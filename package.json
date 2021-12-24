@@ -1,0 +1,7 @@
+{
+  "name": "swing-mirror",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Henric Trotzig <henric.trotzig@gmail.com>",
+  "license": "MIT"
+}
