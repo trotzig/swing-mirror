@@ -9,7 +9,6 @@ const config = {
 
 const socket = io.connect(window.location.origin);
 const video = document.querySelector('video');
-console.log(video);
 
 socket.on('offer', (id, description) => {
   console.log('offer', id, description);

@@ -80,7 +80,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>Hello world</Text>
       {error && <Text>{error.message}</Text>}
-      {stream && <RTCView style={styles.video} streamUrl={stream.toURL()} />}
+      {stream && <RTCView style={styles.video} streamURL={stream.toURL()} />}
       {hasWatcher ? (
         <Text>Watcher connected</Text>
       ) : (
