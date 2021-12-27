@@ -4,7 +4,7 @@ import {
   RTCView,
 } from 'react-native-webrtc';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { io } from 'socket.io-client';
 import React, { useEffect, useState } from 'react';
 
@@ -78,14 +78,21 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Hello world</Text>
-      {error && <Text>{error.message}</Text>}
-      {stream && <RTCView style={styles.video} streamURL={stream.toURL()} />}
-      {hasWatcher ? (
-        <Text>Watcher connected</Text>
-      ) : (
-        <Text>Waiting for watcher...</Text>
+      {stream && (
+        <RTCView
+          style={styles.video}
+          streamURL={stream.toURL()}
+          objectFit="contain"
+        />
       )}
+      <SafeAreaView style={styles.inner}>
+        {error && <Text style={{ color: '#fff' }}>{error.message}</Text>}
+        {hasWatcher ? (
+          <Text style={{ color: '#fff' }}>Watcher connected</Text>
+        ) : (
+          <Text style={{ color: '#fff' }}>Waiting for watcher...</Text>
+        )}
+      </SafeAreaView>
       <StatusBar style="auto" />
     </View>
   );
@@ -94,13 +101,22 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  inner: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    color: '#fff',
+  },
   video: {
     backgroundColor: '#000',
-    height: 100,
-    width: 200,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });

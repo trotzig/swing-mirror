@@ -15,8 +15,8 @@ export default async function getCameraStream({
   const stream = await mediaDevices.getUserMedia({
     audio: true,
     video: {
-      width: 640,
-      height: 480,
+      height: 1170,
+      width: 540,
       frameRate: 30,
       facingMode: useFrontFacingCamera ? 'user' : 'environment',
       deviceId: videoSource.deviceId,
