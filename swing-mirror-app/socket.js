@@ -3,13 +3,14 @@ import { io } from 'socket.io-client';
 
 export default async function({
   stream,
+  broadcastId,
   onWatcherActive = () => {},
   onWatcherDisconnect = () => {},
 }) {
   const peerConnections = {};
   const socket = io('http://192.168.68.117:4000', { jsonp: false });
 
-  socket.emit('broadcaster', { broadcastId: 'app' });
+  socket.emit('broadcaster', { broadcastId });
 
   socket.on('watcher', async id => {
     const peerConnection = new RTCPeerConnection({
