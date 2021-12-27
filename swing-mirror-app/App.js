@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { Fontisto } from '@expo/vector-icons';
+import { Camera } from 'expo-camera';
 
 import getCameraStream from './getCameraStream';
 import socket from './socket';
@@ -53,13 +54,15 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {stream && (
+      {isRecording ? (
+        <Camera style={styles.video} type={Camera.Constants.Type.back} />
+      ) : stream ? (
         <RTCView
           style={styles.video}
           streamURL={stream.toURL()}
-          objectFit="contain"
+          objectFit="cover"
         />
-      )}
+      ) : null}
       <SafeAreaView style={styles.inner}>
         {error && <Text style={{ color: '#fff' }}>{error.message}</Text>}
         {hasWatcher ? (
