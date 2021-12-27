@@ -1,4 +1,8 @@
-import { RTCPeerConnection, RTCIceCandidate, RTCView } from 'react-native-webrtc';
+import {
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCView,
+} from 'react-native-webrtc';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { io } from 'socket.io-client';
@@ -15,7 +19,7 @@ export default function App() {
       const socket = io('http://localhost:4000', { jsonp: false });
 
       // TODO: don't broadcast this until ready
-      socket.emit('broadcaster');
+      socket.emit('broadcaster', { broadcastId: 'app' });
 
       socket.on('watcher', async id => {
         setHasWatcher(true);
@@ -61,8 +65,11 @@ export default function App() {
       });
 
       socket.on('disconnectPeer', id => {
-        peerConnections[id].close();
-        delete peerConnections[id];
+        const peerConnection = peerConnections[id];
+        if (peerConnection) {
+          peerConnections[id].close();
+          delete peerConnections[id];
+        }
       });
     }
     run();
@@ -93,5 +100,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     height: 100,
     width: 200,
-  }
+  },
 });

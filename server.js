@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const express = require('express');
 const app = express();
 
@@ -14,6 +16,12 @@ io.sockets.on('error', e => console.log(e));
 server.listen(port, () =>
   console.log(`Server is running on http://localhost:${port}`),
 );
+
+app.get('/broadcast', (req, res, next) => {
+  res.render('broadcast', {
+    broadcastId: crypto.randomBytes(2).toString('hex'),
+  });
+});
 
 app.get('/:broadcastId', (req, res, next) => {
   res.render('watch', req.params);
@@ -36,7 +44,7 @@ io.sockets.on('connection', socket => {
       socket.to(broadcaster).emit('watcher', socket.id);
     }
   });
-  socket.on('disconnect', (event) => {
+  socket.on('disconnect', event => {
     console.log('disconnect', socket.id);
     for (const socketId of Object.values(broadcasters)) {
       socket.to(socketId).emit('disconnectPeer', socket.id);

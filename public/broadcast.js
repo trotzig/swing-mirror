@@ -22,7 +22,7 @@ navigator.mediaDevices
   .then(stream => {
     console.log('stream available');
     video.srcObject = stream;
-    socket.emit("broadcaster", { broadcastId: 'xys' });
+    socket.emit("broadcaster", { broadcastId: window.broadcastId });
   })
   .catch(error => console.error(error));
 

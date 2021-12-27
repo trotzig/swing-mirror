@@ -4,10 +4,17 @@
     <title>Broadcaster</title>
     <meta charset="UTF-8" />
     <link href="/styles.css" rel="stylesheet" />
+    <script>
+        window.broadcastId = '<%= broadcastId %>';
+    </script>
   </head>
   <body>
-    <div id="broadcastId" class="broadcast-id">no broadcast id</div>
     <video playsinline autoplay muted></video>
+    <div id="broadcastId" class="broadcast-id">
+      <a target="_blank" href="/<%= broadcastId %>">
+        <%= broadcastId %>
+      </a>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/broadcast.js"></script>
   </body>
