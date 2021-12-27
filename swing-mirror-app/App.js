@@ -1,8 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { RTCView } from 'react-native-webrtc';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
+import { Fontisto } from '@expo/vector-icons';
 
 import getCameraStream from './getCameraStream';
 import socket from './socket';
@@ -31,6 +32,7 @@ export default function App() {
   const [stream, setStream] = useState();
   const [error, setError] = useState();
   const [broadcastId, setBroadcastId] = useState();
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     async function run() {
@@ -66,6 +68,23 @@ export default function App() {
           <Text style={{ color: '#fff' }}>code: {broadcastId}</Text>
         )}
       </SafeAreaView>
+      {stream && (
+        <View style={styles.controls}>
+          {isRecording ? (
+            <Pressable
+              onPress={() => {
+                setIsRecording(false);
+              }}
+            >
+              <Fontisto name="stop" size={48} color="red" />
+            </Pressable>
+          ) : (
+            <Pressable onPress={() => setIsRecording(true)}>
+              <Fontisto name="record" size={48} color="red" />
+            </Pressable>
+          )}
+        </View>
+      )}
       <StatusBar style="auto" />
     </View>
   );
@@ -91,5 +110,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  controls: {
+    position: 'absolute',
+    left: 0,
+    bottom: 100,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 60,
   },
 });
