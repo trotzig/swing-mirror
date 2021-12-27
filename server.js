@@ -8,28 +8,39 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server);
 app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs');
 
 io.sockets.on('error', e => console.log(e));
 server.listen(port, () =>
   console.log(`Server is running on http://localhost:${port}`),
 );
 
-let broadcaster;
+app.get('/:broadcastId', (req, res, next) => {
+  res.render('watch', req.params);
+});
+
+const broadcasters = {
+  // mapping id => socketId
+};
 
 io.sockets.on('connection', socket => {
-  console.log('connection established');
-  socket.on('broadcaster', () => {
-    console.log('broadcaster', socket.id);
-    broadcaster = socket.id;
+  socket.on('broadcaster', event => {
+    console.log('broadcaster', event, socket.id);
+    broadcasters[event.broadcastId] = socket.id;
     socket.broadcast.emit('broadcaster');
   });
-  socket.on('watcher', (...args) => {
-    console.log('watcher', socket.id, args);
-    socket.to(broadcaster).emit('watcher', socket.id);
+  socket.on('watcher', event => {
+    console.log('watcher', event, socket.id);
+    const broadcaster = broadcasters[event.broadcastId];
+    if (broadcaster) {
+      socket.to(broadcaster).emit('watcher', socket.id);
+    }
   });
-  socket.on('disconnect', () => {
+  socket.on('disconnect', (event) => {
     console.log('disconnect', socket.id);
-    socket.to(broadcaster).emit('disconnectPeer', socket.id);
+    for (const socketId of Object.values(broadcasters)) {
+      socket.to(socketId).emit('disconnectPeer', socket.id);
+    }
   });
 
   socket.on('offer', (id, message) => {

@@ -22,7 +22,7 @@ navigator.mediaDevices
   .then(stream => {
     console.log('stream available');
     video.srcObject = stream;
-    socket.emit("broadcaster");
+    socket.emit("broadcaster", { broadcastId: 'xys' });
   })
   .catch(error => console.error(error));
 
@@ -64,8 +64,11 @@ socket.on("candidate", (id, candidate) => {
 });
 
 socket.on("disconnectPeer", id => {
-  peerConnections[id].close();
-  delete peerConnections[id];
+  const peerConnection = peerConnections[id];
+  if (peerConnection) {
+    peerConnection.close();
+    delete peerConnections[id];
+  }
 });
 
 window.onunload = window.onbeforeunload = () => {

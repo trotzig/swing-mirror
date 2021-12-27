@@ -40,12 +40,12 @@ socket.on('candidate', (id, candidate) => {
 
 socket.on('connect', () => {
   console.log('connect');
-  socket.emit('watcher', 'some-id');
+  socket.emit('watcher', { broadcastId: window.broadcastId });
 });
 
 socket.on('broadcaster', () => {
   console.log('broadcaster');
-  socket.emit('watcher');
+  socket.emit('watcher', { broadcastId: window.broadcastId });
 });
 
 window.onunload = window.onbeforeunload = () => {
