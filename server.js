@@ -23,8 +23,8 @@ io.sockets.on('connection', socket => {
     broadcaster = socket.id;
     socket.broadcast.emit('broadcaster');
   });
-  socket.on('watcher', () => {
-    console.log('watcher', socket.id);
+  socket.on('watcher', (...args) => {
+    console.log('watcher', socket.id, args);
     socket.to(broadcaster).emit('watcher', socket.id);
   });
   socket.on('disconnect', () => {
