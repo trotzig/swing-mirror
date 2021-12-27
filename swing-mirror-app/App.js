@@ -13,10 +13,11 @@ import getCameraStream from './getCameraStream';
 export default function App() {
   const [hasWatcher, setHasWatcher] = useState(false);
   const [stream, setStream] = useState();
+  const [error, setError] = useState();
   useEffect(() => {
     function run() {
       const peerConnections = {};
-      const socket = io('http://localhost:4000', { jsonp: false });
+      const socket = io('http://192.168.68.117:4000', { jsonp: false });
 
       // TODO: don't broadcast this until ready
       socket.emit('broadcaster', { broadcastId: 'app' });
@@ -33,25 +34,25 @@ export default function App() {
         });
         peerConnections[id] = peerConnection;
 
-        const cameraStream = await getCameraStream();
+        try {
+          const cameraStream = await getCameraStream();
 
-        setStream(cameraStream);
+          setStream(cameraStream);
 
-        cameraStream.getTracks().forEach(track => {
-          console.log('track', track);
-          peerConnection.addTrack(track, stream);
-        });
+          peerConnection.addStream(cameraStream);
+          peerConnection.onicecandidate = event => {
+            console.log('onicecandidate', event);
+            if (event.candidate) {
+              socket.emit('candidate', id, event.candidate);
+            }
+          };
 
-        peerConnection.onicecandidate = event => {
-          console.log('onicecandidate', event);
-          if (event.candidate) {
-            socket.emit('candidate', id, event.candidate);
-          }
-        };
-
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        socket.emit('offer', id, peerConnection.localDescription);
+          const offer = await peerConnection.createOffer();
+          await peerConnection.setLocalDescription(offer);
+          socket.emit('offer', id, peerConnection.localDescription);
+        } catch (e) {
+          setError(e);
+        }
       });
 
       socket.on('answer', (id, description) => {
@@ -78,7 +79,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Hello world</Text>
-      <RTCView style={styles.video} streamUrl={stream} />
+      {error && <Text>{error.message}</Text>}
+      {stream && <RTCView style={styles.video} streamUrl={stream.toURL()} />}
       {hasWatcher ? (
         <Text>Watcher connected</Text>
       ) : (

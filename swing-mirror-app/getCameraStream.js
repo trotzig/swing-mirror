@@ -18,8 +18,9 @@ export default async function getCameraStream({
       width: 640,
       height: 480,
       frameRate: 30,
-      facingMode: isFront ? 'user' : 'environment',
+      facingMode: useFrontFacingCamera ? 'user' : 'environment',
       deviceId: videoSource.deviceId,
     },
   });
+  return stream;
 }
