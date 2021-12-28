@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "Henric Trotzig <henric.trotzig@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "node server.js"
   },
