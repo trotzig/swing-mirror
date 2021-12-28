@@ -11,7 +11,6 @@ const socket = io.connect(window.location.origin);
 const video = document.querySelector('video');
 
 socket.on('offer', (id, description) => {
-  console.log('offer', id, description);
   peerConnection = new RTCPeerConnection(config);
   peerConnection
     .setRemoteDescription(description)
@@ -31,19 +30,16 @@ socket.on('offer', (id, description) => {
 });
 
 socket.on('candidate', (id, candidate) => {
-  console.log('candidate', id, candidate);
   peerConnection
     .addIceCandidate(new RTCIceCandidate(candidate))
     .catch(e => console.error(e));
 });
 
 socket.on('connect', () => {
-  console.log('connect');
   socket.emit('watcher', { broadcastId: window.broadcastId });
 });
 
 socket.on('broadcaster', () => {
-  console.log('broadcaster');
   socket.emit('watcher', { broadcastId: window.broadcastId });
 });
 

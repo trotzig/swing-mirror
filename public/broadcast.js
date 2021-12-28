@@ -20,25 +20,21 @@ const constraints = {
 navigator.mediaDevices
   .getUserMedia(constraints)
   .then(stream => {
-    console.log('stream available');
     video.srcObject = stream;
     socket.emit('broadcaster', { broadcastId: window.broadcastId });
   })
   .catch(error => console.error(error));
 
 socket.on('watcher', id => {
-  console.log('watcher', id);
   const peerConnection = new RTCPeerConnection(config);
   peerConnections[id] = peerConnection;
 
   let stream = video.srcObject;
   stream.getTracks().forEach(track => {
-    console.log('track', track);
     peerConnection.addTrack(track, stream);
   });
 
   peerConnection.onicecandidate = event => {
-    console.log('onicecandidate', event);
     if (event.candidate) {
       socket.emit('candidate', id, event.candidate);
     }
@@ -54,12 +50,10 @@ socket.on('watcher', id => {
 });
 
 socket.on('answer', (id, description) => {
-  console.log('answer', id, description);
   peerConnections[id].setRemoteDescription(description);
 });
 
 socket.on('candidate', (id, candidate) => {
-  console.log('candidate', id, candidate);
   peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
 });
 
