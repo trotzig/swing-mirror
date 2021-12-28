@@ -9,6 +9,11 @@ const http = require('http');
 const server = http.createServer(app);
 
 const io = require('socket.io')(server);
+
+const broadcasters = {
+  // mapping id => socketId
+};
+
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
@@ -17,19 +22,25 @@ server.listen(port, () =>
   console.log(`Server is running on http://localhost:${port}`),
 );
 
+app.get('/', (req, res, next) => {
+  res.render('index');
+});
+
 app.get('/broadcast', (req, res, next) => {
   res.render('broadcast', {
     broadcastId: crypto.randomBytes(2).toString('hex'),
   });
 });
 
-app.get('/:broadcastId', (req, res, next) => {
-  res.render('watch', req.params);
+app.get('/watch', (req, res, next) => {
+  const { broadcastId } = req.query;
+  if (!broadcasters[broadcastId]) {
+    return res
+      .status(404)
+      .render('index', { ...req.query, error: 'not_found' });
+  }
+  res.render('watch', req.query);
 });
-
-const broadcasters = {
-  // mapping id => socketId
-};
 
 io.sockets.on('connection', socket => {
   socket.on('broadcaster', event => {
@@ -45,6 +56,11 @@ io.sockets.on('connection', socket => {
   socket.on('disconnect', event => {
     for (const socketId of Object.values(broadcasters)) {
       socket.to(socketId).emit('disconnectPeer', socket.id);
+    }
+    for (const broadcastId of Object.keys(broadcasters)) {
+      if (broadcasters[broadcastId] === socket.id) {
+        delete broadcasters[broadcastId];
+      }
     }
   });
 
