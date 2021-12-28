@@ -6,21 +6,23 @@
     <link href="/styles.css" rel="stylesheet" />
   </head>
   <body>
-    <h1>Welcome to Swing Mirror</h1>
-    <% if (locals.error === 'not_found' && locals.broadcastId) { %>
-      <p class="error">
-        We couldn't find a broadcaster with code <%= locals.broadcastId %>. Check to
-        make sure that you typed it correctly.
+    <div class="page-wrapper">
+      <h1 style="margin-top: 50px">Welcome to Swing Mirror</h1>
+      <% if (locals.error === 'not_found' && locals.broadcastId) { %>
+        <p class="error">
+          We couldn't find a broadcaster with code <%= locals.broadcastId %>. Check to
+          make sure that you typed it correctly.
+        </p>
+      <% } %>
+      <p>
+        Enter broadcaster code:
       </p>
-    <% } %>
-    <p>
-      Enter broadcaster code:
-    </p>
-    <form action="/watch" method="GET">
-      <input type="text" name="broadcastId" value="<%= locals.broadcastId || '' %>" />
-      <button type="submit">
-        Submit
-      </button>
-    </form>
+      <form action="/watch" method="GET">
+        <input type="text" name="broadcastId" value="<%= locals.broadcastId || '' %>" />
+        <button type="submit">
+          Submit
+        </button>
+      </form>
+    </div>
   </body>
 </html>
