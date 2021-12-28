@@ -14,6 +14,13 @@ const broadcasters = {
   // mapping id => socketId
 };
 
+app.use((req, res, next) =>  {
+  if (`${port}` === '80' && !req.secure) {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
+  next();
+});
+
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
