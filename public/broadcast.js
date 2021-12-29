@@ -68,3 +68,36 @@ socket.on('disconnectPeer', id => {
 window.onunload = window.onbeforeunload = () => {
   socket.close();
 };
+
+let mediaRecorder;
+let recordedChunks;
+
+document.body.querySelector('#record').addEventListener('click', () => {
+  recordedChunks = [];
+  mediaRecorder = new MediaRecorder(video.srcObject, {
+    mimeType: 'video/webm; codecs=vp9',
+  });
+  mediaRecorder.ondataavailable = event => {
+    if (event.data.size > 0) {
+      recordedChunks.push(event.data);
+    }
+  };
+  mediaRecorder.onstop = event => {
+    const blob = new Blob(recordedChunks, {
+      type: 'video/webm',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style = 'display: none';
+    a.href = url;
+    a.download = 'test.webm';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+  mediaRecorder.start();
+});
+
+document.body.querySelector('#stop').addEventListener('click', () => {
+  mediaRecorder.stop();
+});

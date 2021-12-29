@@ -106,3 +106,9 @@ footer a {
   color: var(--dark-foreground);
   text-decoration: underline;
 }
+
+.broadcast-controls {
+  position: fixed;
+  left: 100px;
+  top: 100px;
+}

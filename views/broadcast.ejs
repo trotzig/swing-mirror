@@ -3,6 +3,7 @@
   <head>
     <title>Broadcaster</title>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
     <link rel="icon" href="/favicon.ico"/>
     <link href="/styles.css" rel="stylesheet" />
     <script>
@@ -15,6 +16,10 @@
       <a target="_blank" href="/watch?broadcastId=<%= broadcastId %>">
         <%= broadcastId %>
       </a>
+    </div>
+    <div class="broadcast-controls">
+      <button id="record">Record</button>
+      <button id="stop">Stop</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/broadcast.js"></script>
