@@ -75,7 +75,7 @@ let recordedChunks;
 document.body.querySelector('#record').addEventListener('click', () => {
   recordedChunks = [];
   mediaRecorder = new MediaRecorder(video.srcObject, {
-    mimeType: 'video/webm; codecs=vp9',
+    mimeType: 'video/mp4;codecs:h264',
   });
   mediaRecorder.ondataavailable = event => {
     if (event.data.size > 0) {
@@ -84,7 +84,7 @@ document.body.querySelector('#record').addEventListener('click', () => {
   };
   mediaRecorder.onstop = event => {
     const blob = new Blob(recordedChunks, {
-      type: 'video/webm',
+      type: 'video/mp4',
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
