@@ -16,7 +16,7 @@ export default async function getCameraStream({
     audio: true,
     video: {
       frameRate: 30,
-      facingMode: useFrontFacingCamera ? 'user' : 'environment',
+      facingMode: { exact: useFrontFacingCamera ? 'user' : 'environment' },
       deviceId: videoSource.deviceId,
     },
   });
