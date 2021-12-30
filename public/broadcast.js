@@ -74,9 +74,10 @@ let recordedChunks;
 
 document.body.querySelector('#record').addEventListener('click', () => {
   recordedChunks = [];
-  const mimeType = ['video/mp4;codecs=h264', 'video/webm;codecs=vp9'].find(
-    type => MediaRecorder.isTypeSupported(type),
-  );
+  const availableMimeTypes = ['video/mp4;codecs=h264', 'video/webm;codecs=vp9'];
+  const mimeType =
+    availableMimeTypes.find(type => MediaRecorder.isTypeSupported(type)) ||
+    availableMimeTypes[0];
   mediaRecorder = new MediaRecorder(video.srcObject, {
     mimeType,
   });
