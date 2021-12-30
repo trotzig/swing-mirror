@@ -1,3 +1,5 @@
+import React from 'react';
+
 function IndexPage({ error, broadcastId }) {
   return (
     <div>
