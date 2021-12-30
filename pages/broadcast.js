@@ -63,9 +63,11 @@ function BroadcastPage({ broadcastId }) {
           mimeType.indexOf('/') + 1,
           mimeType.indexOf(';'),
         )}`;
+        const recording = { url, name, photoUrl };
         setRecordings(previousRecordings =>
-          previousRecordings.concat([{ url, name, photoUrl }]),
+          previousRecordings.concat([recording]),
         );
+        instructionRef.current({ addRecording: recording });
       };
       mediaRecorder.start();
     } else if (mediaRecorder) {

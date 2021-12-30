@@ -8,6 +8,7 @@ function WatchPage({ broadcastId }) {
   const buttonRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
+  const [recordings, setRecordings] = useState([]);
   const [isController, setIsController] = useState(true);
 
   useEffect(() => {
@@ -15,7 +16,13 @@ function WatchPage({ broadcastId }) {
       broadcastId,
       videoRef,
       onInstruction: instruction => {
-        setIsRecording(instruction.isRecording);
+        if (typeof instruction.isRecording === 'boolean') {
+          setIsRecording(instruction.isRecording);
+        }
+        if (typeof instruction.addRecording === 'object') {
+          console.log('yay', instruction.addRecording);
+          setRecordings(old => old.concat([instruction.addRecording]));
+        }
       },
     });
     instructionRef.current = sendInstruction;
@@ -48,6 +55,19 @@ function WatchPage({ broadcastId }) {
       </Head>
       <div className="video-wrapper">
         <video autoPlay muted playsInline ref={videoRef}></video>
+        <div className="video-header">
+          <div className="video-header-inner">
+            <div className="video-recordings">
+              {recordings.map(({ url, name, photoUrl }, i) => {
+                return (
+                  <a key={url}>
+                    <img src={photoUrl} className="video-still-image" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
         <div className="video-footer">
           <button
             ref={buttonRef}
