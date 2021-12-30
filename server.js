@@ -1,15 +1,11 @@
-const crypto = require('crypto');
-
 const next = require('next');
 
 const express = require('express');
-const app = express();
-
-const port = process.env.PORT || 4000;
-
 const http = require('http');
-const server = http.createServer(app);
 
+const app = express();
+const port = process.env.PORT || 4000;
+const server = http.createServer(app);
 const io = require('socket.io')(server);
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -31,16 +27,11 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 io.sockets.on('error', e => console.error(e));
+
 nextApp.prepare().then(() => {
   server.listen(port, () =>
     console.log(`Server is running on http://localhost:${port}`),
   );
-
-  app.get('/broadcast', (req, res, next) => {
-    res.render('broadcast', {
-      broadcastId: crypto.randomBytes(2).toString('hex'),
-    });
-  });
 
   app.get('/watch', (req, res, next) => {
     const { broadcastId } = req.query;
