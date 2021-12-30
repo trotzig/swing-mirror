@@ -1,23 +1,27 @@
+import Cookies from 'cookies';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
 import broadcast from '../src/broadcast';
 
-const broadcastId = cryptoRandomString({ length: 4 });
 let mediaRecorder;
 
-function BroadcastPage() {
+function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const videoRef = useRef();
   useEffect(() => {
     const unbroadcast = broadcast({ broadcastId, videoRef });
     return unbroadcast;
-  });
+  }, [broadcastId]);
   return (
     <div>
       <video playsInline autoPlay muted ref={videoRef}></video>
       <div id="broadcastId" className="broadcast-id">
-        <a target="_blank" href="/watch?broadcastId=<%= broadcastId %>">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={`/watch?broadcastId=${broadcastId}>`}
+        >
           {broadcastId}
         </a>
       </div>
@@ -81,5 +85,17 @@ function BroadcastPage() {
     </div>
   );
 }
+
+function getServerSideProps({ req, res }) {
+  const cookies = new Cookies(req, res);
+  let broadcastId = cookies.get('broadcastId');
+  if (!broadcastId) {
+    broadcastId = cryptoRandomString({ length: 4 });
+    cookies.set('broadcastId', broadcastId);
+  }
+  return { props: { broadcastId } };
+}
+
+export { getServerSideProps };
 
 export default BroadcastPage;
