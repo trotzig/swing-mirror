@@ -20,6 +20,7 @@ function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
+  const buttonRef = useRef();
   const canvasRef = useRef();
 
   useEffect(() => {
@@ -71,6 +72,10 @@ function BroadcastPage({ broadcastId }) {
 
   useEffect(() => {
     const listener = e => {
+      if (e.target === buttonRef.current) {
+        // button is focused
+        return;
+      }
       if (e.which === 13 || e.which === 32) {
         // Enter or Spacebar
         setIsRecording(old => !old);
@@ -109,6 +114,7 @@ function BroadcastPage({ broadcastId }) {
       </div>
       <div className="video-footer">
         <button
+          ref={buttonRef}
           className={
             isRecording ? 'video-control recording' : 'video-control stopped'
           }
