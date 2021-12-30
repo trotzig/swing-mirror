@@ -66,7 +66,14 @@ function BroadcastPage({ broadcastId }) {
   }, [isRecording]);
 
   useEffect(() => {
-    const listener = () => {};
+    const listener = (e) => {
+      if (e.which === 13 || e.which === 32) {
+        // Enter or Spacebar
+        setIsRecording(old => !old);
+      }
+    };
+    document.addEventListener('keyup', listener);
+    return () => document.removeEventListener('keyup', listener);
   });
 
   return (
