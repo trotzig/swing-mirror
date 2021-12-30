@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-export default function broadcast({ broadcastId, videoRef }) {
+export default function broadcast({ broadcastId, videoRef, onInstruction }) {
   const peerConnections = {};
   const config = {
     iceServers: [
@@ -53,6 +53,10 @@ export default function broadcast({ broadcastId, videoRef }) {
 
   socket.on('answer', (id, description) => {
     peerConnections[id].setRemoteDescription(description);
+  });
+
+  socket.on('instruction', (id, instruction) => {
+    onInstruction(instruction);
   });
 
   socket.on('candidate', (id, candidate) => {

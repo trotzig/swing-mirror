@@ -23,7 +23,11 @@ function BroadcastPage({ broadcastId }) {
   const canvasRef = useRef();
 
   useEffect(() => {
-    const unbroadcast = broadcast({ broadcastId, videoRef });
+    const unbroadcast = broadcast({
+      broadcastId,
+      videoRef,
+      onInstruction: instruction => setIsRecording(instruction.isRecording),
+    });
     return unbroadcast;
   }, [broadcastId]);
 
@@ -66,7 +70,7 @@ function BroadcastPage({ broadcastId }) {
   }, [isRecording]);
 
   useEffect(() => {
-    const listener = (e) => {
+    const listener = e => {
       if (e.which === 13 || e.which === 32) {
         // Enter or Spacebar
         setIsRecording(old => !old);

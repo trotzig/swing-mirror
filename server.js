@@ -70,6 +70,9 @@ nextApp.prepare().then(() => {
       }
     });
 
+    socket.on('instruction', (id, instruction) => {
+      socket.to(id).emit('instruction', socket.id, instruction);
+    });
     socket.on('offer', (id, message) => {
       socket.to(id).emit('offer', socket.id, message);
     });

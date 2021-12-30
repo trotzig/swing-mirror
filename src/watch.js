@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 
 export default function watch({ broadcastId, videoRef }) {
+  let broadcastSocketId;
   let peerConnection;
   const config = {
     iceServers: [
@@ -13,6 +14,7 @@ export default function watch({ broadcastId, videoRef }) {
   const socket = io.connect(window.location.origin);
 
   socket.on('offer', (id, description) => {
+    broadcastSocketId = id;
     peerConnection = new RTCPeerConnection(config);
     peerConnection
       .setRemoteDescription(description)
@@ -51,5 +53,9 @@ export default function watch({ broadcastId, videoRef }) {
   }
 
   window.onunload = window.onbeforeunload = closeSocket;
-  return closeSocket;
+  return {
+    closeSocket,
+    sendInstruction: instruction =>
+      socket.emit('instruction', broadcastSocketId, instruction),
+  };
 }
