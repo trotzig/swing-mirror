@@ -27,6 +27,48 @@ function BroadcastPage({ broadcastId }) {
     return unbroadcast;
   }, [broadcastId]);
 
+  useEffect(() => {
+    if (isRecording) {
+      const recordedChunks = [];
+      const availableMimeTypes = [
+        'video/mp4;codecs:h264',
+        'video/webm;codecs=vp9',
+      ];
+      const mimeType =
+        availableMimeTypes.find(type => MediaRecorder.isTypeSupported(type)) ||
+        availableMimeTypes[0];
+      mediaRecorder = new MediaRecorder(videoRef.current.srcObject, {
+        mimeType,
+      });
+      mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+          recordedChunks.push(event.data);
+        }
+      };
+      const photoUrl = takeStillPhoto({ canvasRef, videoRef });
+      mediaRecorder.onstop = event => {
+        const blob = new Blob(recordedChunks, {
+          type: mimeType,
+        });
+        const url = URL.createObjectURL(blob);
+        const name = `recording.${mimeType.slice(
+          mimeType.indexOf('/') + 1,
+          mimeType.indexOf(';'),
+        )}`;
+        setRecordings(previousRecordings =>
+          previousRecordings.concat([{ url, name, photoUrl }]),
+        );
+      };
+      mediaRecorder.start();
+    } else if (mediaRecorder) {
+      mediaRecorder.stop();
+    }
+  }, [isRecording]);
+
+  useEffect(() => {
+    const listener = () => {};
+  });
+
   return (
     <div className="video-wrapper">
       <video playsInline autoPlay muted ref={videoRef}></video>
@@ -37,10 +79,7 @@ function BroadcastPage({ broadcastId }) {
             {recordings.map(({ name, url, photoUrl }) => {
               return (
                 <a key={url} href={url} download={name}>
-                  <img
-                    src={photoUrl}
-                    className="video-still-image"
-                  />
+                  <img src={photoUrl} className="video-still-image" />
                 </a>
               );
             })}
@@ -62,47 +101,7 @@ function BroadcastPage({ broadcastId }) {
           className={
             isRecording ? 'video-control recording' : 'video-control stopped'
           }
-          onClick={() => {
-            if (isRecording) {
-              setIsRecording(false);
-              mediaRecorder.stop();
-              return;
-            }
-
-            setIsRecording(true);
-            const recordedChunks = [];
-            const availableMimeTypes = [
-              'video/mp4;codecs:h264',
-              'video/webm;codecs=vp9',
-            ];
-            const mimeType =
-              availableMimeTypes.find(type =>
-                MediaRecorder.isTypeSupported(type),
-              ) || availableMimeTypes[0];
-            mediaRecorder = new MediaRecorder(videoRef.current.srcObject, {
-              mimeType,
-            });
-            mediaRecorder.ondataavailable = event => {
-              if (event.data.size > 0) {
-                recordedChunks.push(event.data);
-              }
-            };
-            const photoUrl = takeStillPhoto({ canvasRef, videoRef });
-            mediaRecorder.onstop = event => {
-              const blob = new Blob(recordedChunks, {
-                type: mimeType,
-              });
-              const url = URL.createObjectURL(blob);
-              const name = `recording.${mimeType.slice(
-                mimeType.indexOf('/') + 1,
-                mimeType.indexOf(';'),
-              )}`;
-              setRecordings(previousRecordings =>
-                previousRecordings.concat([{ url, name, photoUrl }]),
-              );
-            };
-            mediaRecorder.start();
-          }}
+          onClick={() => setIsRecording(!isRecording)}
         />
       </div>
     </div>
