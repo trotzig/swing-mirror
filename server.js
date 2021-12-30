@@ -49,7 +49,7 @@ nextApp.prepare().then(() => {
       nextApp.render(req, res, '/', { broadcastId, error: 'not_found' });
       return;
     }
-    res.render('watch', req.query);
+    nextApp.render(req, res, '/watch', { broadcastId });
   });
 
   app.get('*', (req, res) => {
