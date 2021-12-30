@@ -31,7 +31,7 @@ export default function broadcast({ broadcastId, videoRef }) {
     const peerConnection = new RTCPeerConnection(config);
     peerConnections[id] = peerConnection;
 
-    const stream = video.srcObject;
+    const stream = videoRef.current.srcObject;
     stream.getTracks().forEach(track => {
       peerConnection.addTrack(track, stream);
     });

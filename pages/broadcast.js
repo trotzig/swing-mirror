@@ -18,23 +18,26 @@ function BroadcastPage({ broadcastId }) {
     <div className="video-wrapper">
       <video playsInline autoPlay muted ref={videoRef}></video>
       <div className="video-header">
-        <div className="broadcast-recordings">
-          {recordings.map(({ name, url }) => {
-            return (
-              <a key={url} href={url} download={name}>
-                {name}
-              </a>
-            );
-          })}
-        </div>
-        <div id="broadcastId" className="broadcast-id">
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={`/watch?broadcastId=${broadcastId}>`}
-          >
-            {broadcastId}
-          </a>
+        <div className="video-header-inner">
+          <div className="broadcast-recordings">
+            {recordings.map(({ name, url }) => {
+              return (
+                <a key={url} href={url} download={name}>
+                  {name}
+                </a>
+              );
+            })}
+          </div>
+          <div />
+          <div id="broadcastId" className="broadcast-id">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`/watch?broadcastId=${broadcastId}`}
+            >
+              {broadcastId}
+            </a>
+          </div>
         </div>
       </div>
       <div className="video-footer">
