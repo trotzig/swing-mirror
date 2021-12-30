@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 function IndexPage({ error, broadcastId }) {
   return (
@@ -22,6 +23,13 @@ function IndexPage({ error, broadcastId }) {
             />
             <button type="submit">Submit</button>
           </form>
+          <p>
+            ...or press{' '}
+            <Link href="/broadcast">
+              <a>here if you want to be a broadcaster</a>
+            </Link>
+            .
+          </p>
         </div>
       </main>
 
@@ -29,12 +37,13 @@ function IndexPage({ error, broadcastId }) {
         <div className="page-wrapper">
           <p>
             Swing Mirror lets you film your golf swing and view it on multiple
-            screens. Use the{' '}
-            <a href="https://swingapps.io">Swing Mirror iOS app</a> as the
-            broadcaster. Then come here and enter the code you get in the iOS
-            app.
+            screens. Choose one device that you{' '}
+            <Link href="/broadcast">
+              <a>turn into a broadcaster</a>
+            </Link>
+            . Then come here and enter the code you get in the upper right
+            corner of the broadcaster window.
           </p>
-          <p>All devices need a working Internet connection.</p>
         </div>
       </footer>
     </div>

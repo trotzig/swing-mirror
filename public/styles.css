@@ -25,6 +25,11 @@ body {
   box-sizing: border-box;
 }
 
+a {
+  color: currentColor;
+  text-decoration: underline;
+}
+
 video {
   background-color: black;
   width: 100%;
