@@ -6,24 +6,41 @@ import broadcast from '../src/broadcast';
 
 let mediaRecorder;
 
+function takeStillPhoto({ canvasRef, videoRef }) {
+  const canvas = canvasRef.current;
+  const video = videoRef.current;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const context = canvas.getContext('2d');
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/png');
+}
+
 function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
+  const canvasRef = useRef();
+
   useEffect(() => {
     const unbroadcast = broadcast({ broadcastId, videoRef });
     return unbroadcast;
   }, [broadcastId]);
+
   return (
     <div className="video-wrapper">
       <video playsInline autoPlay muted ref={videoRef}></video>
+      <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
-          <div className="broadcast-recordings">
-            {recordings.map(({ name, url }) => {
+          <div className="video-recordings">
+            {recordings.map(({ name, url, photoUrl }) => {
               return (
                 <a key={url} href={url} download={name}>
-                  {name}
+                  <img
+                    src={photoUrl}
+                    className="video-still-image"
+                  />
                 </a>
               );
             })}
@@ -70,6 +87,7 @@ function BroadcastPage({ broadcastId }) {
                 recordedChunks.push(event.data);
               }
             };
+            const photoUrl = takeStillPhoto({ canvasRef, videoRef });
             mediaRecorder.onstop = event => {
               const blob = new Blob(recordedChunks, {
                 type: mimeType,
@@ -80,7 +98,7 @@ function BroadcastPage({ broadcastId }) {
                 mimeType.indexOf(';'),
               )}`;
               setRecordings(previousRecordings =>
-                previousRecordings.concat([{ url, name }]),
+                previousRecordings.concat([{ url, name, photoUrl }]),
               );
             };
             mediaRecorder.start();
