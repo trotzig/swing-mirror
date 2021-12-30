@@ -36,10 +36,6 @@ nextApp.prepare().then(() => {
     console.log(`Server is running on http://localhost:${port}`),
   );
 
-  app.get('/', (req, res, next) => {
-    res.render('index');
-  });
-
   app.get('/broadcast', (req, res, next) => {
     res.render('broadcast', {
       broadcastId: crypto.randomBytes(2).toString('hex'),
@@ -49,9 +45,9 @@ nextApp.prepare().then(() => {
   app.get('/watch', (req, res, next) => {
     const { broadcastId } = req.query;
     if (!broadcasters[broadcastId]) {
-      return res
-        .status(404)
-        .render('index', { ...req.query, error: 'not_found' });
+      res.status(404);
+      nextApp.render(req, res, '/', { broadcastId, error: 'not_found' });
+      return;
     }
     res.render('watch', req.query);
   });
