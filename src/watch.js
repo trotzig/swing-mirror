@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-export default function watch({ broadcastId, videoRef }) {
+export default function watch({ broadcastId, videoRef, onInstruction }) {
   let broadcastSocketId;
   let peerConnection;
   const config = {
@@ -41,6 +41,10 @@ export default function watch({ broadcastId, videoRef }) {
 
   socket.on('connect', () => {
     socket.emit('watcher', { broadcastId });
+  });
+
+  socket.on('instruction', (id, instruction) => {
+    onInstruction(instruction);
   });
 
   socket.on('broadcaster', () => {

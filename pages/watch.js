@@ -8,9 +8,16 @@ function WatchPage({ broadcastId }) {
   const buttonRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
+  const [isController, setIsController] = useState(true);
 
   useEffect(() => {
-    const { closeSocket, sendInstruction } = watch({ broadcastId, videoRef });
+    const { closeSocket, sendInstruction } = watch({
+      broadcastId,
+      videoRef,
+      onInstruction: instruction => {
+        setIsRecording(instruction.isRecording);
+      },
+    });
     instructionRef.current = sendInstruction;
     return closeSocket;
   }, [broadcastId]);

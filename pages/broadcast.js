@@ -20,16 +20,19 @@ function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
+  const instructionRef = useRef();
   const buttonRef = useRef();
   const canvasRef = useRef();
 
   useEffect(() => {
-    const unbroadcast = broadcast({
+    const { closeSocket, sendInstruction } = broadcast({
       broadcastId,
       videoRef,
       onInstruction: instruction => setIsRecording(instruction.isRecording),
     });
-    return unbroadcast;
+
+    instructionRef.current = sendInstruction;
+    return closeSocket;
   }, [broadcastId]);
 
   useEffect(() => {
@@ -68,6 +71,7 @@ function BroadcastPage({ broadcastId }) {
     } else if (mediaRecorder) {
       mediaRecorder.stop();
     }
+    instructionRef.current({ isRecording });
   }, [isRecording]);
 
   useEffect(() => {

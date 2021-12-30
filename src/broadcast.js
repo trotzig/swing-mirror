@@ -74,5 +74,11 @@ export default function broadcast({ broadcastId, videoRef, onInstruction }) {
   window.onunload = window.onbeforeunload = () => {
     socket.close();
   };
-  return () => socket.close();
+  return {
+    closeSocket: () => socket.close(),
+    sendInstruction: instruction =>
+      Object.keys(peerConnections).forEach(socketId =>
+        socket.emit('instruction', socketId, instruction),
+      ),
+  };
 }
