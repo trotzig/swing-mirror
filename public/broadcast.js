@@ -29,7 +29,7 @@ socket.on('watcher', id => {
   const peerConnection = new RTCPeerConnection(config);
   peerConnections[id] = peerConnection;
 
-  let stream = video.srcObject;
+  const stream = video.srcObject;
   stream.getTracks().forEach(track => {
     peerConnection.addTrack(track, stream);
   });
@@ -74,8 +74,11 @@ let recordedChunks;
 
 document.body.querySelector('#record').addEventListener('click', () => {
   recordedChunks = [];
+  const mimeType = ['video/mp4;codecs=h264', 'video/webm;codecs=vp9'].find(
+    type => MediaRecorder.isTypeSupported(type),
+  );
   mediaRecorder = new MediaRecorder(video.srcObject, {
-    mimeType: 'video/mp4;codecs:h264',
+    mimeType,
   });
   mediaRecorder.ondataavailable = event => {
     if (event.data.size > 0) {
@@ -84,16 +87,19 @@ document.body.querySelector('#record').addEventListener('click', () => {
   };
   mediaRecorder.onstop = event => {
     const blob = new Blob(recordedChunks, {
-      type: 'video/mp4',
+      type: mimeType,
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    document.body.appendChild(a);
-    a.style = 'display: none';
+    a.style = 'display: block';
     a.href = url;
-    a.download = 'test.webm';
-    a.click();
-    window.URL.revokeObjectURL(url);
+    a.download = `recording.${mimeType.slice(
+      mimeType.indexOf('/') + 1,
+      mimeType.indexOf(';'),
+    )}`;
+    a.innerHTML = a.download;
+    //a.onclick = () => video.src = url;
+    document.querySelector('.broadcast-recordings').appendChild(a);
   };
   mediaRecorder.start();
 });

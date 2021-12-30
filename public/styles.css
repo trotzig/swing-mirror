@@ -112,3 +112,11 @@ footer a {
   left: 100px;
   top: 100px;
 }
+.broadcast-recordings {
+  position: fixed;
+  left: 100px;
+  top: 200px;
+  min-height: 100px;
+  min-width: 100px;
+  background-color: #fff;
+}
