@@ -108,11 +108,41 @@ footer a {
   text-decoration: underline;
 }
 
-.broadcast-controls {
+.video-header {
   position: fixed;
-  left: 100px;
-  top: 100px;
+  top: 0;
+  left: 0;
+  min-height: 75px;
+  background-color: rgba(0,0,0,0.7);
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
+
+.video-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  min-height: 75px;
+  background-color: rgba(0,0,0,0.7);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.video-control {
+  margin: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: red;
+  border: none;
+  border-radius: 50%;
+  transition: .1s border-radius;
+}
+.video-control.recording {
+  border-radius: 5px;
+}
+
 .broadcast-recordings {
   position: fixed;
   left: 100px;

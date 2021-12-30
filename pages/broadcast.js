@@ -8,27 +8,48 @@ let mediaRecorder;
 
 function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
+  const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
   useEffect(() => {
     const unbroadcast = broadcast({ broadcastId, videoRef });
     return unbroadcast;
   }, [broadcastId]);
   return (
-    <div>
+    <div className="video-wrapper">
       <video playsInline autoPlay muted ref={videoRef}></video>
-      <div id="broadcastId" className="broadcast-id">
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href={`/watch?broadcastId=${broadcastId}>`}
-        >
-          {broadcastId}
-        </a>
+      <div className="video-header">
+        <div className="broadcast-recordings">
+          {recordings.map(({ name, url }) => {
+            return (
+              <a key={url} href={url} download={name}>
+                {name}
+              </a>
+            );
+          })}
+        </div>
+        <div id="broadcastId" className="broadcast-id">
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={`/watch?broadcastId=${broadcastId}>`}
+          >
+            {broadcastId}
+          </a>
+        </div>
       </div>
-      <div className="broadcast-controls">
+      <div className="video-footer">
         <button
-          id="record"
+          className={
+            isRecording ? 'video-control recording' : 'video-control stopped'
+          }
           onClick={() => {
+            if (isRecording) {
+              setIsRecording(false);
+              mediaRecorder.stop();
+              return;
+            }
+
+            setIsRecording(true);
             const recordedChunks = [];
             const availableMimeTypes = [
               'video/mp4;codecs:h264',
@@ -61,26 +82,7 @@ function BroadcastPage({ broadcastId }) {
             };
             mediaRecorder.start();
           }}
-        >
-          Record
-        </button>
-        <button
-          id="stop"
-          onClick={() => {
-            mediaRecorder.stop();
-          }}
-        >
-          Stop
-        </button>
-      </div>
-      <div className="broadcast-recordings">
-        {recordings.map(({ name, url }) => {
-          return (
-            <a key={url} href={url} download={name}>
-              {name}
-            </a>
-          );
-        })}
+        />
       </div>
     </div>
   );
