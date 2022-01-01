@@ -11,11 +11,11 @@ let mediaRecorder;
 function takeStillPhoto({ canvasRef, videoRef }) {
   const canvas = canvasRef.current;
   const video = videoRef.current;
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  canvas.width = video.videoWidth / 5;
+  canvas.height = video.videoHeight / 5;
   const context = canvas.getContext('2d');
   context.drawImage(video, 0, 0, canvas.width, canvas.height);
-  return canvas.toDataURL('image/png');
+  return canvas.toDataURL('image/jpg');
 }
 
 function BroadcastPage({ broadcastId }) {
