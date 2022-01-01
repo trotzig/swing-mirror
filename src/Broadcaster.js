@@ -31,15 +31,6 @@ export default class Broadcaster extends EventEmitter {
         }
       };
 
-      const channel = peerConnection.createDataChannel('file-transfer');
-      channel.binaryType = 'arraybuffer';
-
-      channel.onopen = () => {
-        console.log('file channel open');
-      };
-      channel.addEventListener('error', event => console.error(event));
-      peerConnection.__dataChannel = channel;
-
       peerConnection
         .createOffer()
         .then(sdp => peerConnection.setLocalDescription(sdp))
