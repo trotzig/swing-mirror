@@ -18,10 +18,9 @@ const broadcasters = {
 };
 
 app.use((req, res, next) => {
-  //if (!dev && req.protocol === 'http') {
-   // return res.redirect('https://' + req.headers.host + req.url);
-  //}
-  console.log(req.protocol, req.url, req.headers);
+  if (!dev && req.headers['x-forwarded-proto'] === 'http') {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
 
   next();
 });
