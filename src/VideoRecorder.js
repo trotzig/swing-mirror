@@ -42,7 +42,7 @@ export default class VideoRecorder {
           type: this.mimeType,
         });
         const url = URL.createObjectURL(blob);
-        const name = `recording.${this.mimeType.slice(
+        const name = `swing.${this.mimeType.slice(
           this.mimeType.indexOf('/') + 1,
           this.mimeType.indexOf(';'),
         )}`;

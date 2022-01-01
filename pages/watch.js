@@ -114,6 +114,15 @@ function WatchPage({ broadcastId }) {
       <Modal
         open={currentRecording}
         onClose={() => setCurrentRecording(undefined)}
+        actions={[
+          <a
+            key="download"
+            href={currentRecording && currentRecording.url}
+            download={currentRecording && currentRecording.name}
+          >
+            Save to device
+          </a>,
+        ]}
       >
         <video
           playsInline
