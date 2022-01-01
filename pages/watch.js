@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React, { useEffect, useRef, useState } from 'react';
 
+import Modal from '../src/Modal';
 import watch from '../src/watch';
 
 function WatchPage({ broadcastId }) {
@@ -8,7 +9,9 @@ function WatchPage({ broadcastId }) {
   const buttonRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
+  const [currentRecording, setCurrentRecording] = useState();
   const [recordings, setRecordings] = useState([]);
+  const [recordingUrls, setRecordingUrls] = useState({});
   const [isController, setIsController] = useState(true);
 
   useEffect(() => {
@@ -20,9 +23,14 @@ function WatchPage({ broadcastId }) {
           setIsRecording(instruction.isRecording);
         }
         if (typeof instruction.addRecording === 'object') {
-          console.log('yay', instruction.addRecording);
           setRecordings(old => old.concat([instruction.addRecording]));
         }
+      },
+      onRecording: ({ url, hash }) => {
+        setRecordingUrls(old => {
+          old[hash] = url;
+          return old;
+        });
       },
     });
     instructionRef.current = sendInstruction;
@@ -58,11 +66,20 @@ function WatchPage({ broadcastId }) {
         <div className="video-header">
           <div className="video-header-inner">
             <div className="video-recordings">
-              {recordings.map(({ url, name, photoUrl }, i) => {
+              {recordings.map((recording, i) => {
                 return (
-                  <a key={url}>
-                    <img src={photoUrl} className="video-still-image" />
-                  </a>
+                  <button
+                    className="reset"
+                    key={recording.url}
+                    onClick={() => {
+                      setCurrentRecording(recording);
+                    }}
+                  >
+                    <img
+                      src={recording.photoUrl}
+                      className="video-still-image"
+                    />
+                  </button>
                 );
               })}
             </div>
@@ -78,6 +95,18 @@ function WatchPage({ broadcastId }) {
           />
         </div>
       </div>
+      <Modal
+        open={currentRecording}
+        onClose={() => setCurrentRecording(undefined)}
+      >
+        <video
+          playsInline
+          autoPlay
+          muted
+          controls
+          src={currentRecording && recordingUrls[currentRecording.hash]}
+        ></video>
+      </Modal>
     </div>
   );
 }

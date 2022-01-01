@@ -4,7 +4,7 @@ import cryptoRandomString from 'crypto-random-string';
 
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
-import getVideoStream from '../src/getVideoStream';
+import createHash from '../src/createHash';
 
 let mediaRecorder;
 
@@ -23,8 +23,6 @@ function BroadcastPage({ broadcastId }) {
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
-  const videoRecordingRef = useRef();
-  const fallbackCanvasRef = useRef();
   const broadcasterRef = useRef();
   const buttonRef = useRef();
   const canvasRef = useRef();
@@ -79,7 +77,12 @@ function BroadcastPage({ broadcastId }) {
         setRecordings(previousRecordings =>
           previousRecordings.concat([recording]),
         );
-        broadcasterRef.current.sendInstruction({ addRecording: recording });
+        blob.arrayBuffer().then(buffer => {
+          broadcasterRef.current.sendInstruction({
+            addRecording: { ...recording, hash: createHash(buffer) },
+          });
+          broadcasterRef.current.sendVideoFile(buffer);
+        });
       };
       mediaRecorder.start();
     } else if (mediaRecorder) {
@@ -123,19 +126,6 @@ function BroadcastPage({ broadcastId }) {
                   className="reset"
                   key={recording.url}
                   onClick={() => {
-                    videoRecordingRef.current.__active = true;
-                    videoRecordingRef.current.addEventListener(
-                      'canplay',
-                      () => {
-                        const stream = getVideoStream({
-                          video: videoRecordingRef.current,
-                          canvas: fallbackCanvasRef.current,
-                        });
-                        broadcasterRef.current.overrideStream(stream);
-                      },
-                      { once: true },
-                    );
-                    videoRecordingRef.current.src = recording.url;
                     setCurrentRecording(recording);
                   }}
                 >
@@ -168,9 +158,6 @@ function BroadcastPage({ broadcastId }) {
       <Modal
         open={!!currentRecording}
         onClose={() => {
-          broadcasterRef.current.resetStream();
-          videoRecordingRef.current.src = '';
-          videoRecordingRef.current.__active = false;
           setCurrentRecording(undefined);
         }}
       >
@@ -179,19 +166,9 @@ function BroadcastPage({ broadcastId }) {
           autoPlay
           muted
           controls
-          ref={videoRecordingRef}
+          src={currentRecording && currentRecording.url}
         ></video>
       </Modal>
-      <canvas
-        ref={fallbackCanvasRef}
-        style={{
-          display: 'none',
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          border: '1px solid red',
-        }}
-      />
     </div>
   );
 }

@@ -31,6 +31,20 @@ export default class Broadcaster extends EventEmitter {
         }
       };
 
+      const channel = peerConnection.createDataChannel('file-transfer');
+      channel.binaryType = 'arraybuffer';
+
+      channel.onopen = () => {
+        console.log('file channel open');
+      };
+
+      channel.addEventListener('message', event => {
+        console.log('channel onmessage', event);
+        console.log(event.data);
+      });
+      channel.addEventListener('error', event => console.error(event));
+      peerConnection.__dataChannel = channel;
+
       peerConnection
         .createOffer()
         .then(sdp => peerConnection.setLocalDescription(sdp))
@@ -66,7 +80,7 @@ export default class Broadcaster extends EventEmitter {
   }
 
   overrideStream(stream) {
-    Object.keys(this.peerConnections).forEach(socketId =>{
+    Object.keys(this.peerConnections).forEach(socketId => {
       const peerConnection = this.peerConnections[socketId];
       peerConnection.getSenders()[0].replaceTrack(stream.getVideoTracks()[0]);
     });
@@ -74,6 +88,15 @@ export default class Broadcaster extends EventEmitter {
 
   resetStream() {
     this.overrideStream(this.stream);
+  }
+
+  sendVideoFile(buffer) {
+    Object.keys(this.peerConnections).forEach(socketId => {
+      const peerConnection = this.peerConnections[socketId];
+      const channel = peerConnection.__dataChannel;
+      console.log('sending buffer');
+      channel.send(buffer);
+    });
   }
 
   sendInstruction(instruction) {

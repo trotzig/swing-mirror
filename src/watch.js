@@ -1,6 +1,13 @@
 import { io } from 'socket.io-client';
 
-export default function watch({ broadcastId, videoRef, onInstruction }) {
+import createHash from './createHash';
+
+export default function watch({
+  broadcastId,
+  videoRef,
+  onInstruction,
+  onRecording,
+}) {
   let broadcastSocketId;
   let peerConnection;
   const config = {
@@ -30,6 +37,14 @@ export default function watch({ broadcastId, videoRef, onInstruction }) {
       if (event.candidate) {
         socket.emit('candidate', id, event.candidate);
       }
+    };
+    peerConnection.ondatachannel = event => {
+      event.channel.onmessage = event => {
+        const hash = createHash(event.data);
+        const blob = new Blob([event.data]);
+        const url = URL.createObjectURL(blob);
+        onRecording({ url, hash });
+      };
     };
   });
 
