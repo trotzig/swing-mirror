@@ -13,6 +13,7 @@ function WatchPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [recordingUrls, setRecordingUrls] = useState({});
   const [isController, setIsController] = useState(true);
+  console.log({ recordingUrls });
 
   useEffect(() => {
     const { closeSocket, sendInstruction } = watch({

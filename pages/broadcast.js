@@ -78,8 +78,10 @@ function BroadcastPage({ broadcastId }) {
           previousRecordings.concat([recording]),
         );
         blob.arrayBuffer().then(buffer => {
+          const hash = createHash(buffer);
+          console.log(hash, recording);
           broadcasterRef.current.sendInstruction({
-            addRecording: { ...recording, hash: createHash(buffer) },
+            addRecording: { ...recording, hash },
           });
           broadcasterRef.current.sendVideoFile(buffer);
         });
