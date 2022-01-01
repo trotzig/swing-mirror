@@ -2,7 +2,7 @@ import Cookies from 'cookies';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
-import broadcast from '../src/broadcast';
+import Broadcaster from '../src/Broadcaster';
 
 let mediaRecorder;
 
@@ -20,19 +20,26 @@ function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
-  const instructionRef = useRef();
+  const broadcasterRef = useRef();
   const buttonRef = useRef();
   const canvasRef = useRef();
 
   useEffect(() => {
-    const { closeSocket, sendInstruction } = broadcast({
-      broadcastId,
-      videoRef,
-      onInstruction: instruction => setIsRecording(instruction.isRecording),
-    });
+    const broadcaster = new Broadcaster({ broadcastId });
+    broadcasterRef.current = broadcaster;
 
-    instructionRef.current = sendInstruction;
-    return closeSocket;
+    navigator.mediaDevices
+      .getUserMedia({ video: { facingMode: 'environment' } })
+      .then(stream => {
+        videoRef.current.srcObject = stream;
+        broadcaster.init(stream);
+      })
+      .catch(error => console.error(error));
+
+    broadcaster.on('instruction', instruction =>
+      setIsRecording(instruction.isRecording),
+    );
+    return () => broadcaster.close();
   }, [broadcastId]);
 
   useEffect(() => {
@@ -67,13 +74,13 @@ function BroadcastPage({ broadcastId }) {
         setRecordings(previousRecordings =>
           previousRecordings.concat([recording]),
         );
-        instructionRef.current({ addRecording: recording });
+        broadcasterRef.current.sendInstruction({ addRecording: recording });
       };
       mediaRecorder.start();
     } else if (mediaRecorder) {
       mediaRecorder.stop();
     }
-    instructionRef.current({ isRecording });
+    broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording]);
 
   useEffect(() => {
