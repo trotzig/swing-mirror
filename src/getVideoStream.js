@@ -18,7 +18,7 @@ export default function getVideoStream({ video, canvas }) {
       return;
     }
     ctx.drawImage(video, 0, 0, width, height);
-    setTimeout(processFrame);
+    setTimeout(processFrame, 100);
   };
   processFrame();
   return canvas.captureStream();
