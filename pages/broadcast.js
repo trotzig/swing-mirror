@@ -4,6 +4,7 @@ import cryptoRandomString from 'crypto-random-string';
 
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
+import getVideoStream from '../src/getVideoStream';
 
 let mediaRecorder;
 
@@ -23,6 +24,7 @@ function BroadcastPage({ broadcastId }) {
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
   const videoRecordingRef = useRef();
+  const fallbackCanvasRef = useRef();
   const broadcasterRef = useRef();
   const buttonRef = useRef();
   const canvasRef = useRef();
@@ -123,8 +125,10 @@ function BroadcastPage({ broadcastId }) {
                     videoRecordingRef.current.addEventListener(
                       'canplay',
                       () => {
-                        const stream =
-                          videoRecordingRef.current.captureStream();
+                        const stream = getVideoStream({
+                          video: videoRecordingRef.current,
+                          canvas: fallbackCanvasRef.current,
+                        });
                         broadcasterRef.current.overrideStream(stream);
                       },
                       { once: true },
@@ -175,6 +179,16 @@ function BroadcastPage({ broadcastId }) {
           ref={videoRecordingRef}
         ></video>
       </Modal>
+      <canvas
+        ref={fallbackCanvasRef}
+        style={{
+          display: 'none',
+          position: 'fixed',
+          bottom: 0,
+          right: 0,
+          border: '1px solid red',
+        }}
+      />
     </div>
   );
 }
