@@ -127,6 +127,7 @@ function BroadcastPage({ broadcastId }) {
           autoPlay
           muted
           controls
+          loop
           src={currentRecording && currentRecording.url}
         ></video>
       </Modal>
