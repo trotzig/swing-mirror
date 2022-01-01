@@ -10,6 +10,9 @@ export default function watch({
 }) {
   let broadcastSocketId;
   let peerConnection;
+  let receiveBuffer = [];
+  let receivedBytes = 0;
+  let pendingRecording = undefined;
   const config = {
     iceServers: [
       {
@@ -38,12 +41,32 @@ export default function watch({
         socket.emit('candidate', id, event.candidate);
       }
     };
-    peerConnection.ondatachannel = event => {
-      event.channel.onmessage = event => {
-        const hash = createHash(event.data);
-        const blob = new Blob([event.data]);
-        const url = URL.createObjectURL(blob);
-        onRecording({ url, hash });
+    peerConnection.ondatachannel = dataEvent => {
+      dataEvent.channel.onmessage = event => {
+        receiveBuffer.push(event.data);
+        receivedBytes = receivedBytes + event.data.byteLength;
+
+        console.log(
+          'received',
+          receivedBytes,
+          'of',
+          pendingRecording.bufferLength,
+          'for',
+          pendingRecording.hash,
+        );
+        if (receivedBytes === pendingRecording.bufferLength) {
+          // we're done
+          console.log('all chunks received');
+          const hash = createHash(receiveBuffer);
+          const blob = new Blob(receiveBuffer);
+          const url = URL.createObjectURL(blob);
+          onRecording({ url, hash });
+          receivedBytes = 0;
+          receiveBuffer = [];
+          pendingRecording = null;
+        } else {
+          dataEvent.channel.send('chunk received');
+        }
       };
     };
   });
@@ -59,6 +82,10 @@ export default function watch({
   });
 
   socket.on('instruction', (id, instruction) => {
+    if (instruction.addRecording) {
+      pendingRecording = instruction.addRecording;
+      console.log('Setting pendingrecording', pendingRecording);
+    }
     onInstruction(instruction);
   });
 

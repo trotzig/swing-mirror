@@ -79,11 +79,10 @@ function BroadcastPage({ broadcastId }) {
         );
         blob.arrayBuffer().then(buffer => {
           const hash = createHash(buffer);
-          console.log(hash, recording);
           broadcasterRef.current.sendInstruction({
-            addRecording: { ...recording, hash },
+            addRecording: { ...recording, hash, bufferLength: buffer.byteLength },
           });
-          broadcasterRef.current.sendVideoFile(buffer);
+          setTimeout(() => broadcasterRef.current.sendVideoFile(buffer), 1000);
         });
       };
       mediaRecorder.start();

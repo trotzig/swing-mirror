@@ -37,11 +37,6 @@ export default class Broadcaster extends EventEmitter {
       channel.onopen = () => {
         console.log('file channel open');
       };
-
-      channel.addEventListener('message', event => {
-        console.log('channel onmessage', event);
-        console.log(event.data);
-      });
       channel.addEventListener('error', event => console.error(event));
       peerConnection.__dataChannel = channel;
 
@@ -91,11 +86,31 @@ export default class Broadcaster extends EventEmitter {
   }
 
   sendVideoFile(buffer) {
+    const bytesPerChunk = 1000;
     Object.keys(this.peerConnections).forEach(socketId => {
       const peerConnection = this.peerConnections[socketId];
       const channel = peerConnection.__dataChannel;
       console.log('sending buffer');
-      channel.send(buffer);
+
+      let offset = 0;
+      const sendSlice = () => {
+        if (offset >= buffer.byteLength) {
+          return;
+        }
+        channel.addEventListener(
+          'message',
+          event => {
+            if (event.data === 'chunk received') {
+              sendSlice();
+            }
+          },
+          { once: true },
+        );
+        const slice = buffer.slice(offset, offset + bytesPerChunk);
+        channel.send(slice);
+        offset += bytesPerChunk;
+      };
+      sendSlice();
     });
   }
 
