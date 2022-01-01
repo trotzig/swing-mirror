@@ -18,7 +18,7 @@ const broadcasters = {
 };
 
 app.use((req, res, next) => {
-  if (!dev && !req.secure) {
+  if (!dev && req.protocol === 'http') {
     return res.redirect('https://' + req.headers.host + req.url);
   }
   next();
