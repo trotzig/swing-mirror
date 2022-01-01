@@ -122,6 +122,7 @@ function BroadcastPage({ broadcastId }) {
                   className="reset"
                   key={recording.url}
                   onClick={() => {
+                    videoRecordingRef.current.__active = true;
                     videoRecordingRef.current.addEventListener(
                       'canplay',
                       () => {
@@ -168,6 +169,7 @@ function BroadcastPage({ broadcastId }) {
         onClose={() => {
           broadcasterRef.current.resetStream();
           videoRecordingRef.current.src = '';
+          videoRecordingRef.current.__active = false;
           setCurrentRecording(undefined);
         }}
       >

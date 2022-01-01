@@ -11,8 +11,9 @@ export default function getVideoStream({ video, canvas }) {
   const height = video.videoHeight;
   canvas.width = width;
   canvas.height = height;
+
   const processFrame = () => {
-    if (!video.src) {
+    if (!video.__active) {
       // stop stream
       return;
     }
