@@ -130,7 +130,7 @@ function BroadcastPage({ broadcastId }) {
                           video: videoRecordingRef.current,
                           canvas: fallbackCanvasRef.current,
                         });
-                        // broadcasterRef.current.overrideStream(stream);
+                        broadcasterRef.current.overrideStream(stream);
                       },
                       { once: true },
                     );

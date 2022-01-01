@@ -7,8 +7,8 @@ export default function getVideoStream({ video, canvas }) {
   }
 
   const ctx = canvas.getContext('2d');
-  const width = video.videoWidth;
-  const height = video.videoHeight;
+  const width = video.videoWidth / 4;
+  const height = video.videoHeight / 4;
   canvas.width = width;
   canvas.height = height;
 
