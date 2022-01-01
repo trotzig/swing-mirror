@@ -2,10 +2,14 @@ import Head from 'next/head';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Modal from '../src/Modal';
+import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
+
+let videoRecorder;
 
 function WatchPage({ broadcastId }) {
   const videoRef = useRef();
+  const canvasRef = useRef();
   const buttonRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
@@ -13,7 +17,6 @@ function WatchPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [recordingUrls, setRecordingUrls] = useState({});
   const [isController, setIsController] = useState(true);
-  console.log({ recordingUrls });
 
   useEffect(() => {
     const { closeSocket, sendInstruction } = watch({
@@ -39,6 +42,17 @@ function WatchPage({ broadcastId }) {
   }, [broadcastId]);
 
   useEffect(() => {
+    if (isRecording) {
+      videoRecorder = new VideoRecorder({
+        video: videoRef.current,
+        canvas: canvasRef.current,
+      });
+      videoRecorder.start();
+    } else if (videoRecorder) {
+      videoRecorder
+        .stop()
+        .then(recording => setRecordings(old => old.concat([recording])));
+    }
     instructionRef.current({ isRecording });
   }, [isRecording]);
 
@@ -64,6 +78,7 @@ function WatchPage({ broadcastId }) {
       </Head>
       <div className="video-wrapper">
         <video autoPlay muted playsInline ref={videoRef}></video>
+        <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
           <div className="video-header-inner">
             <div className="video-recordings">
@@ -105,7 +120,7 @@ function WatchPage({ broadcastId }) {
           autoPlay
           muted
           controls
-          src={currentRecording && recordingUrls[currentRecording.hash]}
+          src={currentRecording && currentRecording.url}
         ></video>
       </Modal>
     </div>

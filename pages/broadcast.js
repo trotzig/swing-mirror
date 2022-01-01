@@ -4,19 +4,9 @@ import cryptoRandomString from 'crypto-random-string';
 
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
-import createHash from '../src/createHash';
+import VideoRecorder from '../src/VideoRecorder';
 
-let mediaRecorder;
-
-function takeStillPhoto({ canvasRef, videoRef }) {
-  const canvas = canvasRef.current;
-  const video = videoRef.current;
-  canvas.width = video.videoWidth / 5;
-  canvas.height = video.videoHeight / 5;
-  const context = canvas.getContext('2d');
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-  return canvas.toDataURL('image/jpg');
-}
+let videoRecorder;
 
 function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
@@ -47,47 +37,15 @@ function BroadcastPage({ broadcastId }) {
 
   useEffect(() => {
     if (isRecording) {
-      const recordedChunks = [];
-      const availableMimeTypes = [
-        'video/mp4;codecs:h264',
-        'video/webm;codecs=vp9',
-      ];
-      const mimeType =
-        availableMimeTypes.find(type => MediaRecorder.isTypeSupported(type)) ||
-        availableMimeTypes[0];
-      mediaRecorder = new MediaRecorder(videoRef.current.srcObject, {
-        mimeType,
+      videoRecorder = new VideoRecorder({
+        video: videoRef.current,
+        canvas: canvasRef.current,
       });
-      mediaRecorder.ondataavailable = event => {
-        if (event.data.size > 0) {
-          recordedChunks.push(event.data);
-        }
-      };
-      const photoUrl = takeStillPhoto({ canvasRef, videoRef });
-      mediaRecorder.onstop = event => {
-        const blob = new Blob(recordedChunks, {
-          type: mimeType,
-        });
-        const url = URL.createObjectURL(blob);
-        const name = `recording.${mimeType.slice(
-          mimeType.indexOf('/') + 1,
-          mimeType.indexOf(';'),
-        )}`;
-        const recording = { url, name, photoUrl };
-        setRecordings(previousRecordings =>
-          previousRecordings.concat([recording]),
-        );
-        blob.arrayBuffer().then(buffer => {
-          const hash = createHash(buffer);
-          broadcasterRef.current.sendInstruction({
-            addRecording: { ...recording, hash, bufferLength: buffer.byteLength },
-          });
-          setTimeout(() => broadcasterRef.current.sendVideoFile(buffer), 1000);
-        });
-      };
-      mediaRecorder.start();
-    } else if (mediaRecorder) {
-      mediaRecorder.stop();
+      videoRecorder.start();
+    } else if (videoRecorder) {
+      videoRecorder
+        .stop()
+        .then(recording => setRecordings(old => old.concat([recording])));
     }
     broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording]);
@@ -109,14 +67,7 @@ function BroadcastPage({ broadcastId }) {
 
   return (
     <div className="video-wrapper">
-      <video
-        className={currentRecording ? 'mini' : ''}
-        playsInline
-        autoPlay
-        muted
-        style={{ display: currentRecording ? 'none' : 'block' }}
-        ref={videoRef}
-      ></video>
+      <video playsInline autoPlay muted ref={videoRef}></video>
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
