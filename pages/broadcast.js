@@ -18,8 +18,10 @@ function takeStillPhoto({ canvasRef, videoRef }) {
 
 function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
+  const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
+  const videoRecordingRef = useRef();
   const broadcasterRef = useRef();
   const buttonRef = useRef();
   const canvasRef = useRef();
@@ -100,16 +102,52 @@ function BroadcastPage({ broadcastId }) {
 
   return (
     <div className="video-wrapper">
-      <video playsInline autoPlay muted ref={videoRef}></video>
+      <video
+        className={currentRecording ? '' : 'inactive'}
+        playsInline
+        autoPlay
+        muted
+        controls
+        ref={videoRecordingRef}
+      ></video>
+      <video
+        className={currentRecording ? 'mini' : ''}
+        playsInline
+        autoPlay
+        muted
+        onClick={() => {
+          if (currentRecording) {
+            broadcasterRef.current.resetStream();
+            videoRecordingRef.current.src = '';
+            setCurrentRecording(undefined);
+          }
+        }}
+        ref={videoRef}
+      ></video>
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
           <div className="video-recordings">
-            {recordings.map(({ name, url, photoUrl }) => {
+            {recordings.map(recording => {
               return (
-                <a key={url} href={url} download={name}>
-                  <img src={photoUrl} className="video-still-image" />
-                </a>
+                <button
+                  className="reset"
+                  key={recording.url}
+                  onClick={() => {
+                    videoRecordingRef.current.addEventListener(
+                      'canplay',
+                      () => {
+                        const stream =
+                          videoRecordingRef.current.captureStream();
+                        broadcasterRef.current.overrideStream(stream);
+                      },
+                    );
+                    videoRecordingRef.current.src = recording.url;
+                    setCurrentRecording(recording);
+                  }}
+                >
+                  <img src={recording.photoUrl} className="video-still-image" />
+                </button>
               );
             })}
           </div>
@@ -125,7 +163,7 @@ function BroadcastPage({ broadcastId }) {
           </div>
         </div>
       </div>
-      <div className="video-footer">
+      <div className={currentRecording ? 'video-footer mini' : 'video-footer'}>
         <button
           ref={buttonRef}
           className={

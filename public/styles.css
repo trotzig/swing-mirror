@@ -41,6 +41,16 @@ video {
   bottom: 0;
   right: 0;
   object-fit: cover;
+  transition: all .1s;
+}
+
+video.mini {
+  width: 30%;
+  height: 30%;
+  top: 10%;
+  right: 20px;
+  left: auto;
+  bottom: auto;
 }
 
 .error {
@@ -136,6 +146,13 @@ footer a {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.video-footer.mini {
+  bottom: auto;
+  left: auto;
+  right: 20px;
+  top: 30%;
+  width: 30%;
 }
 
 .video-control {
