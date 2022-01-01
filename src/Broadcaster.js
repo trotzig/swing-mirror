@@ -86,7 +86,7 @@ export default class Broadcaster extends EventEmitter {
   }
 
   sendVideoFile(buffer) {
-    const bytesPerChunk = 1000;
+    const bytesPerChunk = 10000;
     Object.keys(this.peerConnections).forEach(socketId => {
       const peerConnection = this.peerConnections[socketId];
       const channel = peerConnection.__dataChannel;
