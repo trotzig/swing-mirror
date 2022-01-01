@@ -18,7 +18,7 @@ const broadcasters = {
 };
 
 app.use((req, res, next) => {
-  if (`${port}` === '80' && !req.secure) {
+  if (!dev) {
     return res.redirect('https://' + req.headers.host + req.url);
   }
   next();
