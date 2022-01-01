@@ -127,6 +127,7 @@ function BroadcastPage({ broadcastId }) {
                           videoRecordingRef.current.captureStream();
                         broadcasterRef.current.overrideStream(stream);
                       },
+                      { once: true },
                     );
                     videoRecordingRef.current.src = recording.url;
                     setCurrentRecording(recording);
