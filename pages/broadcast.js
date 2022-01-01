@@ -110,6 +110,7 @@ function BroadcastPage({ broadcastId }) {
         playsInline
         autoPlay
         muted
+        style={{ display: currentRecording ? 'none' : 'block' }}
         ref={videoRef}
       ></video>
       <canvas style={{ display: 'none' }} ref={canvasRef} />

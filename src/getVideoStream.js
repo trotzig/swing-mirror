@@ -7,8 +7,9 @@ export default function getVideoStream({ video, canvas }) {
   }
 
   const ctx = canvas.getContext('2d');
-  const width = video.videoWidth / 4;
-  const height = video.videoHeight / 4;
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+
   canvas.width = width;
   canvas.height = height;
 
@@ -17,8 +18,8 @@ export default function getVideoStream({ video, canvas }) {
       // stop stream
       return;
     }
-    ctx.drawImage(video, 0, 0, width, height);
-    setTimeout(processFrame, 100);
+    ctx.drawImage(video, 0, 0);
+    requestAnimationFrame(processFrame);
   };
   processFrame();
   return canvas.captureStream();

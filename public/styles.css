@@ -105,6 +105,11 @@ footer a {
   text-decoration: underline;
 }
 
+.video-wrapper {
+  background-color: #000;
+  height: 100%;
+}
+
 .video-header {
   position: fixed;
   top: 0;
