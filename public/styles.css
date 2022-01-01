@@ -44,15 +44,6 @@ video {
   transition: all .1s;
 }
 
-video.mini {
-  width: 30%;
-  height: 30%;
-  top: 10%;
-  right: 20px;
-  left: auto;
-  bottom: auto;
-}
-
 .error {
   background-color: var(--danger-background);
   color: var(--danger-foreground);
@@ -147,13 +138,6 @@ footer a {
   justify-content: center;
   align-items: center;
 }
-.video-footer.mini {
-  bottom: auto;
-  left: auto;
-  right: 20px;
-  top: 30%;
-  width: 30%;
-}
 
 .video-control {
   margin: 20px;
@@ -177,4 +161,33 @@ footer a {
 
 .video-recordings a {
   margin-right: 5px;
+}
+
+.modal {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  top: 0px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all .3s;
+  opacity: 1;
+  transform: translateX(0);
+}
+.modal.closed {
+  opacity: 0;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+.modal video {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  flex: 1;
 }

@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
 import Broadcaster from '../src/Broadcaster';
+import Modal from '../src/Modal';
 
 let mediaRecorder;
 
@@ -103,25 +104,10 @@ function BroadcastPage({ broadcastId }) {
   return (
     <div className="video-wrapper">
       <video
-        className={currentRecording ? '' : 'inactive'}
-        playsInline
-        autoPlay
-        muted
-        controls
-        ref={videoRecordingRef}
-      ></video>
-      <video
         className={currentRecording ? 'mini' : ''}
         playsInline
         autoPlay
         muted
-        onClick={() => {
-          if (currentRecording) {
-            broadcasterRef.current.resetStream();
-            videoRecordingRef.current.src = '';
-            setCurrentRecording(undefined);
-          }
-        }}
         ref={videoRef}
       ></video>
       <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -172,6 +158,22 @@ function BroadcastPage({ broadcastId }) {
           onClick={() => setIsRecording(!isRecording)}
         />
       </div>
+      <Modal
+        open={!!currentRecording}
+        onClose={() => {
+          broadcasterRef.current.resetStream();
+          videoRecordingRef.current.src = '';
+          setCurrentRecording(undefined);
+        }}
+      >
+        <video
+          playsInline
+          autoPlay
+          muted
+          controls
+          ref={videoRecordingRef}
+        ></video>
+      </Modal>
     </div>
   );
 }
