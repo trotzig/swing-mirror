@@ -1,8 +1,9 @@
 import Cookies from 'cookies';
+import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
-import Link from 'next/link';
 
+import { limitRecordings } from '../src/limitRecordings';
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
 import VideoRecorder from '../src/VideoRecorder';
@@ -51,7 +52,9 @@ function BroadcastPage({ broadcastId }) {
     } else if (videoRecorderRef.current) {
       videoRecorderRef.current
         .stop()
-        .then(recording => setRecordings(old => old.concat([recording])));
+        .then(recording =>
+          setRecordings(old => limitRecordings(old.concat([recording]))),
+        );
     }
     broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording]);

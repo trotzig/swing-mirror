@@ -1,7 +1,8 @@
 import Head from 'next/head';
-import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import React, { useEffect, useRef, useState } from 'react';
 
+import { limitRecordings } from '../src/limitRecordings';
 import Modal from '../src/Modal';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
@@ -16,7 +17,6 @@ function WatchPage({ broadcastId }) {
   const [videoObjectFit, setVideoObjectFit] = useState('cover');
   const [currentRecording, setCurrentRecording] = useState();
   const [recordings, setRecordings] = useState([]);
-  const [recordingUrls, setRecordingUrls] = useState({});
   const [isController, setIsController] = useState(true);
 
   useEffect(() => {
@@ -27,15 +27,6 @@ function WatchPage({ broadcastId }) {
         if (typeof instruction.isRecording === 'boolean') {
           setIsRecording(instruction.isRecording);
         }
-        if (typeof instruction.addRecording === 'object') {
-          setRecordings(old => old.concat([instruction.addRecording]));
-        }
-      },
-      onRecording: ({ url, hash }) => {
-        setRecordingUrls(old => {
-          old[hash] = url;
-          return old;
-        });
       },
     });
     instructionRef.current = sendInstruction;
@@ -52,7 +43,9 @@ function WatchPage({ broadcastId }) {
     } else if (videoRecorderRef.current) {
       videoRecorderRef.current
         .stop()
-        .then(recording => setRecordings(old => old.concat([recording])));
+        .then(recording =>
+          setRecordings(old => limitRecordings(old.concat([recording]))),
+        );
     }
     instructionRef.current({ isRecording });
   }, [isRecording]);
@@ -94,7 +87,7 @@ function WatchPage({ broadcastId }) {
         <div className="video-header">
           <div className="video-header-inner">
             <Link href="/">
-              <a>Back</a>
+              <a>Close</a>
             </Link>
           </div>
         </div>
