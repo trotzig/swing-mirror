@@ -37,12 +37,11 @@ function IndexPage({ error, broadcastId }) {
             <div className="start-box">
               <h2>Mirror device</h2>
               <p>
-                Enter camera code to make this device act as a second screen,
-                showing the video stream from the camera device.
+                Enter camera code to make this device act as a second screen.
+                Find the code in the top right corner of the camera view.
               </p>
               <form action="/watch" method="GET">
                 <input
-                  autoFocus
                   type="text"
                   name="broadcastId"
                   defaultValue={broadcastId}
