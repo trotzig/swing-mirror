@@ -93,7 +93,7 @@ function BroadcastPage({ broadcastId }) {
           </div>
           <div />
           <div id="broadcastId" className="broadcast-id">
-            <code>{broadcastId}</code>
+            <span>code</span> <code>{broadcastId}</code>
           </div>
         </div>
       </div>

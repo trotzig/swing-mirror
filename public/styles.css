@@ -109,6 +109,7 @@ main {
 
 code {
   color: currentColor;
+  font-weight: bold;
 }
 
 p {
@@ -210,15 +211,15 @@ h2 {
 }
 
 .video-still-image {
-  border-radius: 5px;
-  width: 70px;
-  height: 70px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   border: 2px solid currentColor;
   object-fit: cover;
 }
 
 .video-recordings button {
-  margin-right: 5px;
+  margin-right: -20px;
 }
 
 .modal {
@@ -258,3 +259,10 @@ h2 {
   right: auto;
   flex: 1;
 }
+
+.broadcast-id span {
+  opacity: 0.5;
+  font-size: small;
+  text-transform: uppercase;
+}
+
