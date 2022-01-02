@@ -49,7 +49,9 @@ export default class VideoRecorder {
         const recording = { url, name, photoUrl: this.photoUrl };
         resolve(recording);
       };
-      this.mediaRecorder.stop();
+      if (this.mediaRecorder.state === 'recording') {
+        this.mediaRecorder.stop();
+      }
     });
   }
 }

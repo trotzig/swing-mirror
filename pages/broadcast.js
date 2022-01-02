@@ -145,7 +145,13 @@ function BroadcastPage({ broadcastId }) {
           muted
           controls
           loop
+          style={{ objectFit: videoObjectFit }}
           src={currentRecording && currentRecording.url}
+          onDoubleClick={() => {
+            setVideoObjectFit(
+              videoObjectFit === 'contain' ? 'cover' : 'contain',
+            );
+          }}
         ></video>
       </Modal>
     </div>
