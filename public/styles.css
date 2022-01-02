@@ -11,10 +11,15 @@
 html {
   overflow: hidden;
   height: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 body {
-  font-family: Tahoma, Trebuchet MS, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   font-size: 15px;
   line-height: 1.5;
   margin: 0;
@@ -41,7 +46,7 @@ video {
   bottom: 0;
   right: 0;
   object-fit: cover;
-  transition: all .1s;
+  transition: all 0.1s;
 }
 
 .error {
@@ -180,7 +185,7 @@ footer a {
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  transition: transform .3s, opacity .3s;
+  transition: transform 0.3s, opacity 0.3s;
   opacity: 1;
   transform: translateX(0);
 }
