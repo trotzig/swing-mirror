@@ -1,18 +1,18 @@
 import Cookies from 'cookies';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
+import Link from 'next/link';
 
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
 import VideoRecorder from '../src/VideoRecorder';
-
-let videoRecorder;
 
 function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef();
+  const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
   const buttonRef = useRef();
   const canvasRef = useRef();
@@ -37,13 +37,13 @@ function BroadcastPage({ broadcastId }) {
 
   useEffect(() => {
     if (isRecording) {
-      videoRecorder = new VideoRecorder({
+      videoRecorderRef.current = new VideoRecorder({
         video: videoRef.current,
         canvas: canvasRef.current,
       });
-      videoRecorder.start();
-    } else if (videoRecorder) {
-      videoRecorder
+      videoRecorderRef.current.start();
+    } else if (videoRecorderRef.current) {
+      videoRecorderRef.current
         .stop()
         .then(recording => setRecordings(old => old.concat([recording])));
     }
@@ -71,34 +71,33 @@ function BroadcastPage({ broadcastId }) {
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
-          <div className="video-recordings">
-            {recordings.map(recording => {
-              return (
-                <button
-                  className="reset"
-                  key={recording.url}
-                  onClick={() => {
-                    setCurrentRecording(recording);
-                  }}
-                >
-                  <img src={recording.photoUrl} className="video-still-image" />
-                </button>
-              );
-            })}
+          <div>
+            <Link href="/">
+              <a>Close</a>
+            </Link>
           </div>
           <div />
           <div id="broadcastId" className="broadcast-id">
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={`/watch?broadcastId=${broadcastId}`}
-            >
-              {broadcastId}
-            </a>
+            <code>{broadcastId}</code>
           </div>
         </div>
       </div>
-      <div className={currentRecording ? 'video-footer mini' : 'video-footer'}>
+      <div className="video-footer">
+        <div className="video-recordings">
+          {recordings.map(recording => {
+            return (
+              <button
+                className="reset"
+                key={recording.url}
+                onClick={() => {
+                  setCurrentRecording(recording);
+                }}
+              >
+                <img src={recording.photoUrl} className="video-still-image" />
+              </button>
+            );
+          })}
+        </div>
         <button
           ref={buttonRef}
           className={

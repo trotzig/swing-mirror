@@ -1,14 +1,14 @@
 import Head from 'next/head';
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 import Modal from '../src/Modal';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
 
-let videoRecorder;
-
 function WatchPage({ broadcastId }) {
   const videoRef = useRef();
+  const videoRecorderRef = useRef();
   const canvasRef = useRef();
   const buttonRef = useRef();
   const instructionRef = useRef();
@@ -43,13 +43,13 @@ function WatchPage({ broadcastId }) {
 
   useEffect(() => {
     if (isRecording) {
-      videoRecorder = new VideoRecorder({
+      videoRecorderRef.current = new VideoRecorder({
         video: videoRef.current,
         canvas: canvasRef.current,
       });
-      videoRecorder.start();
-    } else if (videoRecorder) {
-      videoRecorder
+      videoRecorderRef.current.start();
+    } else if (videoRecorderRef.current) {
+      videoRecorderRef.current
         .stop()
         .then(recording => setRecordings(old => old.concat([recording])));
     }
@@ -81,27 +81,27 @@ function WatchPage({ broadcastId }) {
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
           <div className="video-header-inner">
-            <div className="video-recordings">
-              {recordings.map((recording, i) => {
-                return (
-                  <button
-                    className="reset"
-                    key={recording.url}
-                    onClick={() => {
-                      setCurrentRecording(recording);
-                    }}
-                  >
-                    <img
-                      src={recording.photoUrl}
-                      className="video-still-image"
-                    />
-                  </button>
-                );
-              })}
-            </div>
+            <Link href="/">
+              <a>Back</a>
+            </Link>
           </div>
         </div>
         <div className="video-footer">
+          <div className="video-recordings">
+            {recordings.map((recording, i) => {
+              return (
+                <button
+                  className="reset"
+                  key={recording.url}
+                  onClick={() => {
+                    setCurrentRecording(recording);
+                  }}
+                >
+                  <img src={recording.photoUrl} className="video-still-image" />
+                </button>
+              );
+            })}
+          </div>
           <button
             ref={buttonRef}
             className={

@@ -16,7 +16,7 @@ function SwingMirrorApp({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" />
         <title>Swing Mirror</title>
       </Head>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </>
   );
 }
