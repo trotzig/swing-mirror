@@ -21,6 +21,7 @@ function BroadcastPage({ broadcastId }) {
     const broadcaster = new Broadcaster({ broadcastId });
     broadcasterRef.current = broadcaster;
 
+    const videoElement = videoRef.current;
     navigator.mediaDevices
       .getUserMedia({ video: { facingMode: 'environment' } })
       .then(stream => {
@@ -32,7 +33,11 @@ function BroadcastPage({ broadcastId }) {
     broadcaster.on('instruction', instruction =>
       setIsRecording(instruction.isRecording),
     );
-    return () => broadcaster.close();
+    return () => {
+      broadcaster.close();
+      const stream = videoElement.srcObject;
+      stream.getTracks().forEach(track => track.stop());
+    };
   }, [broadcastId]);
 
   useEffect(() => {
