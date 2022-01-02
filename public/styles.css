@@ -71,6 +71,7 @@ form input {
   padding: 7.5px 15px;
   font-size: 15px;
   line-height: 20px;
+  margin-bottom: 10px;
   color: currentColor;
   background-color: #000;
   border: 2px solid #ccc;
@@ -129,7 +130,14 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 30px;
+  row-gap: 30px;
   align-items: flex-top;
+}
+
+@media (max-width: 600px) {
+  .start-boxes {
+    grid-template-columns: 1fr;
+  }
 }
 
 .start-box {
@@ -140,6 +148,7 @@ h2 {
 }
 .start-box form button {
   margin-left: 10px;
+  margin-bottom: 10px;
 }
 
 .video-wrapper {
