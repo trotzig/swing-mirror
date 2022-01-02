@@ -11,6 +11,7 @@ function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
+  const [videoObjectFit, setVideoObjectFit] = useState('cover');
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -72,7 +73,16 @@ function BroadcastPage({ broadcastId }) {
 
   return (
     <div className="video-wrapper">
-      <video playsInline autoPlay muted ref={videoRef}></video>
+      <video
+        playsInline
+        autoPlay
+        muted
+        ref={videoRef}
+        style={{ objectFit: videoObjectFit }}
+        onDoubleClick={() => {
+          setVideoObjectFit(videoObjectFit === 'contain' ? 'cover' : 'contain');
+        }}
+      ></video>
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">

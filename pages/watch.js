@@ -13,6 +13,7 @@ function WatchPage({ broadcastId }) {
   const buttonRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
+  const [videoObjectFit, setVideoObjectFit] = useState('cover');
   const [currentRecording, setCurrentRecording] = useState();
   const [recordings, setRecordings] = useState([]);
   const [recordingUrls, setRecordingUrls] = useState({});
@@ -77,7 +78,18 @@ function WatchPage({ broadcastId }) {
         <title>Watcher | Swing Mirror</title>
       </Head>
       <div className="video-wrapper">
-        <video autoPlay muted playsInline ref={videoRef}></video>
+        <video
+          autoPlay
+          muted
+          playsInline
+          ref={videoRef}
+          style={{ objectFit: videoObjectFit }}
+          onDoubleClick={() => {
+            setVideoObjectFit(
+              videoObjectFit === 'contain' ? 'cover' : 'contain',
+            );
+          }}
+        ></video>
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
           <div className="video-header-inner">
