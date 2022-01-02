@@ -13,7 +13,7 @@ function SwingMirrorApp({ Component, pageProps }) {
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/apple-icon-60@2x.png" />
+        <link rel="apple-touch-icon" href="/app-icon-60@2x.png" />
         <link rel="icon" href="/favicon.ico" />
         <title>Swing Mirror</title>
       </Head>
