@@ -1,11 +1,14 @@
-import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 
+import Modal from '../src/Modal';
+import Monitor from '../src/icons/Monitor';
+import StartBox from '../src/StartBox';
 import SwingAppsIconSvg from '../src/icons/SwingAppsIconSvg';
 import VideoCam from '../src/icons/VideoCam';
 import Warning from '../src/icons/Warning';
 
 function IndexPage({ error, broadcastId }) {
+  const [formVisible, setFormVisible] = useState(false);
   return (
     <div>
       <div className="blurry-background">
@@ -37,33 +40,19 @@ function IndexPage({ error, broadcastId }) {
             </div>
           )}
           <div className="start-boxes">
-            <div className="start-box">
-              <h2>Camera mode</h2>
-              <p>Use this device as a camera.</p>
-              <Link href="/broadcast">
-                <a>
-                  <div>
-                    <VideoCam size={80} />
-                  </div>
-                  <span>Start camera mode</span>
-                </a>
-              </Link>
-            </div>
-            <div className="start-box">
-              <h2>Mirror device</h2>
-              <p>
-                Enter camera code to make this device act as a second screen.
-                Find the code in the top right corner of the camera view.
-              </p>
-              <form action="/watch" method="GET">
-                <input
-                  type="text"
-                  name="broadcastId"
-                  defaultValue={broadcastId}
-                />
-                <button type="submit">Submit</button>
-              </form>
-            </div>
+            <StartBox
+              title="Camera mode"
+              description="Use this device as a camera"
+              icon={<VideoCam size={50} />}
+              href="/broadcast"
+            />
+
+            <StartBox
+              title="Mirror device"
+              description="Use this device as a second screen"
+              icon={<Monitor size={50} />}
+              onClick={() => setFormVisible(true)}
+            />
           </div>
         </div>
       </main>
@@ -75,6 +64,19 @@ function IndexPage({ error, broadcastId }) {
           </p>
         </div>
       </footer>
+      <Modal open={formVisible} onClose={() => setFormVisible(false)}>
+        <div className="watch-form">
+          <form action="/watch" method="GET">
+            <input
+              type="text"
+              name="broadcastId"
+              defaultValue={broadcastId}
+              placeholder="Enter camera code"
+            />
+            <button type="submit">Go!</button>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 }

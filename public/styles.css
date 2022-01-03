@@ -150,12 +150,35 @@ h2 {
   text-align: center;
   border: 1px solid #666;
   border-radius: 5px;
-  padding: 30px 20px;
+  padding: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 250ms ease-in-out;
+}
+
+.start-box:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.03);
+}
+
+.start-box form {
+  display: none;
+}
+
+.start-box.open form {
+  display: block;
 }
 
 .start-box form button {
   margin-left: 10px;
   margin-bottom: 10px;
+}
+
+.start-box input {
+  background: transparent;
 }
 
 .video-wrapper {
@@ -293,4 +316,9 @@ h2 {
   filter: blur(50px);
   opacity: 0.2;
   pointer-events: none;
+}
+
+.watch-form {
+  margin-top: 100px;
+  padding: 20px;
 }
