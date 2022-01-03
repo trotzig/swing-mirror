@@ -25,7 +25,7 @@ function IndexPage({ error, broadcastId }) {
       </nav>
       <main>
         <div className="page-wrapper">
-          <h1 style={{ marginTop: 50 }}>Swing Mirror</h1>
+          <h1 style={{ marginTop: 50 }}>Swing <i>|</i> Mirror</h1>
           <p style={{ marginBottom: 30 }}>
             Share and control your camera on multiple devices.
           </p>
