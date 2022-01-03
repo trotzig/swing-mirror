@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { limitRecordings } from '../src/limitRecordings';
+import ArrowBack from '../src/icons/ArrowBack';
 import Modal from '../src/Modal';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
@@ -87,7 +88,9 @@ function WatchPage({ broadcastId }) {
         <div className="video-header">
           <div className="video-header-inner">
             <Link href="/">
-              <a>Close</a>
+              <a>
+                <ArrowBack />
+              </a>
             </Link>
           </div>
         </div>

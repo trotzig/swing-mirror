@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
 import { limitRecordings } from '../src/limitRecordings';
+import ArrowBack from '../src/icons/ArrowBack';
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
 import VideoRecorder from '../src/VideoRecorder';
@@ -91,7 +92,9 @@ function BroadcastPage({ broadcastId }) {
         <div className="video-header-inner">
           <div>
             <Link href="/">
-              <a>Close</a>
+              <a>
+                <ArrowBack />
+              </a>
             </Link>
           </div>
           <div />
