@@ -17,7 +17,7 @@ function BroadcastPage({ broadcastId }) {
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('cover');
   const [facingMode, setFacingMode] = useState('environment');
-  const [hasBackCamera, setHasBackCamera] = useState(false);
+  const [hasBackCamera, setHasBackCamera] = useState(true);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -28,22 +28,23 @@ function BroadcastPage({ broadcastId }) {
     broadcasterRef.current = broadcaster;
 
     const videoElement = videoRef.current;
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      let videoInputCount = 0;
-      for (const device of devices) {
-        if (device.kind === 'videoinput') {
-          videoInputCount++;
-        }
-      }
-      setHasBackCamera(videoInputCount > 1);
-      navigator.mediaDevices
-        .getUserMedia({ video: { facingMode } })
-        .then(stream => {
-          videoRef.current.srcObject = stream;
-          broadcaster.init(stream);
-        })
-        .catch(error => console.error(error));
-    });
+
+    navigator.mediaDevices
+      .getUserMedia({ video: { facingMode } })
+      .then(stream => {
+        videoRef.current.srcObject = stream;
+        broadcaster.init(stream);
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          let videoInputCount = 0;
+          for (const device of devices) {
+            if (device.kind === 'videoinput') {
+              videoInputCount++;
+            }
+          }
+          setHasBackCamera(videoInputCount > 1);
+        });
+      })
+      .catch(error => console.error(error));
 
     broadcaster.on('instruction', instruction =>
       setIsRecording(instruction.isRecording),
