@@ -147,7 +147,7 @@ h1 i {
 
 @media (max-width: 500px) {
   .start-boxes p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .start-boxes h2 {
     font-size: 18px;
@@ -165,6 +165,9 @@ h1 i {
   flex-direction: column;
   justify-content: center;
   transition: transform 250ms ease-in-out;
+}
+.start-box p {
+  opacity: 0.7;
 }
 
 .start-box:hover {
