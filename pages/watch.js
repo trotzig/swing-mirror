@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { limitRecordings } from '../src/limitRecordings';
 import ArrowBack from '../src/icons/ArrowBack';
 import Modal from '../src/Modal';
+import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
 
@@ -12,7 +13,6 @@ function WatchPage({ broadcastId }) {
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const canvasRef = useRef();
-  const buttonRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('cover');
@@ -50,21 +50,6 @@ function WatchPage({ broadcastId }) {
     }
     instructionRef.current({ isRecording });
   }, [isRecording]);
-
-  useEffect(() => {
-    const listener = e => {
-      if (e.target === buttonRef.current) {
-        // button is focused
-        return;
-      }
-      if (e.which === 13 || e.which === 32) {
-        // Enter or Spacebar
-        setIsRecording(old => !old);
-      }
-    };
-    document.addEventListener('keyup', listener);
-    return () => document.removeEventListener('keyup', listener);
-  });
 
   return (
     <div>
@@ -110,12 +95,9 @@ function WatchPage({ broadcastId }) {
               );
             })}
           </div>
-          <button
-            ref={buttonRef}
-            className={
-              isRecording ? 'video-control recording' : 'video-control stopped'
-            }
+          <RecordButton
             onClick={() => setIsRecording(!isRecording)}
+            isRecording={isRecording}
           />
         </div>
       </div>

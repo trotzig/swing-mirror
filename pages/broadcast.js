@@ -7,6 +7,7 @@ import { limitRecordings } from '../src/limitRecordings';
 import ArrowBack from '../src/icons/ArrowBack';
 import Broadcaster from '../src/Broadcaster';
 import Modal from '../src/Modal';
+import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
 
 function BroadcastPage({ broadcastId }) {
@@ -17,7 +18,6 @@ function BroadcastPage({ broadcastId }) {
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
-  const buttonRef = useRef();
   const canvasRef = useRef();
 
   useEffect(() => {
@@ -59,21 +59,6 @@ function BroadcastPage({ broadcastId }) {
     }
     broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording]);
-
-  useEffect(() => {
-    const listener = e => {
-      if (e.target === buttonRef.current) {
-        // button is focused
-        return;
-      }
-      if (e.which === 13 || e.which === 32) {
-        // Enter or Spacebar
-        setIsRecording(old => !old);
-      }
-    };
-    document.addEventListener('keyup', listener);
-    return () => document.removeEventListener('keyup', listener);
-  });
 
   return (
     <div className="video-wrapper">
@@ -119,11 +104,8 @@ function BroadcastPage({ broadcastId }) {
             );
           })}
         </div>
-        <button
-          ref={buttonRef}
-          className={
-            isRecording ? 'video-control recording' : 'video-control stopped'
-          }
+        <RecordButton
+          isRecording={isRecording}
           onClick={() => setIsRecording(!isRecording)}
         />
       </div>
