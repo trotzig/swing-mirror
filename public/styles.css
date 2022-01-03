@@ -117,7 +117,7 @@ main h1 {
 main .tagline {
   margin-bottom: 30px;
 }
-@media (orientation: landscape) and (max-width: 800px) {
+@media (orientation: landscape) and (max-width: 900px) {
   nav {
     position: absolute;
     top: 0;
@@ -238,7 +238,7 @@ h1 i {
   justify-content: center;
 }
 
-@media (orientation: landscape) and (max-width: 800px) {
+@media (orientation: landscape) and (max-width: 900px) {
   .video-header {
     top: 0;
     left: 0;
@@ -324,7 +324,7 @@ h1 i {
   justify-content: center;
 }
 
-@media (orientation: landscape) and (max-width: 800px) {
+@media (orientation: landscape) and (max-width: 900px) {
   .video-footer {
     bottom: 0;
     left: auto;
