@@ -11,7 +11,7 @@ function IndexPage({ error, broadcastId }) {
   const [formVisible, setFormVisible] = useState(false);
   return (
     <div>
-      <div className="blurry-background"/>
+      <div className="blurry-background" />
       <nav>
         <div className="page-wrapper">
           <SwingAppsIconSvg size={50} />

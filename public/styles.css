@@ -316,9 +316,13 @@ h1 i {
   background-repeat: no-repeat;
   background-size: 60vh 60vh;
   position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
   background-position: 5% 15%;
   height: 100%;
   width: 100%;
+  max-width: var(--content-width);
   filter: blur(50px);
   opacity: 0.2;
   pointer-events: none;
