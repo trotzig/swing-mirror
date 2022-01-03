@@ -6,6 +6,7 @@ import cryptoRandomString from 'crypto-random-string';
 import { limitRecordings } from '../src/limitRecordings';
 import ArrowBack from '../src/icons/ArrowBack';
 import Broadcaster from '../src/Broadcaster';
+import FlipCamera from '../src/icons/FlipCamera';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
@@ -15,6 +16,8 @@ function BroadcastPage({ broadcastId }) {
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('cover');
+  const [facingMode, setFacingMode] = useState('environment');
+  const [hasBackCamera, setHasBackCamera] = useState(false);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -25,13 +28,22 @@ function BroadcastPage({ broadcastId }) {
     broadcasterRef.current = broadcaster;
 
     const videoElement = videoRef.current;
-    navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: 'environment' } })
-      .then(stream => {
-        videoRef.current.srcObject = stream;
-        broadcaster.init(stream);
-      })
-      .catch(error => console.error(error));
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      let videoInputCount = 0;
+      for (const device of devices) {
+        if (device.kind === 'videoinput') {
+          videoInputCount++;
+        }
+      }
+      setHasBackCamera(videoInputCount > 1);
+      navigator.mediaDevices
+        .getUserMedia({ video: { facingMode } })
+        .then(stream => {
+          videoRef.current.srcObject = stream;
+          broadcaster.init(stream);
+        })
+        .catch(error => console.error(error));
+    });
 
     broadcaster.on('instruction', instruction =>
       setIsRecording(instruction.isRecording),
@@ -41,7 +53,7 @@ function BroadcastPage({ broadcastId }) {
       const stream = videoElement.srcObject;
       stream.getTracks().forEach(track => track.stop());
     };
-  }, [broadcastId]);
+  }, [broadcastId, facingMode]);
 
   useEffect(() => {
     if (isRecording) {
@@ -108,6 +120,20 @@ function BroadcastPage({ broadcastId }) {
           isRecording={isRecording}
           onClick={() => setIsRecording(!isRecording)}
         />
+        {hasBackCamera && (
+          <div className="flip-camera">
+            <button
+              className="reset"
+              onClick={() =>
+                setFacingMode(
+                  facingMode === 'environment' ? 'user' : 'environment',
+                )
+              }
+            >
+              <FlipCamera size={30} />
+            </button>
+          </div>
+        )}
       </div>
       <Modal
         open={!!currentRecording}
