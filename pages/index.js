@@ -1,18 +1,30 @@
 import Link from 'next/link';
 import React from 'react';
 
+import SwingAppsIconSvg from '../src/icons/SwingAppsIconSvg';
 import VideoCam from '../src/icons/VideoCam';
 import Warning from '../src/icons/Warning';
 
 function IndexPage({ error, broadcastId }) {
   return (
     <div>
+      <div className="blurry-background">
+        <div className="tk-blob">
+          <svg width="60vh" height="60vh" viewBox="0 0 747.2 726.7">
+            <path d="M539.8 137.6c98.3 69 183.5 124 203 198.4 19.3 74.4-27.1 168.2-93.8 245-66.8 76.8-153.8 136.6-254.2 144.9-100.6 8.2-214.7-35.1-292.7-122.5S-18.1 384.1 7.4 259.8C33 135.6 126.3 19 228.5 2.2c102.1-16.8 213.2 66.3 311.3 135.4z"></path>
+          </svg>
+        </div>
+      </div>
+      <nav>
+        <div className="page-wrapper">
+          <SwingAppsIconSvg size={50} />
+        </div>
+      </nav>
       <main>
         <div className="page-wrapper">
-          <h1 style={{ marginTop: 50 }}>Welcome to Swing Mirror</h1>
+          <h1 style={{ marginTop: 50 }}>Swing Mirror</h1>
           <p style={{ marginBottom: 30 }}>
-            Swing Mirror lets you film your golf swing and view it on multiple
-            screens.
+            Share and control your camera on multiple devices.
           </p>
           {error && error === 'not_found' && (
             <p className="error">
@@ -55,7 +67,8 @@ function IndexPage({ error, broadcastId }) {
       <footer>
         <div className="page-wrapper" style={{ textAlign: 'center' }}>
           <p>
-            by <a href="https://github.com/trotzig">@trotzig</a> {new Date().getFullYear()}
+            by <a href="https://github.com/trotzig">@trotzig</a>{' '}
+            {new Date().getFullYear()}
           </p>
         </div>
       </footer>

@@ -1,4 +1,6 @@
 import '../public/styles.css';
+import '../public/blobz.css';
+
 import Head from 'next/head';
 
 import React from 'react';

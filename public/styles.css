@@ -5,7 +5,7 @@
 
 html {
   background-color: #000;
-  color: #bfbfbf;
+  color: #f5f5f5;
 }
 
 body {
@@ -98,6 +98,12 @@ button.reset {
   cursor: pointer;
 }
 
+nav {
+  min-height: 50px;
+  padding: 20px 0;
+  margin-bottom: 50px;
+}
+
 main {
   text-align: center;
   margin-bottom: 50px;
@@ -117,7 +123,7 @@ p {
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 36px;
 }
 
 h2 {
@@ -277,4 +283,12 @@ h2 {
   opacity: 0.5;
   font-size: small;
   text-transform: uppercase;
+}
+
+.blurry-background {
+  position: absolute;
+  top: 15%;
+  left: 5%;
+  filter: blur(50px);
+  opacity: 0.2;
 }
