@@ -16,7 +16,6 @@ function BroadcastPage({ broadcastId }) {
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('cover');
-  const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
@@ -30,9 +29,10 @@ function BroadcastPage({ broadcastId }) {
     const videoElement = videoRef.current;
 
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode } })
+      .getUserMedia({ video: { facingMode: 'environment' } })
       .then(stream => {
         videoRef.current.srcObject = stream;
+        videoRef.current.__facingMode = 'environment';
         broadcaster.init(stream);
         navigator.mediaDevices.enumerateDevices().then(devices => {
           let videoInputCount = 0;
@@ -54,7 +54,7 @@ function BroadcastPage({ broadcastId }) {
       const stream = videoElement.srcObject;
       stream.getTracks().forEach(track => track.stop());
     };
-  }, [broadcastId, facingMode]);
+  }, [broadcastId]);
 
   useEffect(() => {
     if (isRecording) {
@@ -125,11 +125,18 @@ function BroadcastPage({ broadcastId }) {
           <div className="flip-camera">
             <button
               className="reset"
-              onClick={() =>
-                setFacingMode(
-                  facingMode === 'environment' ? 'user' : 'environment',
-                )
-              }
+              onClick={() => {
+                const facingMode =
+                  videoRef.current.facingMode === 'environment'
+                    ? 'user'
+                    : 'environment';
+                navigator.mediaDevices
+                  .getUserMedia({ video: { facingMode } })
+                  .then(stream => {
+                    broadcasterRef.current.overrideStream(stream);
+                    videoRef.current.srcObject = stream;
+                  });
+              }}
             >
               <FlipCamera size={30} />
             </button>
