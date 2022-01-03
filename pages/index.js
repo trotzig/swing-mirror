@@ -64,14 +64,18 @@ function IndexPage({ error, broadcastId }) {
           </p>
         </div>
       </footer>
-      <Modal open={formVisible} onClose={() => setFormVisible(false)}>
+      <Modal opaque open={formVisible} onClose={() => setFormVisible(false)}>
         <div className="watch-form">
           <form action="/watch" method="GET">
+            <h2>Enter camera code</h2>
+            <p>
+              You can find the code in the upper right corner on your camera
+              view.{' '}
+            </p>
             <input
               type="text"
               name="broadcastId"
               defaultValue={broadcastId}
-              placeholder="Enter camera code"
             />
             <button type="submit">Go!</button>
           </form>

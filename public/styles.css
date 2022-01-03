@@ -140,9 +140,12 @@ h2 {
   align-items: flex-top;
 }
 
-@media (max-width: 600px) {
-  .start-boxes {
-    grid-template-columns: 1fr;
+@media (max-width: 500px) {
+  .start-boxes p {
+    font-size: 12px;
+  }
+  .start-boxes h2 {
+    font-size: 18px;
   }
 }
 
@@ -170,15 +173,6 @@ h2 {
 
 .start-box.open form {
   display: block;
-}
-
-.start-box form button {
-  margin-left: 10px;
-  margin-bottom: 10px;
-}
-
-.start-box input {
-  background: transparent;
 }
 
 .video-wrapper {
@@ -246,7 +240,7 @@ h2 {
   height: 100%;
   width: 100%;
   border-radius: 50%;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .record-button.recording::before {
@@ -319,6 +313,32 @@ h2 {
 }
 
 .watch-form {
-  margin-top: 100px;
-  padding: 20px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 100px 20px;
+}
+
+.watch-form p {
+  margin-bottom: 30px;
+}
+.watch-form h2 {
+  font-size: 30px;
+}
+.watch-form form button {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  min-height: 55px;
+  font-size: 20px;
+}
+
+.watch-form form input {
+  font-family: monospace;
+  font-size: 30px;
+  width: 150px;
+  min-height: 55px;
 }
