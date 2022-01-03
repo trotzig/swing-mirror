@@ -32,8 +32,14 @@ function BroadcastPage({ broadcastId }) {
     navigator.mediaDevices
       .getUserMedia({ video: { facingMode } })
       .then(stream => {
+        videoRef.current.addEventListener(
+          'canplay',
+          () => {
+            broadcaster.init(stream);
+          },
+          { once: true },
+        );
         videoRef.current.srcObject = stream;
-        broadcaster.init(stream);
         navigator.mediaDevices.enumerateDevices().then(devices => {
           let videoInputCount = 0;
           for (const device of devices) {
