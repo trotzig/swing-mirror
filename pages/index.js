@@ -27,11 +27,14 @@ function IndexPage({ error, broadcastId }) {
             Share and control your camera on multiple devices.
           </p>
           {error && error === 'not_found' && (
-            <p className="error">
+            <div className="error">
               <Warning />
-              We couldn&apos;t find a broadcaster with code {broadcastId}. Check
-              to make sure that you typed it correctly.
-            </p>
+              <div>
+                We couldn&apos;t find a broadcaster with code{' '}
+                <code>{broadcastId}</code>. Check to make sure that you typed it
+                correctly.
+              </div>
+            </div>
           )}
           <div className="start-boxes">
             <div className="start-box">

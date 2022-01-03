@@ -46,6 +46,7 @@ video {
   border-radius: var(--border-radius);
   border-color: currentColor;
   padding: 15px;
+  margin-bottom: 30px;
   display: flex;
   align-items: flex-top;
 }
@@ -291,4 +292,5 @@ h2 {
   left: 5%;
   filter: blur(50px);
   opacity: 0.2;
+  pointer-events: none;
 }
