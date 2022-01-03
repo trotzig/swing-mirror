@@ -52,6 +52,13 @@ function IndexPage({ error, broadcastId }) {
           </div>
         </div>
       </main>
+      <footer>
+        <div className="page-wrapper" style={{ textAlign: 'center' }}>
+          <p>
+            by <a href="https://github.com/trotzig">@trotzig</a> {new Date().getFullYear()}
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
