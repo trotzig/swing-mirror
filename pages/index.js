@@ -19,10 +19,10 @@ function IndexPage({ error, broadcastId }) {
       </nav>
       <main>
         <div className="page-wrapper">
-          <h1 style={{ marginTop: 50 }}>
+          <h1>
             Swing <i>|</i> Mirror
           </h1>
-          <p style={{ marginBottom: 30 }}>
+          <p className="tagline">
             Share and control your camera on multiple devices.
           </p>
           {error && error === 'not_found' && (

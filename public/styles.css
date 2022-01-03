@@ -110,6 +110,32 @@ main {
   margin-bottom: 50px;
 }
 
+main h1 {
+  margin-top: 50px;
+}
+
+main .tagline {
+  margin-bottom: 30px;
+}
+@media (orientation: landscape) and (max-width: 800px) {
+  nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-bottom: 0;
+  }
+  main {
+    margin-bottom: 30px;
+  }
+  main h1 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+  }
+  main .tagline {
+    margin-bottom: 20px;
+  }
+}
+
 footer {
   opacity: 0.5;
 }
@@ -212,6 +238,22 @@ h1 i {
   justify-content: center;
 }
 
+@media (orientation: landscape) and (max-width: 800px) {
+  .video-header {
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.4);
+    height: 100%;
+    width: 75px;
+  }
+  .video-header-inner {
+    height: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+}
+
 .video-footer {
   position: fixed;
   bottom: 0;
@@ -266,6 +308,45 @@ h1 i {
 
 .video-recordings button {
   margin-right: -20px;
+}
+
+.flip-camera {
+  text-align: right;
+}
+
+.flip-camera button {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  background-color: rgba(255, 255, 255, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (orientation: landscape) and (max-width: 800px) {
+  .video-footer {
+    bottom: 0;
+    left: auto;
+    right: 0;
+    width: 75px;
+    height: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 90px 1fr;
+  }
+
+  .video-recordings {
+    padding-top: 20px;
+    align-self: flex-start;
+  }
+
+  .video-recordings button {
+    margin-top: -20px;
+    margin-right: 0;
+  }
+  .flip-camera {
+    align-self: flex-end;
+  }
 }
 
 .modal {
@@ -357,18 +438,4 @@ h1 i {
   font-size: 30px;
   width: 150px;
   min-height: 55px;
-}
-
-.flip-camera {
-  text-align: right;
-}
-
-.flip-camera button {
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-  background-color: rgba(255, 255, 255, 0.15);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
