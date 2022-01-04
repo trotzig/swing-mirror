@@ -9,6 +9,7 @@ import Broadcaster from '../src/Broadcaster';
 import FlipCamera from '../src/icons/FlipCamera';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
+import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 
 function BroadcastPage({ broadcastId }) {
@@ -157,20 +158,7 @@ function BroadcastPage({ broadcastId }) {
           </a>,
         ]}
       >
-        <video
-          playsInline
-          autoPlay
-          muted
-          controls
-          loop
-          style={{ objectFit: videoObjectFit }}
-          src={currentRecording && currentRecording.url}
-          onDoubleClick={() => {
-            setVideoObjectFit(
-              videoObjectFit === 'contain' ? 'cover' : 'contain',
-            );
-          }}
-        ></video>
+        <VideoPlayer initialObjectFit={videoObjectFit} video={currentRecording} />
       </Modal>
     </div>
   );

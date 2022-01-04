@@ -6,6 +6,7 @@ import { limitRecordings } from '../src/limitRecordings';
 import ArrowBack from '../src/icons/ArrowBack';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
+import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
 
@@ -114,20 +115,10 @@ function WatchPage({ broadcastId }) {
           </a>,
         ]}
       >
-        <video
-          playsInline
-          autoPlay
-          muted
-          controls
-          loop
-          style={{ objectFit: videoObjectFit }}
-          onDoubleClick={() => {
-            setVideoObjectFit(
-              videoObjectFit === 'contain' ? 'cover' : 'contain',
-            );
-          }}
-          src={currentRecording && currentRecording.url}
-        ></video>
+        <VideoPlayer
+          initialObjectFit={videoObjectFit}
+          video={currentRecording}
+        />
       </Modal>
     </div>
   );
