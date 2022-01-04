@@ -59,6 +59,7 @@ function WatchPage({ broadcastId }) {
       </Head>
       <div className="video-wrapper">
         <video
+          className="full-screen"
           autoPlay
           muted
           playsInline

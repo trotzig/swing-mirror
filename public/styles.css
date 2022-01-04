@@ -27,7 +27,7 @@ a {
   text-decoration: underline;
 }
 
-video {
+video.full-screen {
   background-color: black;
   width: 100%;
   height: 100%;
@@ -254,7 +254,8 @@ h1 i {
   }
 }
 
-.video-footer {
+.video-footer,
+.video-player-controls {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -269,7 +270,8 @@ h1 i {
   grid-template-columns: 1fr 50px 1fr;
 }
 
-.record-button {
+.record-button, .video-player-play-button {
+  padding: 0;
   margin: 20px auto;
   width: 50px;
   height: 50px;
@@ -378,13 +380,6 @@ h1 i {
 .modal-actions > * {
   margin-right: 20px;
 }
-.modal video {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  flex: 1;
-}
 
 .broadcast-id span {
   opacity: 0.5;
@@ -438,4 +433,21 @@ h1 i {
   font-size: 30px;
   width: 150px;
   min-height: 55px;
+}
+.video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+}
+.video-player video {
+  flex: 1;
+  width: 100%;
+}
+.video-player-play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

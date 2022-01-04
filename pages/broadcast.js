@@ -83,6 +83,7 @@ function BroadcastPage({ broadcastId }) {
   return (
     <div className="video-wrapper">
       <video
+        className="full-screen"
         playsInline
         autoPlay
         muted
