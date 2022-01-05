@@ -1,5 +1,5 @@
 {
   "name": "Swing Mirror",
   "scope": "/",
-  "display": "fullscreen"
+  "display": "browser"
 }
