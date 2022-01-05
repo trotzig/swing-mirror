@@ -3,12 +3,12 @@ import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
-import { limitRecordings } from '../src/limitRecordings';
 import ArrowBack from '../src/icons/ArrowBack';
 import Broadcaster from '../src/Broadcaster';
 import FlipCamera from '../src/icons/FlipCamera';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
+import ShareButton from '../src/ShareButton';
 import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 
@@ -144,15 +144,7 @@ function BroadcastPage({ broadcastId }) {
         onClose={() => {
           setCurrentRecording(undefined);
         }}
-        actions={[
-          <a
-            key="download"
-            href={currentRecording && currentRecording.url}
-            download={currentRecording && currentRecording.name}
-          >
-            Save to device
-          </a>,
-        ]}
+        actions={[<ShareButton key="share" video={currentRecording} />]}
       >
         <VideoPlayer
           initialObjectFit={videoObjectFit}
