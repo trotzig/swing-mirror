@@ -17,8 +17,6 @@ export default function ShareButton({ video }) {
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             title: 'Swing Mirror video',
-            text: '',
-            url: 'https://swingmirror.io',
             files: [file],
           });
         }
