@@ -29,7 +29,6 @@ function rangeTouchEndListener(e) {
 export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
   const [objectFit, setObjectFit] = useState(initialObjectFit);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
   const videoRef = useRef();
   const seekRef = useRef();
@@ -39,12 +38,7 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
   useEffect(() => {
     const videoEl = videoRef.current;
     const playListener = () => setIsPlaying(true);
-    setDuration(videoEl.duration || 10);
     videoEl.addEventListener('play', playListener);
-    const metaListener = () => {
-      setDuration(videoEl.duration);
-    };
-    videoEl.addEventListener('playing', metaListener);
     const pauseListener = () => setIsPlaying(false);
     videoEl.addEventListener('pause', pauseListener);
     const timeListener = () => {
@@ -58,7 +52,6 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
     return () => {
       videoEl.removeEventListener('play', playListener);
       videoEl.removeEventListener('pause', pauseListener);
-      videoEl.removeEventListener('loadedmetadata', metaListener);
       videoEl.removeEventListener('timeupdate', timeListener);
       videoEl.pause();
     };
@@ -92,7 +85,7 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
           type="range"
           min="0"
           step="any"
-          max={duration}
+          max={video && video.duration}
           onChange={e => (videoRef.current.currentTime = e.target.value)}
           onMouseDown={() => videoRef.current.pause()}
           onTouchEnd={rangeTouchEndListener}

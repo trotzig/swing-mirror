@@ -24,6 +24,7 @@ export default class VideoRecorder {
       }
     };
     this.photoUrl = this.takeStillPhoto();
+    this.startTime = Date.now();
     this.mediaRecorder.start();
   }
 
@@ -38,6 +39,7 @@ export default class VideoRecorder {
   stop() {
     return new Promise(resolve => {
       this.mediaRecorder.onstop = () => {
+        const endTime = Date.now();
         const blob = new Blob(this.recordedChunks, {
           type: this.mimeType,
         });
@@ -46,7 +48,12 @@ export default class VideoRecorder {
           this.mimeType.indexOf('/') + 1,
           this.mimeType.indexOf(';'),
         )}`;
-        const recording = { url, name, photoUrl: this.photoUrl };
+        const recording = {
+          url,
+          name,
+          photoUrl: this.photoUrl,
+          duration: (endTime - this.startTime) / 1000,
+        };
         resolve(recording);
       };
       if (this.mediaRecorder.state === 'recording') {
