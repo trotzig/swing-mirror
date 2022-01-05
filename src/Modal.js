@@ -28,7 +28,6 @@ export default function Modal({
       <div className="modal-actions">
         <button
           className="reset"
-          style={{ padding: 20 }}
           onClick={() => onClose()}
         >
           <ArrowBack />

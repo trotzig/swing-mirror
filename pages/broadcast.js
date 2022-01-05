@@ -13,7 +13,7 @@ import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 
 function BroadcastPage({ broadcastId }) {
-  const [recordings, setRecordings] = useState([]);
+  const [recording, setRecording] = useState();
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('contain');
@@ -71,11 +71,7 @@ function BroadcastPage({ broadcastId }) {
       });
       videoRecorderRef.current.start();
     } else if (videoRecorderRef.current) {
-      videoRecorderRef.current
-        .stop()
-        .then(recording =>
-          setRecordings(old => limitRecordings(old.concat([recording]))),
-        );
+      videoRecorderRef.current.stop().then(setRecording);
     }
     broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording]);
@@ -111,20 +107,18 @@ function BroadcastPage({ broadcastId }) {
         </div>
       </div>
       <div className="video-footer">
-        <div className="video-recordings">
-          {recordings.map(recording => {
-            return (
-              <button
-                className="reset"
-                key={recording.url}
-                onClick={() => {
-                  setCurrentRecording(recording);
-                }}
-              >
-                <img src={recording.photoUrl} className="video-still-image" />
-              </button>
-            );
-          })}
+        <div className="video-recording">
+          {recording && (
+            <button
+              className="reset"
+              key={recording.url}
+              onClick={() => {
+                setCurrentRecording(recording);
+              }}
+            >
+              <img src={recording.photoUrl} className="video-still-image" />
+            </button>
+          )}
         </div>
         <RecordButton
           isRecording={isRecording}
