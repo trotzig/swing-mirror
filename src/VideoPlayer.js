@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import db from './db';
+
 const pausePath = 'M13,10 L18,13 18,23 13,26 M18,13 L26,18 26,18 18,23';
 const playPath = 'M10,10 L16,10 16,26 10,26 M20,10 L26,10 26,26 20,26';
 
@@ -35,9 +37,14 @@ function step(dir, video, playbackRate) {
   video.currentTime = video.currentTime + dir * move;
 }
 
-export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
+export default function VideoPlayer({
+  video,
+  initialObjectFit = 'cover',
+  onVideoChange = () => {},
+}) {
   const [objectFit, setObjectFit] = useState(initialObjectFit);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [dbVideos, setDbVideos] = useState([]);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
   const videoRef = useRef();
   const seekRef = useRef();
@@ -75,6 +82,17 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
     videoRef.current.playbackRate = rate.value;
   }, [playbackRateIncr]);
 
+  useEffect(() => {
+    async function run() {
+      await db.init();
+      setDbVideos(await db.listVideos());
+    }
+
+    if (video) {
+      run();
+    }
+  }, [video]);
+
   return (
     <div className="video-player">
       <video
@@ -109,6 +127,21 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
           onMouseDown={() => videoRef.current.pause()}
           onTouchEnd={rangeTouchEndListener}
         />
+        <ul className="db-videos">
+          {dbVideos.map(dbVideo => (
+            <li key={dbVideo.id}>
+              <button
+                className="reset"
+                onClick={async () => {
+                  console.log(dbVideo);
+                  onVideoChange(await dbVideo.toRecording());
+                }}
+              >
+                <img src={dbVideo.photoUrl} />
+              </button>
+            </li>
+          ))}
+        </ul>
         <div className="video-player-controls-bottom">
           <button
             className="video-player-playback-rate"

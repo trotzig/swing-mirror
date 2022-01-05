@@ -498,6 +498,31 @@ h1 i {
 }
 
 .video-player-step-back,
-.video-player-step-forward
-{
+.video-player-step-forward {
+}
+
+.db-videos,
+.db-videos li {
+  all: unset;
+}
+
+.db-videos {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+.db-videos::-webkit-scrollbar {
+  display: none;
+}
+.db-videos li {
+  display: inline-block;
+  margin-right: 5px;
+}
+.db-videos img {
+  line-height: 0;
+  display: block;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
 }

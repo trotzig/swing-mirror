@@ -114,6 +114,7 @@ function WatchPage({ broadcastId }) {
         <VideoPlayer
           initialObjectFit={videoObjectFit}
           video={currentRecording}
+          onVideoChange={setCurrentRecording}
         />
       </Modal>
     </div>

@@ -1,8 +1,9 @@
+import db from './db';
+
 export default class VideoRecorder {
   constructor({ video, canvas }) {
     this.video = video;
     this.canvas = canvas;
-    console.log(this);
   }
 
   start() {
@@ -54,6 +55,9 @@ export default class VideoRecorder {
           photoUrl: this.photoUrl,
           duration: (endTime - this.startTime) / 1000,
         };
+        db.init()
+          .then(() => db.addVideo({ ...recording, blob }))
+          .catch(console.error);
         resolve(recording);
       };
       if (this.mediaRecorder.state === 'recording') {

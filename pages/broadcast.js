@@ -11,6 +11,7 @@ import RecordButton from '../src/RecordButton';
 import ShareButton from '../src/ShareButton';
 import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
+import db from '../src/db';
 
 function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
@@ -75,6 +76,15 @@ function BroadcastPage({ broadcastId }) {
     }
     broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording]);
+
+  useEffect(() => {
+    async function run() {
+      await db.init();
+      const dbVideo = await db.getMostRecentVideo();
+      setRecording(await dbVideo.toRecording());
+    }
+    run();
+  }, []);
 
   return (
     <div className="video-wrapper">
@@ -149,6 +159,7 @@ function BroadcastPage({ broadcastId }) {
         <VideoPlayer
           initialObjectFit={videoObjectFit}
           video={currentRecording}
+          onVideoChange={setCurrentRecording}
         />
       </Modal>
     </div>
