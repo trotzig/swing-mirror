@@ -7,7 +7,7 @@ export default function ShareButton({ video }) {
       onClick={async () => {
         const res = await fetch(video.url);
         const blob = await res.blob();
-        const file = new File(blob, 'video', { type: blob.type });
+        const file = new File([blob], 'video', { type: blob.type });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             title: 'Swing Mirror video',
