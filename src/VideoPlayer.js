@@ -26,6 +26,15 @@ function rangeTouchEndListener(e) {
   el.dispatchEvent(new Event('change', { target: el }));
 }
 
+function step(dir, video, playbackRate) {
+  if (!video.paused) {
+    video.pause();
+    return;
+  }
+  const move = playbackRate.value / 2;
+  video.currentTime = video.currentTime + dir * move;
+}
+
 export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
   const [objectFit, setObjectFit] = useState(initialObjectFit);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -79,6 +88,16 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
           setObjectFit(objectFit === 'contain' ? 'cover' : 'contain');
         }}
       ></video>
+      <div className="video-player-step-overlay">
+        <button
+          className="video-player-step-back reset"
+          onClick={() => step(-1, videoRef.current, playbackRate)}
+        />
+        <button
+          className="video-player-step-forward reset"
+          onClick={() => step(1, videoRef.current, playbackRate)}
+        />
+      </div>
       <div className="video-player-controls">
         <input
           ref={seekRef}

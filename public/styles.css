@@ -482,3 +482,18 @@ h1 i {
   align-items: center;
   justify-content: center;
 }
+
+.video-player-step-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.video-player-step-back,
+.video-player-step-forward
+{
+}
