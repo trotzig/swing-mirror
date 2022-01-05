@@ -58,6 +58,7 @@ function WatchPage({ broadcastId }) {
         <title>Watcher | Swing Mirror</title>
       </Head>
       <div className="video-wrapper">
+        <div className="blurry-background" />
         <video
           className="full-screen"
           autoPlay

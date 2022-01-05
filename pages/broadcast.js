@@ -82,6 +82,7 @@ function BroadcastPage({ broadcastId }) {
 
   return (
     <div className="video-wrapper">
+      <div className="blurry-background" />
       <video
         className="full-screen"
         playsInline
@@ -159,7 +160,10 @@ function BroadcastPage({ broadcastId }) {
           </a>,
         ]}
       >
-        <VideoPlayer initialObjectFit={videoObjectFit} video={currentRecording} />
+        <VideoPlayer
+          initialObjectFit={videoObjectFit}
+          video={currentRecording}
+        />
       </Modal>
     </div>
   );
