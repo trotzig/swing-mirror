@@ -23,6 +23,7 @@ function rangeTouchEndListener(e) {
   const max = parseFloat(el.getAttribute('max'), 10);
   const value = Math.max(Math.min(relativeLeft * max, max), 0);
   el.value = value;
+  el.dispatchEvent(new Event('change', { target: el }));
 }
 
 export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
