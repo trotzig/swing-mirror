@@ -13,7 +13,7 @@ export default function ShareButton({ video }) {
             title: 'Swing Mirror video',
             text: '',
             url: 'https://swingmirror.io',
-            files: [blob],
+            files: [file],
           });
         }
       }}
