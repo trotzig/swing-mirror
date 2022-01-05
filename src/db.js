@@ -44,6 +44,9 @@ class DB {
 
   async getMostRecentVideo() {
     const videos = await this.db.getAllFromIndex('videos', 'date');
+    if (!videos.length) {
+      return;
+    }
     const video = videos[videos.length - 1];
     return this.__prepareVideo(video);
   }
@@ -59,5 +62,4 @@ class DB {
 }
 
 const instance = new DB();
-window.__db = instance;
 export default instance;
