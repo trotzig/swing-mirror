@@ -11,6 +11,20 @@ const playbackRates = [
   { label: 'x0.1', value: 0.1 },
 ];
 
+function rangeTouchEndListener(e) {
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    // only run on iOS
+  }
+  const el = e.target;
+  const rect = el.getBoundingClientRect();
+  const touch = e.changedTouches[0];
+  const left = touch.pageX - rect.left;
+  const relativeLeft = left / rect.width;
+  const max = parseFloat(el.getAttribute('max'), 10);
+  const value = Math.max(Math.min(relativeLeft * max, max), 0);
+  el.value = value;
+}
+
 export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
   const [objectFit, setObjectFit] = useState(initialObjectFit);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -80,6 +94,7 @@ export default function VideoPlayer({ video, initialObjectFit = 'cover' }) {
           max={duration}
           onChange={e => (videoRef.current.currentTime = e.target.value)}
           onMouseDown={() => videoRef.current.pause()}
+          onTouchEnd={rangeTouchEndListener}
         />
         <div className="video-player-controls-bottom">
           <button
