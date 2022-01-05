@@ -2,10 +2,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { limitRecordings } from '../src/limitRecordings';
 import ArrowBack from '../src/icons/ArrowBack';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
+import ShareButton from '../src/ShareButton';
 import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
@@ -101,15 +101,7 @@ function WatchPage({ broadcastId }) {
       <Modal
         open={currentRecording}
         onClose={() => setCurrentRecording(undefined)}
-        actions={[
-          <a
-            key="download"
-            href={currentRecording && currentRecording.url}
-            download={currentRecording && currentRecording.name}
-          >
-            Save to device
-          </a>,
-        ]}
+        actions={[<ShareButton key="share" video={currentRecording} />]}
       >
         <VideoPlayer
           initialObjectFit={videoObjectFit}

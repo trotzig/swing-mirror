@@ -374,15 +374,12 @@ h1 i {
   left: 0;
   right: 0;
   padding: 15px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 30px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.7);
   border-bottom: 1px solid rgba(100, 100, 100, 0.4);
   min-height: var(--header-min-height);
-}
-.modal-actions > * {
 }
 
 .broadcast-id span {

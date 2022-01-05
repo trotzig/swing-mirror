@@ -1,4 +1,5 @@
 import db from './db';
+import fileSuffix from './fileSuffix';
 
 export default class VideoRecorder {
   constructor({ video, canvas }) {
@@ -45,10 +46,7 @@ export default class VideoRecorder {
           type: this.mimeType,
         });
         const url = URL.createObjectURL(blob);
-        const name = `swing.${this.mimeType.slice(
-          this.mimeType.indexOf('/') + 1,
-          this.mimeType.indexOf(';'),
-        )}`;
+        const name = `swing.${fileSuffix(this.mimeType)}`;
         const recording = {
           url,
           name,
