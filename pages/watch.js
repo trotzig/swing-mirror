@@ -16,7 +16,7 @@ function WatchPage({ broadcastId }) {
   const canvasRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
-  const [videoObjectFit, setVideoObjectFit] = useState('cover');
+  const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [currentRecording, setCurrentRecording] = useState();
   const [recordings, setRecordings] = useState([]);
   const [isController, setIsController] = useState(true);

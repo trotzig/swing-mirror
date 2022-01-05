@@ -16,7 +16,7 @@ function BroadcastPage({ broadcastId }) {
   const [recordings, setRecordings] = useState([]);
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
-  const [videoObjectFit, setVideoObjectFit] = useState('cover');
+  const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const videoRef = useRef();
