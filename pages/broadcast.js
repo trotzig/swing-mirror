@@ -43,7 +43,13 @@ function BroadcastPage({ broadcastId }) {
     const broadcaster = broadcasterRef.current;
     const videoElement = videoRef.current;
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode } })
+      .getUserMedia({
+        video: {
+          facingMode,
+          width: screen.availWidth,
+          height: screen.availHeight,
+        },
+      })
       .then(stream => {
         videoRef.current.addEventListener(
           'canplay',
