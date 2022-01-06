@@ -34,7 +34,7 @@ function BroadcastPage({ broadcastId }) {
     const videoElement = videoRef.current;
 
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode, frameRate: slowMotion ? 120 : 24 } })
+      .getUserMedia({ video: { facingMode, frameRate: slowMotion ? 60 : 30 } })
       .then(stream => {
         videoRef.current.addEventListener(
           'canplay',
@@ -154,7 +154,7 @@ function BroadcastPage({ broadcastId }) {
               className="reset"
               onClick={() => setSlowMotion(!slowMotion)}
             >
-              <SlowMotion />
+              <SlowMotion size={30} />
             </button>
           </div>
         </div>
