@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
-import ArrowBack from '../src/icons/ArrowBack';
+import Home from '../src/icons/Home';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
 import ShareButton from '../src/ShareButton';
@@ -73,7 +73,7 @@ function WatchPage({ broadcastId }) {
           <div className="video-header-inner">
             <Link href="/">
               <a>
-                <ArrowBack />
+                <Home />
               </a>
             </Link>
           </div>

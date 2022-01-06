@@ -3,9 +3,9 @@ import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
-import ArrowBack from '../src/icons/ArrowBack';
 import Broadcaster from '../src/Broadcaster';
 import FlipCamera from '../src/icons/FlipCamera';
+import Home from '../src/icons/Home';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
 import ShareButton from '../src/ShareButton';
@@ -117,7 +117,7 @@ function BroadcastPage({ broadcastId }) {
           <div>
             <Link href="/">
               <a>
-                <ArrowBack />
+                <Home />
               </a>
             </Link>
           </div>
