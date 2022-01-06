@@ -62,18 +62,6 @@ video.full-screen {
   margin: 0 auto;
 }
 
-form input {
-  padding: 7.5px 15px;
-  font-size: 15px;
-  line-height: 20px;
-  margin-bottom: 10px;
-  color: currentColor;
-  background-color: #000;
-  border: 2px solid #ccc;
-  border-radius: var(--border-radius);
-  box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
-  vertical-align: middle;
-}
 
 button {
   display: inline-block;
@@ -432,12 +420,6 @@ h1 i {
   font-size: 20px;
 }
 
-.watch-form form input {
-  font-family: monospace;
-  font-size: 30px;
-  width: 150px;
-  min-height: 55px;
-}
 .video-player {
   position: absolute;
   top: 0;
@@ -532,4 +514,43 @@ h1 i {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.code-input {
+  position: relative;
+  overflow: hidden;
+}
+.code-input-input {
+  all: unset;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+}
+
+.code-input-input,
+.code-input-ruler {
+  font-family: monospace;
+  font-family: monospace;
+  font-size: 30px;
+  letter-spacing: 30px;
+}
+
+.code-input-boxes {
+  line-height: 0;
+}
+.code-input-box {
+  display: inline-block;
+  height: 20px;
+  border: 2px solid #666;
+  border-radius: var(--border-radius);
+}
+
+.code-input-ruler {
+  position: fixed;
+  left: -100px;
+  top: -100px;
+  display: inline-block;
+  visibility: hidden;
 }

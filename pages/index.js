@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Modal from '../src/Modal';
 import Monitor from '../src/icons/Monitor';
@@ -6,6 +6,65 @@ import StartBox from '../src/StartBox';
 import SwingAppsIconSvg from '../src/icons/SwingAppsIconSvg';
 import VideoCam from '../src/icons/VideoCam';
 import Warning from '../src/icons/Warning';
+
+function CodeInput({ length, ...props }) {
+  const ruler = useRef();
+  const [charWidth, setCharWidth] = useState(0);
+  const [charHeight, setCharHeight] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [focus, setFocus] = useState(false);
+  useEffect(() => {
+    const rect = ruler.current.getBoundingClientRect();
+    setCharWidth(rect.width / 4);
+    setCharHeight(rect.height);
+  }, []);
+  return (
+    <div className="code-input">
+      <input
+        autoComplete="off"
+        pattern="[a-z0-9]+"
+        minLength={length}
+        maxLength={length}
+        className="code-input-input"
+        {...props}
+        onChange={e => {
+          const len = e.target.value.length;
+          setCharIndex(len);
+          if (len >= length) {
+            e.target.blur();
+            e.target.closest('form').submit();
+          }
+        }}
+        onFocus={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
+        style={{ textIndent: charWidth * 0.33 }}
+      />
+      <div className="code-input-boxes">
+        {charWidth
+          ? Array(length)
+              .fill({})
+              .map((o, i) => (
+                <div
+                  key={i}
+                  className="code-input-box"
+                  style={{
+                    width: charWidth - 4,
+                    height: charHeight + 10,
+                    marginRight: 2,
+                    marginLeft: 2,
+                    borderColor:
+                      focus && charIndex === i ? 'currentColor' : undefined,
+                  }}
+                />
+              ))
+          : null}
+      </div>
+      <span ref={ruler} className="code-input-ruler">
+        {Array(length).fill('1').join('')}
+      </span>
+    </div>
+  );
+}
 
 function IndexPage({ error, broadcastId }) {
   const [formVisible, setFormVisible] = useState(false);
@@ -62,14 +121,13 @@ function IndexPage({ error, broadcastId }) {
       </footer>
       <Modal opaque open={formVisible} onClose={() => setFormVisible(false)}>
         <div className="watch-form">
-          <form action="/watch" method="GET">
+          <form action="/watch" method="GET" autoComplete="off">
             <h2>Enter camera code</h2>
             <p>
               You can find the code in the upper right corner on your camera
               view.{' '}
             </p>
-            <input type="text" name="broadcastId" defaultValue={broadcastId} />
-            <button type="submit">Go!</button>
+            <CodeInput length={4} name="broadcastId" />
           </form>
         </div>
       </Modal>
