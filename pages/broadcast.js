@@ -17,7 +17,6 @@ function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
-  const [cameraEnabled, setCameraEnabled] = useState(false);
   const [hasStream, setHasStream] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [facingMode, setFacingMode] = useState('environment');
@@ -30,9 +29,6 @@ function BroadcastPage({ broadcastId }) {
   useEffect(() => {
     if (!broadcasterRef.current) {
       broadcasterRef.current = new Broadcaster({ broadcastId });
-    }
-    if (!cameraEnabled) {
-      return;
     }
     const broadcaster = broadcasterRef.current;
     const videoElement = videoRef.current;
@@ -68,7 +64,7 @@ function BroadcastPage({ broadcastId }) {
       const stream = videoElement.srcObject;
       stream.getTracks().forEach(track => track.stop());
     };
-  }, [broadcastId, facingMode, cameraEnabled]);
+  }, [broadcastId, facingMode]);
 
   useEffect(() => {
     if (isRecording) {
@@ -106,11 +102,6 @@ function BroadcastPage({ broadcastId }) {
           setVideoObjectFit(videoObjectFit === 'contain' ? 'cover' : 'contain');
         }}
       ></video>
-      {!cameraEnabled && (
-        <button className="start-camera" onClick={() => setCameraEnabled(true)}>
-          Start camera
-        </button>
-      )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
