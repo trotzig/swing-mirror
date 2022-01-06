@@ -17,6 +17,8 @@ function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
   const [currentRecording, setCurrentRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
+  const [cameraEnabled, setCameraEnabled] = useState(false);
+  const [hasStream, setHasStream] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
@@ -26,11 +28,14 @@ function BroadcastPage({ broadcastId }) {
   const canvasRef = useRef();
 
   useEffect(() => {
-    const broadcaster = new Broadcaster({ broadcastId });
-    broadcasterRef.current = broadcaster;
-
+    if (!broadcasterRef.current) {
+      broadcasterRef.current = new Broadcaster({ broadcastId });
+    }
+    if (!cameraEnabled) {
+      return;
+    }
+    const broadcaster = broadcasterRef.current;
     const videoElement = videoRef.current;
-
     navigator.mediaDevices
       .getUserMedia({ video: { facingMode } })
       .then(stream => {
@@ -38,6 +43,7 @@ function BroadcastPage({ broadcastId }) {
           'canplay',
           () => {
             broadcaster.init(stream);
+            setHasStream(true);
           },
           { once: true },
         );
@@ -62,7 +68,7 @@ function BroadcastPage({ broadcastId }) {
       const stream = videoElement.srcObject;
       stream.getTracks().forEach(track => track.stop());
     };
-  }, [broadcastId, facingMode]);
+  }, [broadcastId, facingMode, cameraEnabled]);
 
   useEffect(() => {
     if (isRecording) {
@@ -100,6 +106,11 @@ function BroadcastPage({ broadcastId }) {
           setVideoObjectFit(videoObjectFit === 'contain' ? 'cover' : 'contain');
         }}
       ></video>
+      {!cameraEnabled && (
+        <button className="start-camera" onClick={() => setCameraEnabled(true)}>
+          Start camera
+        </button>
+      )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
@@ -130,23 +141,27 @@ function BroadcastPage({ broadcastId }) {
             </button>
           )}
         </div>
-        <RecordButton
-          isRecording={isRecording}
-          onClick={() => setIsRecording(!isRecording)}
-        />
+        {hasStream && (
+          <RecordButton
+            isRecording={isRecording}
+            onClick={() => setIsRecording(!isRecording)}
+          />
+        )}
         <div className="video-footer-right">
-          <div className="rounded-translucent">
-            <button
-              className="reset"
-              onClick={() =>
-                setFacingMode(
-                  facingMode === 'environment' ? 'user' : 'environment',
-                )
-              }
-            >
-              <FlipCamera size={30} />
-            </button>
-          </div>
+          {hasStream && (
+            <div className="rounded-translucent">
+              <button
+                className="reset"
+                onClick={() =>
+                  setFacingMode(
+                    facingMode === 'environment' ? 'user' : 'environment',
+                  )
+                }
+              >
+                <FlipCamera size={30} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <Modal

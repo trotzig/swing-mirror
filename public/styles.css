@@ -526,3 +526,10 @@ h1 i {
   height: 30px;
   object-fit: cover;
 }
+
+.start-camera {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
