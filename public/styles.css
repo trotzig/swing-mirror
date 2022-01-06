@@ -400,7 +400,7 @@ h1 i {
   display: flex;
   height: 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   max-width: 800px;
   margin: 0 auto;
