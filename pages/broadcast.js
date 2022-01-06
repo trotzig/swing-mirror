@@ -21,15 +21,25 @@ function BroadcastPage({ broadcastId }) {
   const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
+  const [documentVisible, setDocumentVisible] = useState(true);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
   const canvasRef = useRef();
 
   useEffect(() => {
-    if (!broadcasterRef.current) {
-      broadcasterRef.current = new Broadcaster({ broadcastId });
+    const handler = () => {
+      setDocumentVisible(!document.hidden);
+    };
+    document.addEventListener('visibilitychange', handler);
+    return () => document.removeEventListener('visibilitychange', handler);
+  }, []);
+
+  useEffect(() => {
+    if (!documentVisible) {
+      return;
     }
+    broadcasterRef.current = new Broadcaster({ broadcastId });
     const broadcaster = broadcasterRef.current;
     const videoElement = videoRef.current;
     navigator.mediaDevices
@@ -64,9 +74,12 @@ function BroadcastPage({ broadcastId }) {
       const stream = videoElement.srcObject;
       stream.getTracks().forEach(track => track.stop());
     };
-  }, [broadcastId, facingMode]);
+  }, [broadcastId, facingMode, documentVisible]);
 
   useEffect(() => {
+    if (!documentVisible) {
+      return;
+    }
     if (isRecording) {
       videoRecorderRef.current = new VideoRecorder({
         video: videoRef.current,
@@ -77,7 +90,7 @@ function BroadcastPage({ broadcastId }) {
       videoRecorderRef.current.stop().then(setRecording);
     }
     broadcasterRef.current.sendInstruction({ isRecording });
-  }, [isRecording]);
+  }, [isRecording, documentVisible]);
 
   useEffect(() => {
     async function run() {
