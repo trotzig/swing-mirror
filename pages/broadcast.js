@@ -94,9 +94,8 @@ function BroadcastPage({ broadcastId }) {
 
   useEffect(() => {
     async function run() {
-      await db.init();
       const dbVideo = await db.getMostRecentVideo();
-      setRecording(await dbVideo.toRecording());
+      setRecording(dbVideo ? await dbVideo.toRecording() : undefined);
     }
     run();
   }, []);

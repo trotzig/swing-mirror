@@ -53,9 +53,7 @@ export default class VideoRecorder {
           photoUrl: this.photoUrl,
           duration: (endTime - this.startTime) / 1000,
         };
-        db.init()
-          .then(() => db.addVideo({ ...recording, blob }))
-          .catch(console.error);
+        db.addVideo({ ...recording, blob }).catch(console.error);
         resolve(recording);
       };
       if (this.mediaRecorder.state === 'recording') {

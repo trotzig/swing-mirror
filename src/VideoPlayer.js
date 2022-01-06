@@ -84,7 +84,6 @@ export default function VideoPlayer({
 
   useEffect(() => {
     async function run() {
-      await db.init();
       setDbVideos(await db.listVideos());
     }
 
