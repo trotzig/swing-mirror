@@ -9,6 +9,7 @@ import FlipCamera from '../src/icons/FlipCamera';
 import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
 import ShareButton from '../src/ShareButton';
+import SlowMotion from '../src/icons/SlowMotion';
 import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
@@ -19,6 +20,7 @@ function BroadcastPage({ broadcastId }) {
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [facingMode, setFacingMode] = useState('environment');
+  const [slowMotion, setSlowMotion] = useState(false);
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
@@ -32,7 +34,7 @@ function BroadcastPage({ broadcastId }) {
     const videoElement = videoRef.current;
 
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode } })
+      .getUserMedia({ video: { facingMode, frameRate: slowMotion ? 120 : 24 } })
       .then(stream => {
         videoRef.current.addEventListener(
           'canplay',
@@ -62,7 +64,7 @@ function BroadcastPage({ broadcastId }) {
       const stream = videoElement.srcObject;
       stream.getTracks().forEach(track => track.stop());
     };
-  }, [broadcastId, facingMode]);
+  }, [broadcastId, facingMode, slowMotion]);
 
   useEffect(() => {
     if (isRecording) {
@@ -134,8 +136,8 @@ function BroadcastPage({ broadcastId }) {
           isRecording={isRecording}
           onClick={() => setIsRecording(!isRecording)}
         />
-        {hasBackCamera && (
-          <div className="flip-camera">
+        <div className="video-footer-right">
+          <div className="rounded-translucent">
             <button
               className="reset"
               onClick={() =>
@@ -147,7 +149,15 @@ function BroadcastPage({ broadcastId }) {
               <FlipCamera size={30} />
             </button>
           </div>
-        )}
+          <div className="rounded-translucent">
+            <button
+              className="reset"
+              onClick={() => setSlowMotion(!slowMotion)}
+            >
+              <SlowMotion />
+            </button>
+          </div>
+        </div>
       </div>
       <Modal
         open={!!currentRecording}

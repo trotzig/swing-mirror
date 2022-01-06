@@ -270,6 +270,13 @@ h1 i {
   grid-template-columns: 1fr 50px 1fr;
 }
 
+.video-footer-right {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-self: flex-end;
+  column-gap: 10px;
+}
+
 .record-button,
 .video-player-play-button {
   padding: 0;
@@ -313,11 +320,7 @@ h1 i {
   margin-right: -20px;
 }
 
-.flip-camera {
-  text-align: right;
-}
-
-.flip-camera button {
+.rounded-translucent button {
   border-radius: 50%;
   height: 50px;
   width: 50px;
@@ -347,7 +350,7 @@ h1 i {
     margin-top: -20px;
     margin-right: 0;
   }
-  .flip-camera {
+  .video-footer-right {
     align-self: flex-end;
   }
 }
