@@ -105,6 +105,7 @@ function BroadcastPage({ broadcastId }) {
       <div className="blurry-background" />
       <video
         className="full-screen"
+        key={[facingMode, broadcastId].join('-')}
         playsInline
         autoPlay
         muted
