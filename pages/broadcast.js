@@ -118,7 +118,7 @@ function BroadcastPage({ broadcastId }) {
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
-          <div>
+          <div className="rounded-translucent">
             <Link href="/">
               <a>
                 <Home />

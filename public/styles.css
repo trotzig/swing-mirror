@@ -208,8 +208,6 @@ h1 i {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-bottom: 1px solid rgba(100, 100, 100, 0.4);
   width: 100%;
 }
 
@@ -231,8 +229,6 @@ h1 i {
   .video-header {
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-bottom: 1px solid rgba(100, 100, 100, 0.4);
     height: 100%;
     width: 75px;
   }
@@ -249,8 +245,6 @@ h1 i {
   left: 0;
   min-height: var(--header-min-height);
   padding: 15px 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-top: 1px solid rgba(100, 100, 100, 0.4);
   width: 100%;
   display: grid;
   justify-content: center;
@@ -271,7 +265,7 @@ h1 i {
   margin: 10px auto;
   width: 50px;
   height: 50px;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.5);
   border: 4px solid currentColor;
   border-radius: 50%;
   transition: 0.1s border-radius;
@@ -308,11 +302,13 @@ h1 i {
   margin-right: -20px;
 }
 
-.rounded-translucent button {
+.rounded-translucent button,
+.rounded-translucent a  {
+  display: block;
   border-radius: 50%;
   height: 50px;
   width: 50px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(0, 0, 0, 0.5);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -368,11 +364,14 @@ h1 i {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-bottom: 1px solid rgba(100, 100, 100, 0.4);
   min-height: var(--header-min-height);
 }
 
+.broadcast-id {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 2px 5px;
+  border-radius: var(--border-radius);
+}
 .broadcast-id span {
   opacity: 0.5;
   font-size: small;
@@ -439,8 +438,6 @@ h1 i {
   bottom: 0;
   left: 0;
   min-height: var(--header-min-height);
-  background-color: rgba(0, 0, 0, 0.7);
-  border-top: 1px solid rgba(100, 100, 100, 0.4);
   width: 100%;
 }
 .video-player-controls input {
@@ -463,7 +460,7 @@ h1 i {
   border-width: 0;
   height: 50px;
   width: 50px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(0, 0, 0, 0.5);
   display: inline-flex;
   align-items: center;
   justify-content: center;

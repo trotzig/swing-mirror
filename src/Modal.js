@@ -26,12 +26,11 @@ export default function Modal({
     >
       {children}
       <div className="modal-actions">
-        <button
-          className="reset"
-          onClick={() => onClose()}
-        >
-          <ArrowBack />
-        </button>
+        <div className="rounded-translucent">
+          <button className="reset" onClick={() => onClose()}>
+            <ArrowBack />
+          </button>
+        </div>
         {actions}
       </div>
     </div>

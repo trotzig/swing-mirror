@@ -40,14 +40,16 @@ export default function ShareButton({ video }) {
   }
 
   return (
-    <a
-      className="reset"
-      style={{ lineHeight: 0 }}
-      key="download"
-      href={video.url}
-      download={video.name || 'swing.webm'}
-    >
-      <Download />
-    </a>
+    <div className="rounded-translucent">
+      <a
+        className="reset"
+        style={{ lineHeight: 0 }}
+        key="download"
+        href={video.url}
+        download={video.name || 'swing.webm'}
+      >
+        <Download />
+      </a>
+    </div>
   );
 }

@@ -70,12 +70,14 @@ function WatchPage({ broadcastId }) {
         ></video>
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
-          <div className="video-header-inner">
-            <Link href="/">
-              <a>
-                <Home />
-              </a>
-            </Link>
+          <div className="video-header-inner ">
+            <div className="rounded-translucent">
+              <Link href="/">
+                <a>
+                  <Home />
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="video-footer">
