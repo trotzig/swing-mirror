@@ -13,6 +13,22 @@ import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
 
+function videoDimensions(videoEl) {
+  if ('ontouchstart' in window) {
+    // iOS and Android constraints are expressed in landscape mode, so we need
+    // to flip width and height
+    // https://stackoverflow.com/questions/62538271/getusermedia-selfie-full-screen-on-mobile
+    return {
+      width: videoEl.offsetHeight,
+      height: videoEl.offsetWidth,
+    };
+  }
+  return {
+    width: videoEl.offsetWidth,
+    height: videoEl.offsetHeight,
+  };
+}
+
 function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
   const [currentRecording, setCurrentRecording] = useState();
@@ -46,8 +62,7 @@ function BroadcastPage({ broadcastId }) {
       .getUserMedia({
         video: {
           facingMode,
-          width: screen.availWidth,
-          height: screen.availHeight,
+          ...videoDimensions(videoRef.current),
         },
       })
       .then(stream => {
