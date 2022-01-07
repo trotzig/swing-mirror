@@ -34,7 +34,7 @@ export function Library({ onSelectedVideo, edit }) {
                   </div>
                 </button>
                 <button
-                  className="library-delete-button reset"
+                  className="library-delete-button reset-text"
                   style={{ opacity: edit ? 1 : 0 }}
                   onClick={() => {
                     db.deleteVideo(video.id);

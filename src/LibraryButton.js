@@ -29,7 +29,7 @@ export default function LibraryButton({ video }) {
         }}
         action={
           <button
-            className="reset"
+            className="reset-text"
             onClick={() => setLibraryEdit(!libraryEdit)}
           >
             {libraryEdit ? 'Done' : 'Edit'}
