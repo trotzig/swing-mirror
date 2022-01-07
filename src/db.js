@@ -14,8 +14,7 @@ function initDB() {
     },
   });
 }
-let dbPromise =
-  typeof indexedDB !== 'undefined' ? initDB() : Promise.resolve();
+let dbPromise = typeof indexedDB !== 'undefined' ? initDB() : Promise.resolve();
 
 function prepareVideo(video) {
   video.toRecording = async () => {
@@ -59,6 +58,14 @@ class DB {
       blob,
     });
     return videoId;
+  }
+
+  async updateVideoName(videoId, name) {
+    const tx = (await dbPromise).transaction('videos', 'readwrite');
+    const video = await tx.store.get(videoId);
+    video.name = name;
+    await tx.store.put(video);
+    await tx.done;
   }
 
   async listVideos() {
