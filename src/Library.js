@@ -9,7 +9,12 @@ export function Library({ onSelectedVideo }) {
       setVideos(await db.listVideos());
     }
     run();
+    db.addEventListener('change', run);
+
+    return () => db.removeEventListener('change', run);
   }, []);
+
+
   return (
     <div className="page-wrapper">
       <div className="library">

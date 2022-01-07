@@ -25,7 +25,7 @@ function prepareVideo(video) {
   return video;
 }
 
-class DB {
+class DB extends EventTarget {
   async recreate() {
     (await dbPromise).close();
     console.log('Destroying database');
@@ -57,6 +57,7 @@ class DB {
       id: blobId,
       blob,
     });
+    this.emitChange();
     return videoId;
   }
 
@@ -66,6 +67,7 @@ class DB {
     video.name = name;
     await tx.store.put(video);
     await tx.done;
+    this.emitChange();
   }
 
   async listVideos() {
@@ -81,6 +83,10 @@ class DB {
     }
     const video = videos[videos.length - 1];
     return prepareVideo(video);
+  }
+
+  emitChange() {
+    this.dispatchEvent(new Event('change'));
   }
 }
 
