@@ -46,10 +46,11 @@ export default class VideoRecorder {
           type: this.mimeType,
         });
         const url = URL.createObjectURL(blob);
-        const name = `swing.${fileSuffix(this.mimeType)}`;
+        const fileName = `swing.${fileSuffix(this.mimeType)}`;
         const recording = {
           url,
-          name,
+          name: 'Untitled video',
+          fileName,
           photoUrl: this.photoUrl,
           duration: (endTime - this.startTime) / 1000,
         };

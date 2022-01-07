@@ -46,7 +46,7 @@ export default function ShareButton({ video }) {
         style={{ lineHeight: 0 }}
         key="download"
         href={video.url}
-        download={video.name || 'swing.webm'}
+        download={video.fileName || video.name || 'swing.webm'}
       >
         <Download />
       </a>
