@@ -8,6 +8,7 @@ import VideoPlayer from './VideoPlayer';
 
 export default function LibraryButton({ video }) {
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [libraryEdit, setLibraryEdit] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState();
   return (
     <div>
@@ -26,8 +27,16 @@ export default function LibraryButton({ video }) {
         onClose={() => {
           setLibraryOpen(false);
         }}
+        action={
+          <button
+            className="reset"
+            onClick={() => setLibraryEdit(!libraryEdit)}
+          >
+            {libraryEdit ? 'Done' : 'Edit'}
+          </button>
+        }
       >
-        <Library onSelectedVideo={setSelectedVideo} />
+        <Library onSelectedVideo={setSelectedVideo} edit={libraryEdit} />
       </Modal>
       <Modal
         open={selectedVideo}

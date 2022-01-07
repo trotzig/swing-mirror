@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import db from './db';
 
-export function Library({ onSelectedVideo }) {
+export function Library({ onSelectedVideo, edit }) {
   const [videos, setVideos] = useState();
   useEffect(() => {
     async function run() {
@@ -14,7 +14,6 @@ export function Library({ onSelectedVideo }) {
     return () => db.removeEventListener('change', run);
   }, []);
 
-
   return (
     <div className="page-wrapper">
       <div className="library">
@@ -23,7 +22,7 @@ export function Library({ onSelectedVideo }) {
             {videos.map(video => (
               <li key={video.id} className="library-item">
                 <button
-                  className="reset"
+                  className="library-item-main reset"
                   onClick={async () => {
                     onSelectedVideo(await video.toRecording());
                   }}
@@ -33,6 +32,15 @@ export function Library({ onSelectedVideo }) {
                     <h4>{video.name}</h4>
                     <p>{new Date(video.date).toLocaleString()}</p>
                   </div>
+                </button>
+                <button
+                  className="library-delete-button reset"
+                  style={{ opacity: edit ? 1 : 0 }}
+                  onClick={() => {
+                    db.deleteVideo(video.id);
+                  }}
+                >
+                  Delete
                 </button>
               </li>
             ))}

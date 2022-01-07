@@ -70,6 +70,13 @@ class DB extends EventTarget {
     this.emitChange();
   }
 
+  async deleteVideo(videoId) {
+    const tx = (await dbPromise).transaction('videos', 'readwrite');
+    const video = await tx.store.delete(videoId);
+    await tx.done;
+    this.emitChange();
+  }
+
   async listVideos() {
     const videos = await (await dbPromise).getAllFromIndex('videos', 'date');
     videos.forEach(prepareVideo);
