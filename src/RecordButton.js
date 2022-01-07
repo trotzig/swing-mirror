@@ -8,6 +8,10 @@ export default function RecordButton({ isRecording, onClick }) {
         // button is focused
         return;
       }
+      if (e.target.ownerDocument.querySelector('.modal.open')) {
+        console.log('Ignoring spacebar press since modal is open');
+        return;
+      }
       if (e.which === 13 || e.which === 32) {
         // Enter or Spacebar
         onClick();
