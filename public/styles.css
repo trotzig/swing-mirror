@@ -383,7 +383,7 @@ h1 i {
   right: 0;
   padding: 15px;
   display: grid;
-  grid-template-columns: 50px auto auto;
+  grid-template-columns: 50px auto 50px;
   column-gap: 10px;
   align-items: center;
   justify-content: center;
@@ -394,6 +394,9 @@ h1 i {
 .modal-title {
   font-size: 20px;
   line-height: 1;
+}
+.modal-action {
+  justify-self: flex-end;
 }
 
 .broadcast-id {

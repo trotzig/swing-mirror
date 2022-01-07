@@ -88,7 +88,7 @@ export default function Modal({
           </button>
         </div>
         <div className="modal-title">{title}</div>
-        {action}
+        <div className="modal-action">{action}</div>
       </div>
     </div>
   );
