@@ -581,10 +581,6 @@ h1 i {
 
 .video-info input {
   all: unset;
-}
-
-.video-info input,
-.video-info button {
   color: currentColor;
   font-size: 18px;
   line-height: 22px;
