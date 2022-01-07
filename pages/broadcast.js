@@ -12,7 +12,7 @@ import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
 
 function videoDimensions(videoEl) {
-  if ('ontouchstart' in window) {
+  if (/iPad|iPhone|iPod|android/.test(navigator.userAgent)) {
     // iOS and Android constraints are expressed in landscape mode, so we need
     // to flip width and height
     // https://stackoverflow.com/questions/62538271/getusermedia-selfie-full-screen-on-mobile
