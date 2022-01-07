@@ -87,6 +87,7 @@ button.reset {
   all: unset;
   cursor: pointer;
   line-height: 0;
+  color: currentColor;
 }
 
 nav {
