@@ -341,14 +341,21 @@ h1 i {
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 1);
-  transition: transform 0.3s, opacity 0.3s;
+  transition: all 0.2s ease-out;
   opacity: 1;
-  transform: translateX(0);
+  transform: translate(0, 0);
 }
 .modal.closed {
   opacity: 0;
   transform: translateX(-30%);
   pointer-events: none;
+}
+
+.modal.slide-up.closed {
+  transform: translateY(60%);
+}
+.modal.slide-up .modal-close {
+  transform: rotate(-90deg);
 }
 .modal-actions {
   position: absolute;
@@ -473,32 +480,6 @@ h1 i {
 
 .video-player-step-back,
 .video-player-step-forward {
-}
-
-.db-videos,
-.db-videos li {
-  all: unset;
-}
-
-.db-videos {
-  display: block;
-  overflow-x: auto;
-  white-space: nowrap;
-  margin-bottom: 0;
-}
-.db-videos::-webkit-scrollbar {
-  display: none;
-}
-.db-videos li {
-  display: inline-block;
-  margin-right: 5px;
-}
-.db-videos img {
-  line-height: 0;
-  display: block;
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
 }
 
 .start-camera {

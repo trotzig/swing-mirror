@@ -19,6 +19,7 @@ export default function LibraryButton({ video }) {
         <img src={video.photoUrl} className="video-still-image" />
       </button>
       <Modal
+        slideUp
         open={libraryOpen}
         onClose={() => {
           setLibraryOpen(false);

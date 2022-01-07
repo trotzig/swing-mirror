@@ -44,7 +44,6 @@ export default function VideoPlayer({
 }) {
   const [objectFit, setObjectFit] = useState(initialObjectFit);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [dbVideos, setDbVideos] = useState([]);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
   const videoRef = useRef();
   const seekRef = useRef();
@@ -82,16 +81,6 @@ export default function VideoPlayer({
     videoRef.current.playbackRate = rate.value;
   }, [playbackRateIncr]);
 
-  useEffect(() => {
-    async function run() {
-      setDbVideos(await db.listVideos());
-    }
-
-    if (video) {
-      run();
-    }
-  }, [video]);
-
   return (
     <div className="video-player">
       <video
@@ -126,21 +115,6 @@ export default function VideoPlayer({
           onMouseDown={() => videoRef.current.pause()}
           onTouchEnd={rangeTouchEndListener}
         />
-        <ul className="db-videos">
-          {dbVideos.map(dbVideo => (
-            <li key={dbVideo.id}>
-              <button
-                className="reset"
-                onClick={async () => {
-                  console.log(dbVideo);
-                  onVideoChange(await dbVideo.toRecording());
-                }}
-              >
-                <img src={dbVideo.photoUrl} />
-              </button>
-            </li>
-          ))}
-        </ul>
         <div className="video-player-controls-bottom">
           <button
             className="video-player-playback-rate"

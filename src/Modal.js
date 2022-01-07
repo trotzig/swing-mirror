@@ -8,6 +8,7 @@ export default function Modal({
   opaque = false,
   onClose = () => {},
   children,
+  slideUp = false,
 }) {
   useEffect(() => {
     const listener = e => {
@@ -19,15 +20,24 @@ export default function Modal({
     document.addEventListener('keyup', listener);
     return () => document.removeEventListener('keyup', listener);
   });
+  const classes = ['modal'];
+  if (open) {
+    classes.push('open');
+  } else {
+    classes.push('closed');
+  }
+  if (slideUp) {
+    classes.push('slide-up');
+  }
   return (
     <div
-      className={open ? 'modal open' : 'modal closed'}
+      className={classes.join(' ')}
       style={{ backgroundColor: opaque ? '#000' : undefined }}
     >
       {children}
       <div className="modal-actions">
         <div className="rounded-translucent">
-          <button className="reset" onClick={() => onClose()}>
+          <button className="reset modal-close" onClick={() => onClose()}>
             <ArrowBack />
           </button>
         </div>
