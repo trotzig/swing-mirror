@@ -13,11 +13,10 @@ export function Library({ onSelectedVideo }) {
   return (
     <div className="page-wrapper">
       <div className="library">
-        <h2>Library</h2>
         {videos ? (
           <ul>
             {videos.map(video => (
-              <li key={video.id}>
+              <li key={video.id} className="library-item">
                 <button
                   className="reset"
                   onClick={async () => {
@@ -25,6 +24,10 @@ export function Library({ onSelectedVideo }) {
                   }}
                 >
                   <img src={video.photoUrl} />
+                  <div>
+                    <h4>{video.name}</h4>
+                    <p>{new Date(video.date).toLocaleString()}</p>
+                  </div>
                 </button>
               </li>
             ))}

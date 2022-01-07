@@ -4,11 +4,12 @@ import ArrowBack from './icons/ArrowBack';
 
 export default function Modal({
   open,
-  actions,
+  action,
   opaque = false,
   onClose = () => {},
   children,
   slideUp = false,
+  title,
 }) {
   useEffect(() => {
     const listener = e => {
@@ -34,14 +35,17 @@ export default function Modal({
       className={classes.join(' ')}
       style={{ backgroundColor: opaque ? '#000' : undefined }}
     >
-      {children}
+      <div className="modal-children">
+        {children}
+      </div>
       <div className="modal-actions">
         <div className="rounded-translucent">
           <button className="reset modal-close" onClick={() => onClose()}>
             <ArrowBack />
           </button>
         </div>
-        {actions}
+        <div className="modal-title">{title}</div>
+        {action}
       </div>
     </div>
   );

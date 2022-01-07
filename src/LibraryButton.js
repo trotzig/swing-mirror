@@ -21,6 +21,7 @@ export default function LibraryButton({ video }) {
       <Modal
         slideUp
         open={libraryOpen}
+        title="Library"
         onClose={() => {
           setLibraryOpen(false);
         }}
@@ -30,7 +31,7 @@ export default function LibraryButton({ video }) {
       <Modal
         open={selectedVideo}
         onClose={() => setSelectedVideo(undefined)}
-        actions={[<ShareButton key="share" video={selectedVideo} />]}
+        action={<ShareButton video={selectedVideo} />}
       >
         <VideoPlayer video={selectedVideo} onVideoChange={setSelectedVideo} />
       </Modal>

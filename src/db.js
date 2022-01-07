@@ -64,7 +64,7 @@ class DB {
   async listVideos() {
     const videos = await (await dbPromise).getAllFromIndex('videos', 'date');
     videos.forEach(prepareVideo);
-    return videos.filter(v => v.blobId);
+    return videos.filter(v => v.blobId).reverse();
   }
 
   async getMostRecentVideo() {
