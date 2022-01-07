@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import ArrowBack from './icons/ArrowBack';
 
@@ -14,6 +14,7 @@ export default function Modal({
   const [touchStart, setTouchStart] = useState();
   const [touchDistance, setTouchDistance] = useState();
   const [scrollTimestamp, setScrollTimestamp] = useState(0);
+  const childrenRef = useRef();
   useEffect(() => {
     const listener = e => {
       if (e.which === 27) {
@@ -24,6 +25,13 @@ export default function Modal({
     document.addEventListener('keyup', listener);
     return () => document.removeEventListener('keyup', listener);
   });
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    childrenRef.current.querySelector('input').focus();
+  }, [open]);
   const classes = ['modal'];
   if (open) {
     classes.push('open');
@@ -65,6 +73,7 @@ export default function Modal({
     >
       <div
         className="modal-children"
+        ref={childrenRef}
         onScroll={e => setScrollTimestamp(Date.now())}
       >
         {children}

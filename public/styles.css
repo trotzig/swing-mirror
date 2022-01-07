@@ -107,6 +107,9 @@ main .tagline {
   margin-bottom: 30px;
 }
 @media (orientation: landscape) and (max-width: 900px) {
+  .page-wrapper {
+    padding: 0 30px;
+  }
   nav {
     position: absolute;
     top: 0;
@@ -419,7 +422,7 @@ h1 i {
   align-items: center;
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px 20px;
 }
 
 .watch-form p {
