@@ -30,7 +30,10 @@ export default function Modal({
     if (!open) {
       return;
     }
-    childrenRef.current.querySelector('input').focus();
+    const focusable = childrenRef.current.querySelector('input');
+    if (focusable) {
+      focusable.focus();
+    }
   }, [open]);
   const classes = ['modal'];
   if (open) {

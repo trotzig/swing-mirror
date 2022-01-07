@@ -32,7 +32,6 @@ function BroadcastPage({ broadcastId }) {
   const [libraryVideo, setLibraryVideo] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [hasStream, setHasStream] = useState(false);
-  const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
@@ -129,10 +128,6 @@ function BroadcastPage({ broadcastId }) {
         autoPlay
         muted
         ref={videoRef}
-        style={{ objectFit: videoObjectFit }}
-        onDoubleClick={() => {
-          setVideoObjectFit(videoObjectFit === 'contain' ? 'cover' : 'contain');
-        }}
       ></video>
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">

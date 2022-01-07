@@ -1,0 +1,2 @@
+--ignore-dir=is:.next
+--ignore-dir=is:node_modules

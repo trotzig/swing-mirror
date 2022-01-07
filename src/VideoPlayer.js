@@ -39,10 +39,8 @@ function step(dir, video, playbackRate) {
 
 export default function VideoPlayer({
   video,
-  initialObjectFit = 'cover',
   onVideoChange = () => {},
 }) {
-  const [objectFit, setObjectFit] = useState(initialObjectFit);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
   const videoRef = useRef();
@@ -89,10 +87,6 @@ export default function VideoPlayer({
         autoPlay
         muted
         loop
-        style={{ objectFit }}
-        onDoubleClick={() => {
-          setObjectFit(objectFit === 'contain' ? 'cover' : 'contain');
-        }}
       ></video>
       <div className="video-player-step-overlay">
         <button

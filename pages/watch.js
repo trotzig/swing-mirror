@@ -14,7 +14,6 @@ function WatchPage({ broadcastId }) {
   const canvasRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
-  const [videoObjectFit, setVideoObjectFit] = useState('contain');
   const [recording, setRecording] = useState();
   const [isController, setIsController] = useState(true);
 
@@ -58,12 +57,6 @@ function WatchPage({ broadcastId }) {
           muted
           playsInline
           ref={videoRef}
-          style={{ objectFit: videoObjectFit }}
-          onDoubleClick={() => {
-            setVideoObjectFit(
-              videoObjectFit === 'contain' ? 'cover' : 'contain',
-            );
-          }}
         ></video>
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
