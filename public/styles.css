@@ -581,7 +581,15 @@ h1 i {
 
 .video-info input {
   all: unset;
-  display: inline-block;
+}
+
+.video-info input,
+.video-info button {
+  color: currentColor;
+  font-size: 18px;
+  line-height: 22px;
+  display: block;
   width: auto;
+  text-shadow: 0 0 3px #000;
   text-align: center;
 }
