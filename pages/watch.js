@@ -3,10 +3,8 @@ import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Home from '../src/icons/Home';
-import Modal from '../src/Modal';
+import LibraryButton from '../src/LibraryButton';
 import RecordButton from '../src/RecordButton';
-import ShareButton from '../src/ShareButton';
-import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
 
@@ -17,7 +15,6 @@ function WatchPage({ broadcastId }) {
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
   const [videoObjectFit, setVideoObjectFit] = useState('contain');
-  const [currentRecording, setCurrentRecording] = useState();
   const [recording, setRecording] = useState();
   const [isController, setIsController] = useState(true);
 
@@ -83,15 +80,7 @@ function WatchPage({ broadcastId }) {
         <div className="video-footer">
           <div className="video-recording">
             {recording && (
-              <button
-                className="reset"
-                key={recording.url}
-                onClick={() => {
-                  setCurrentRecording(recording);
-                }}
-              >
-                <img src={recording.photoUrl} className="video-still-image" />
-              </button>
+              <LibraryButton key={recording.url} video={recording} />
             )}
           </div>
           <RecordButton
@@ -100,17 +89,6 @@ function WatchPage({ broadcastId }) {
           />
         </div>
       </div>
-      <Modal
-        open={currentRecording}
-        onClose={() => setCurrentRecording(undefined)}
-        actions={[<ShareButton key="share" video={currentRecording} />]}
-      >
-        <VideoPlayer
-          initialObjectFit={videoObjectFit}
-          video={currentRecording}
-          onVideoChange={setCurrentRecording}
-        />
-      </Modal>
     </div>
   );
 }

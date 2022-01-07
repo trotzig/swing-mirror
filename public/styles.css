@@ -63,7 +63,6 @@ video.full-screen {
   margin: 0 auto;
 }
 
-
 button {
   display: inline-block;
   margin-bottom: 0;
@@ -299,12 +298,8 @@ h1 i {
   object-fit: cover;
 }
 
-.video-recording button {
-  margin-right: -20px;
-}
-
 .rounded-translucent button,
-.rounded-translucent a  {
+.rounded-translucent a {
   display: block;
   border-radius: 50%;
   height: 50px;
@@ -313,6 +308,9 @@ h1 i {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+.video-recording {
+  z-index: 1;
 }
 
 @media (orientation: landscape) and (max-width: 900px) {
@@ -331,10 +329,6 @@ h1 i {
     align-self: flex-start;
   }
 
-  .video-recording button {
-    margin-top: -20px;
-    margin-right: 0;
-  }
   .video-footer-right {
     align-self: flex-end;
   }
@@ -551,4 +545,7 @@ h1 i {
   top: -100px;
   display: inline-block;
   visibility: hidden;
+}
+
+.library {
 }
