@@ -600,3 +600,10 @@ h1 i {
   text-shadow: 0 0 3px #000;
   text-align: center;
 }
+
+.home-library-button {
+  z-index: 1;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}

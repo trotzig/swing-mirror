@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import LibraryButton from '../src/LibraryButton';
 import Modal from '../src/Modal';
 import Monitor from '../src/icons/Monitor';
 import StartBox from '../src/StartBox';
 import SwingAppsIconSvg from '../src/icons/SwingAppsIconSvg';
 import VideoCam from '../src/icons/VideoCam';
 import Warning from '../src/icons/Warning';
+import db from '../src/db';
 
 function CodeInput({ length, ...props }) {
   const ruler = useRef();
@@ -68,12 +70,27 @@ function CodeInput({ length, ...props }) {
 
 function IndexPage({ error, broadcastId }) {
   const [formVisible, setFormVisible] = useState(false);
+  const [libraryVideo, setLibraryVideo] = useState();
+  useEffect(() => {
+    async function run() {
+      const dbVideo = await db.getMostRecentVideo();
+      setLibraryVideo(dbVideo ? await dbVideo.toRecording() : undefined);
+    }
+    run();
+    db.addEventListener('change', run);
+    return () => db.removeEventListener('change', run);
+  }, []);
   return (
     <div>
       <div className="blurry-background" />
       <nav>
-        <div className="page-wrapper">
+        <div className="page-wrapper" style={{ position: 'relative' }}>
           <SwingAppsIconSvg size={50} />
+          {libraryVideo && (
+            <div className="home-library-button">
+              <LibraryButton video={libraryVideo} />
+            </div>
+          )}
         </div>
       </nav>
       <main>
