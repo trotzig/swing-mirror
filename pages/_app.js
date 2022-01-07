@@ -1,4 +1,5 @@
 import '../public/styles.css';
+import '../public/range-input.css';
 
 import Head from 'next/head';
 

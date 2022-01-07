@@ -84,9 +84,9 @@ export default function VideoPlayer({
       <video
         ref={videoRef}
         playsInline
-        autoPlay
         muted
         loop
+        autoPlay
       ></video>
       <div className="video-player-step-overlay">
         <button
