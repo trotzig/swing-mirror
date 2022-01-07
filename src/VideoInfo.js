@@ -9,6 +9,7 @@ export default function VideoInfo({ video }) {
     <div className="video-info">
       <input
         type="text"
+        spellCheck="false"
         value={value}
         onChange={e => setValue(e.target.value)}
         onFocus={e => e.target.select()}
