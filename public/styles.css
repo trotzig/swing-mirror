@@ -565,6 +565,7 @@ h1 i {
 .library-item img {
   height: 80px;
   width: 80px;
+  border-radius: var(--border-radius);
   object-fit: cover;
 }
 .library-item h4 {
