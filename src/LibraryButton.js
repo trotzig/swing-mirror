@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Library } from './Library';
 import Modal from './Modal';
 import ShareButton from './ShareButton';
+import VideoInfo from './VideoInfo';
 import VideoPlayer from './VideoPlayer';
 
 export default function LibraryButton({ video }) {
@@ -31,6 +32,7 @@ export default function LibraryButton({ video }) {
       <Modal
         open={selectedVideo}
         onClose={() => setSelectedVideo(undefined)}
+        title={selectedVideo && <VideoInfo video={selectedVideo} />}
         action={<ShareButton video={selectedVideo} />}
       >
         <VideoPlayer video={selectedVideo} onVideoChange={setSelectedVideo} />
