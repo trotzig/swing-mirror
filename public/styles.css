@@ -616,3 +616,6 @@ h1 i {
   text-align: center;
   transition: opacity 1s;
 }
+.volume-button {
+  justify-self: flex-end;
+}

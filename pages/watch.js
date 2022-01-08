@@ -7,6 +7,8 @@ import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
 import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
+import VolumeOff from '../src/icons/VolumeOff';
+import VolumeUp from '../src/icons/VolumeUp';
 import watch from '../src/watch';
 
 const delayRates = [
@@ -26,6 +28,7 @@ function WatchPage({ broadcastId }) {
   const [delayIndex, setDelayIndex] = useState(0);
   const [recording, setRecording] = useState();
   const [isController, setIsController] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     const { closeSocket, sendInstruction } = watch({
@@ -67,7 +70,7 @@ function WatchPage({ broadcastId }) {
         <video
           className="full-screen"
           autoPlay
-          muted
+          muted={isMuted}
           playsInline
           ref={videoRef}
         />
@@ -91,6 +94,16 @@ function WatchPage({ broadcastId }) {
             >
               {delay.title}
             </div>
+            {hasStream && (
+              <div className="rounded-translucent">
+                <button
+                  className="reset-text"
+                  onClick={() => setDelayIndex(delayIndex + 1)}
+                >
+                  {delay.label}
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="video-footer">
@@ -104,16 +117,11 @@ function WatchPage({ broadcastId }) {
             isRecording={isRecording}
           />
           <div className="video-footer-right">
-            {hasStream && (
-              <div className="rounded-translucent">
-                <button
-                  className="reset-text"
-                  onClick={() => setDelayIndex(delayIndex + 1)}
-                >
-                  {delay.label}
-                </button>
-              </div>
-            )}
+            <div className="rounded-translucent">
+              <button className="reset" onClick={() => setIsMuted(!isMuted)}>
+                {isMuted ? <VolumeOff /> : <VolumeUp />}
+              </button>
+            </div>
           </div>
         </div>
       </div>

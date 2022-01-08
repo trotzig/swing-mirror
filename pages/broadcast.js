@@ -58,6 +58,7 @@ function BroadcastPage({ broadcastId }) {
     const videoElement = videoRef.current;
     navigator.mediaDevices
       .getUserMedia({
+        audio: true,
         video: {
           facingMode,
           ...videoDimensions(videoRef.current),

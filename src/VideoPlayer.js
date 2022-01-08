@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import db from './db';
+import VolumeOff from './icons/VolumeOff';
+import VolumeUp from './icons/VolumeUp';
 
 const pausePath = 'M13,10 L18,13 18,23 13,26 M18,13 L26,18 26,18 18,23';
 const playPath = 'M10,10 L16,10 16,26 10,26 M20,10 L26,10 26,26 20,26';
@@ -39,6 +40,7 @@ function step(dir, video, playbackRate) {
 
 export default function VideoPlayer({ video, onVideoChange = () => {} }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
   const videoRef = useRef();
   const seekRef = useRef();
@@ -78,7 +80,7 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
 
   return (
     <div className="video-player">
-      <video ref={videoRef} playsInline muted loop autoPlay></video>
+      <video ref={videoRef} playsInline muted={isMuted} loop autoPlay></video>
       <div className="video-player-step-overlay">
         <button
           className="video-player-step-back reset"
@@ -132,6 +134,11 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
               </path>
             </svg>
           </button>
+          <div className="rounded-translucent volume-button">
+            <button className="reset" onClick={() => setIsMuted(!isMuted)}>
+              {isMuted ? <VolumeOff /> : <VolumeUp />}
+            </button>
+          </div>
         </div>
       </div>
     </div>
