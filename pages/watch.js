@@ -9,6 +9,7 @@ import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
 import VolumeOff from '../src/icons/VolumeOff';
 import VolumeUp from '../src/icons/VolumeUp';
+import db from '../src/db';
 import watch from '../src/watch';
 
 const delayRates = [
@@ -57,6 +58,14 @@ function WatchPage({ broadcastId }) {
     }
     instructionRef.current({ isRecording });
   }, [isRecording]);
+
+  useEffect(() => {
+    async function run() {
+      const dbVideo = await db.getMostRecentVideo();
+      setRecording(dbVideo ? await dbVideo.toRecording() : undefined);
+    }
+    run();
+  }, []);
 
   const delay = delayRates[delayIndex % delayRates.length];
 
