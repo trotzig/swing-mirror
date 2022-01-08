@@ -6,6 +6,7 @@
     "jsx-a11y/alt-text": 0
   },
   "globals": {
-    "Promise": true
+    "Promise": true,
+    "Uint8ClampedArray": true
   }
 }

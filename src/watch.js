@@ -7,6 +7,7 @@ export default function watch({
   videoRef,
   onInstruction,
   onRecording,
+  onStreamActive,
 }) {
   let broadcastSocketId;
   let peerConnection;
@@ -37,6 +38,7 @@ export default function watch({
       });
     peerConnection.ontrack = event => {
       videoRef.current.srcObject = event.streams[0];
+      onStreamActive();
     };
     peerConnection.onicecandidate = event => {
       if (event.candidate) {
