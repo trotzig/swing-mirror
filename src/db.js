@@ -71,8 +71,12 @@ class DB extends EventTarget {
   }
 
   async deleteVideo(videoId) {
-    const tx = (await dbPromise).transaction('videos', 'readwrite');
-    const video = await tx.store.delete(videoId);
+    const tx = (await dbPromise).transaction(['videos', 'videoBlobs'], 'readwrite');
+    const vStore = tx.objectStore('videos');
+    const vbStore = tx.objectStore('videoBlobs');
+    const video = await vStore.get(videoId);
+    await vStore.delete(videoId);
+    await vbStore.delete(video.blobId);
     await tx.done;
     this.emitChange();
   }
