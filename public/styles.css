@@ -262,7 +262,11 @@ h1 i {
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: 1fr 50px 1fr;
+  grid-template-columns: 1fr 80px 1fr;
+}
+
+.video-footer-right {
+  justify-self: flex-end;
 }
 
 .record-button,
