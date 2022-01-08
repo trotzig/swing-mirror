@@ -10,10 +10,10 @@ import VideoRecorder from '../src/VideoRecorder';
 import watch from '../src/watch';
 
 const delayRates = [
-  { label: '+0s', value: 0 },
-  { label: '+1s', value: 1 },
-  { label: '+2s', value: 2 },
-  { label: '+3s', value: 3 },
+  { label: '+0s', value: 0, title: 'No delay' },
+  { label: '+1s', value: 1, title: 'Video delayed 1 second' },
+  { label: '+2s', value: 2, title: 'Video delayed 2 seconds' },
+  { label: '+3s', value: 3, title: 'Video delayed 3 seconds' },
 ];
 
 function WatchPage({ broadcastId }) {
@@ -70,7 +70,7 @@ function WatchPage({ broadcastId }) {
           muted
           playsInline
           ref={videoRef}
-        ></video>
+        />
         {delay.value > 0 ? (
           <DelayedVideo delaySeconds={delay.value} videoRef={videoRef} />
         ) : null}
@@ -84,6 +84,13 @@ function WatchPage({ broadcastId }) {
                 </a>
               </Link>
             </div>
+
+            <div
+              className="delay-title"
+              style={{ opacity: delay.value > 0 ? 1 : 0 }}
+            >
+              {delay.title}
+            </div>
           </div>
         </div>
         <div className="video-footer">
@@ -96,14 +103,18 @@ function WatchPage({ broadcastId }) {
             onClick={() => setIsRecording(!isRecording)}
             isRecording={isRecording}
           />
-          {hasStream && (
-            <button
-              className="reset-text"
-              onClick={() => setDelayIndex(delayIndex + 1)}
-            >
-              {delay.label}
-            </button>
-          )}
+          <div className="video-footer-right">
+            {hasStream && (
+              <div className="rounded-translucent">
+                <button
+                  className="reset-text"
+                  onClick={() => setDelayIndex(delayIndex + 1)}
+                >
+                  {delay.label}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

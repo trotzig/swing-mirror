@@ -37,10 +37,7 @@ function step(dir, video, playbackRate) {
   video.currentTime = video.currentTime + dir * move;
 }
 
-export default function VideoPlayer({
-  video,
-  onVideoChange = () => {},
-}) {
+export default function VideoPlayer({ video, onVideoChange = () => {} }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
   const videoRef = useRef();
@@ -81,13 +78,7 @@ export default function VideoPlayer({
 
   return (
     <div className="video-player">
-      <video
-        ref={videoRef}
-        playsInline
-        muted
-        loop
-        autoPlay
-      ></video>
+      <video ref={videoRef} playsInline muted loop autoPlay></video>
       <div className="video-player-step-overlay">
         <button
           className="video-player-step-back reset"
@@ -110,12 +101,14 @@ export default function VideoPlayer({
           onTouchEnd={rangeTouchEndListener}
         />
         <div className="video-player-controls-bottom">
-          <button
-            className="video-player-playback-rate"
-            onClick={() => setPlaybackRateIncr(old => old + 1)}
-          >
-            {playbackRate.label}
-          </button>
+          <div className="rounded-translucent">
+            <button
+              className="reset-text"
+              onClick={() => setPlaybackRateIncr(old => old + 1)}
+            >
+              {playbackRate.label}
+            </button>
+          </div>
           <button
             className="video-player-play-button"
             onClick={() =>

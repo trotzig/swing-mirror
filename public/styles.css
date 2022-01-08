@@ -48,9 +48,10 @@ video.full-screen, .delayed-video {
   border-radius: var(--border-radius);
   border-color: currentColor;
   padding: 15px;
-  margin-bottom: 30px;
   display: flex;
   align-items: flex-top;
+  max-width: 600px;
+  margin: 0 auto 30px;
 }
 
 .error svg {
@@ -488,17 +489,6 @@ h1 i {
   justify-content: center;
 }
 
-.video-player-playback-rate {
-  border-radius: 50%;
-  border-width: 0;
-  height: 50px;
-  width: 50px;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .video-player-step-overlay {
   position: absolute;
   top: 0;
@@ -621,4 +611,8 @@ h1 i {
 .home-library-button {
   z-index: 1;
   line-height: 0;
+}
+.delay-title {
+  text-align: center;
+  transition: opacity 1s;
 }

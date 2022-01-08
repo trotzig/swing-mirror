@@ -11,12 +11,21 @@ export default function DelayedVideo({ videoRef, delaySeconds }) {
   const captureRef = useRef();
   const outputRef = useRef();
   const workerRef = useRef();
+  const frameRateRef = useRef(30);
 
   useEffect(() => {
     const captureCtx = initCanvas(captureRef.current, videoRef.current);
     const outputCtx = initCanvas(outputRef.current, videoRef.current);
 
     let isActive = true;
+    let framesProcessed = 0;
+
+    const frameRateInterval = setInterval(() => {
+      frameRateRef.current = framesProcessed;
+      framesProcessed = 0;
+      // console.log('Current frame rate', frameRateRef.current);
+    }, 1000);
+
     function processFrame() {
       if (!isActive || !captureRef.current) {
         return;
@@ -41,6 +50,7 @@ export default function DelayedVideo({ videoRef, delaySeconds }) {
 
     workerRef.current = new Worker('/video-delay-worker.js');
     workerRef.current.addEventListener('message', e => {
+      framesProcessed++;
       if (e.data == 'empty') {
         // still buffering, keep capturing
         requestAnimationFrame(processFrame);
@@ -63,11 +73,15 @@ export default function DelayedVideo({ videoRef, delaySeconds }) {
     return () => {
       isActive = false;
       workerRef.current.terminate();
+      clearInterval(frameRateInterval);
     };
   }, [videoRef]);
 
   useEffect(() => {
-    workerRef.current.postMessage({ delaySeconds });
+    workerRef.current.postMessage({
+      delaySeconds,
+      framesPerSecond: frameRateRef.current,
+    });
   }, [delaySeconds]);
 
   return (
