@@ -28,7 +28,10 @@ export default function watch({
     peerConnection
       .setRemoteDescription(description)
       .then(() => peerConnection.createAnswer())
-      .then(sdp => peerConnection.setLocalDescription(sdp))
+      .then(sdp => {
+        console.log('SDP', sdp);
+        return peerConnection.setLocalDescription(sdp);
+      })
       .then(() => {
         socket.emit('answer', id, peerConnection.localDescription);
       });

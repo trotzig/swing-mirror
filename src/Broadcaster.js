@@ -33,7 +33,10 @@ export default class Broadcaster extends EventEmitter {
 
       peerConnection
         .createOffer()
-        .then(sdp => peerConnection.setLocalDescription(sdp))
+        .then(sdp => {
+          console.log('SDP', sdp);
+          return peerConnection.setLocalDescription(sdp);
+        })
         .then(() => {
           this.socket.emit('offer', id, peerConnection.localDescription);
         })
