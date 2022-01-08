@@ -265,13 +265,6 @@ h1 i {
   grid-template-columns: 1fr 50px 1fr;
 }
 
-.video-footer-right {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-self: flex-end;
-  column-gap: 10px;
-}
-
 .record-button,
 .video-player-play-button {
   padding: 0;
@@ -331,19 +324,21 @@ h1 i {
     bottom: 0;
     left: auto;
     right: 0;
-    width: 75px;
+    width: auto;
     height: 100%;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 90px 1fr;
+    padding: 15px;
   }
 
   .video-recording {
-    padding-top: 20px;
     align-self: flex-start;
+    justify-self: flex-end;
   }
 
   .video-footer-right {
     align-self: flex-end;
+    justify-self: flex-end;
   }
 }
 
@@ -385,7 +380,7 @@ h1 i {
   right: 0;
   padding: 15px;
   display: grid;
-  grid-template-columns: 50px auto 50px;
+  grid-template-columns: 60px auto 60px;
   column-gap: 10px;
   align-items: center;
   justify-content: center;
