@@ -97,7 +97,6 @@ button.reset-text {
 }
 
 nav {
-  min-height: 50px;
   padding: 20px 0;
   margin-bottom: 50px;
 }
@@ -122,6 +121,7 @@ main .tagline {
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
     margin-bottom: 0;
   }
   main {
@@ -166,9 +166,11 @@ h1 i {
 .start-boxes {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 30px;
+  column-gap: 15px;
   row-gap: 30px;
-  align-items: flex-top;
+  align-items: stretch;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 @media (max-width: 500px) {
@@ -612,9 +614,12 @@ h1 i {
   text-align: center;
 }
 
+.start-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .home-library-button {
   z-index: 1;
-  position: absolute;
-  right: 15px;
-  top: 0;
+  line-height: 0;
 }
