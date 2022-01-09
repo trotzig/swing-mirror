@@ -1,6 +1,33 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function FrequencyBarGraph({ stream, onData }) {
+const MAX_VALUE = 255;
+
+function renderGraph({
+  canvasCtx,
+  dataArray,
+  width,
+  height,
+  bufferLength,
+  barWidth,
+}) {
+  canvasCtx.clearRect(0, 0, width, height);
+  let x = 0;
+  for (let i = 0; i < bufferLength; i++) {
+    const barWidth = width / bufferLength;
+    const barHeight = dataArray[i] * (height / MAX_VALUE);
+    canvasCtx.fillStyle = 'rgba(66, 122, 172, 1)';
+    canvasCtx.fillRect(x, height - barHeight, barWidth, barHeight);
+    x += barWidth;
+  }
+}
+
+export default function FrequencyBarGraph({
+  stream,
+  onData,
+  data,
+  width,
+  height,
+}) {
   const canvasRef = useRef();
   useEffect(() => {
     if (!stream) {
@@ -16,9 +43,7 @@ export default function FrequencyBarGraph({ stream, onData }) {
     analyzer.fftSize = 64;
     const bufferLength = analyzer.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
-    console.log({ bufferLength });
 
-    const barWidth = width / bufferLength;
     sourceNode.connect(analyzer);
 
     let isActive = true;
@@ -26,20 +51,15 @@ export default function FrequencyBarGraph({ stream, onData }) {
       if (!isActive) {
         return;
       }
-      canvasCtx.clearRect(0, 0, width, height);
       analyzer.getByteFrequencyData(dataArray);
-
-      if (!dataArray) {
-        return requestAnimationFrame(renderFrame);
-      }
-      let x = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] / 2;
-        canvasCtx.fillStyle = 'rgba(66, 122, 172, 1)';
-        canvasCtx.fillRect(x, height - barHeight / 2, barWidth, barHeight);
-        x += barWidth;
-      }
-      onData(dataArray);
+      renderGraph({
+        canvasCtx,
+        dataArray,
+        bufferLength,
+        width,
+        height,
+      });
+      onData(dataArray, bufferLength);
       requestAnimationFrame(renderFrame);
     }
     renderFrame();
@@ -48,5 +68,21 @@ export default function FrequencyBarGraph({ stream, onData }) {
       isActive = false;
     };
   }, [stream, onData]);
-  return <canvas ref={canvasRef} />;
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    const canvasCtx = canvasRef.current.getContext('2d');
+    const width = canvasRef.current.width;
+    const height = canvasRef.current.height;
+    renderGraph({
+      canvasCtx,
+      dataArray: data,
+      bufferLength: data.length,
+      width,
+      height,
+    });
+  }, [data]);
+  return <canvas width={width} height={height} ref={canvasRef} />;
 }

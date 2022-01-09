@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
 import AutoRecordCalibrate from '../src/AutoRecordCalibrate';
+import AutoRecorder from '../src/AutoRecorder';
 import Broadcaster from '../src/Broadcaster';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
@@ -146,12 +147,16 @@ function BroadcastPage({ broadcastId }) {
             </Link>
           </div>
           <div>
-            <button
-              className="reset-text"
-              onClick={() => setAutoRecordPhase('calibrate')}
-            >
-              Auto-record
-            </button>
+            {autoRecordPhase === undefined ? (
+              <button
+                className="reset-text"
+                onClick={() => setAutoRecordPhase('calibrate')}
+              >
+                Auto-record
+              </button>
+            ) : autoRecordPhase === 'active' && stream ? (
+              <AutoRecorder stream={stream} model={autoRecordModel} />
+            ) : null}
           </div>
           <div id="broadcastId" className="broadcast-id">
             <span>code</span> <code>{broadcastId}</code>
@@ -190,10 +195,15 @@ function BroadcastPage({ broadcastId }) {
         open={autoRecordPhase === 'calibrate'}
         onClose={() => setAutoRecordPhase(undefined)}
       >
-        {stream && <AutoRecordCalibrate stream={stream} onCalibrationDone={(model) => {
-          setAutoRecordModel(model);
-          setAutoRecordPhase('active');
-        }} />}
+        {stream && (
+          <AutoRecordCalibrate
+            stream={stream}
+            onCalibrationDone={model => {
+              setAutoRecordModel(model);
+              setAutoRecordPhase('active');
+            }}
+          />
+        )}
       </Modal>
     </div>
   );
