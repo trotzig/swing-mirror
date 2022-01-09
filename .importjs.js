@@ -10,7 +10,7 @@ module.exports = {
     return 'const';
   },
   namedExports: {
-    react: ['useEffect', 'useState', 'useRef'],
+    react: ['useEffect', 'useState', 'useRef', 'useCallback'],
   },
   globals: ['console', 'document'],
   logLevel: 'debug',

@@ -3,10 +3,12 @@
   "rules": {
     "no-undef": 2,
     "@next/next/no-img-element": 0,
-    "jsx-a11y/alt-text": 0
+    "jsx-a11y/alt-text": 0,
+    "react-hooks/exhaustive-deps": 2
   },
   "globals": {
     "Promise": true,
-    "Uint8ClampedArray": true
+    "Uint8ClampedArray": true,
+    "Uint8Array": true
   }
 }

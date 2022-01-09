@@ -3,10 +3,12 @@ import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
+import AutoRecordCalibrate from '../src/AutoRecordCalibrate';
 import Broadcaster from '../src/Broadcaster';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
+import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
@@ -32,10 +34,12 @@ function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
   const [libraryVideo, setLibraryVideo] = useState();
   const [isRecording, setIsRecording] = useState(false);
-  const [hasStream, setHasStream] = useState(false);
+  const [stream, setStream] = useState(false);
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
+  const [autoRecordPhase, setAutoRecordPhase] = useState();
+  const [autoRecordModel, setAutoRecordModel] = useState();
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -64,16 +68,16 @@ function BroadcastPage({ broadcastId }) {
           ...videoDimensions(videoRef.current),
         },
       })
-      .then(stream => {
+      .then(cameraStream => {
         videoRef.current.addEventListener(
           'canplay',
           () => {
-            broadcaster.init(stream);
-            setHasStream(true);
+            broadcaster.init(cameraStream);
+            setStream(cameraStream);
           },
           { once: true },
         );
-        videoRef.current.srcObject = stream;
+        videoRef.current.srcObject = cameraStream;
         navigator.mediaDevices.enumerateDevices().then(devices => {
           let videoInputCount = 0;
           for (const device of devices) {
@@ -91,8 +95,8 @@ function BroadcastPage({ broadcastId }) {
     );
     return () => {
       broadcaster.close();
-      const stream = videoElement.srcObject;
-      stream.getTracks().forEach(track => track.stop());
+      const cameraStream = videoElement.srcObject;
+      cameraStream.getTracks().forEach(track => track.stop());
     };
   }, [broadcastId, facingMode, documentVisible]);
 
@@ -141,7 +145,14 @@ function BroadcastPage({ broadcastId }) {
               </a>
             </Link>
           </div>
-          <div />
+          <div>
+            <button
+              className="reset-text"
+              onClick={() => setAutoRecordPhase('calibrate')}
+            >
+              Auto-record
+            </button>
+          </div>
           <div id="broadcastId" className="broadcast-id">
             <span>code</span> <code>{broadcastId}</code>
           </div>
@@ -151,14 +162,14 @@ function BroadcastPage({ broadcastId }) {
         <div className="video-recording">
           {recording && <LibraryButton key={recording.url} video={recording} />}
         </div>
-        {hasStream && (
+        {stream && (
           <RecordButton
             isRecording={isRecording}
             onClick={() => setIsRecording(!isRecording)}
           />
         )}
         <div className="video-footer-right">
-          {hasStream && (
+          {stream && (
             <div className="rounded-translucent">
               <button
                 className="reset"
@@ -174,6 +185,16 @@ function BroadcastPage({ broadcastId }) {
           )}
         </div>
       </div>
+      <Modal
+        title="Calibrate"
+        open={autoRecordPhase === 'calibrate'}
+        onClose={() => setAutoRecordPhase(undefined)}
+      >
+        {stream && <AutoRecordCalibrate stream={stream} onCalibrationDone={(model) => {
+          setAutoRecordModel(model);
+          setAutoRecordPhase('active');
+        }} />}
+      </Modal>
     </div>
   );
 }
