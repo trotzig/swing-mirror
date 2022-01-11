@@ -2,7 +2,8 @@ import db from './db';
 import fileSuffix from './fileSuffix';
 
 export default class VideoRecorder {
-  constructor({ video, canvas }) {
+  constructor({ stream, video, canvas }) {
+    this.stream = stream;
     this.video = video;
     this.canvas = canvas;
   }
@@ -17,7 +18,7 @@ export default class VideoRecorder {
       availableMimeTypes.find(type => MediaRecorder.isTypeSupported(type)) ||
       availableMimeTypes[0];
 
-    this.mediaRecorder = new MediaRecorder(this.video.srcObject, {
+    this.mediaRecorder = new MediaRecorder(this.stream || this.video.srcObject, {
       mimeType: this.mimeType,
     });
     this.mediaRecorder.ondataavailable = event => {

@@ -45,7 +45,7 @@ export default function AutoRecordCalibrate({ stream, onCalibrationDone }) {
     if (!started) {
       return;
     }
-    const STEP_DURATION = 1000;
+    const STEP_DURATION = 4000;
     setInformation('Hit a golf shot!');
     let timeout;
     timeout = setTimeout(() => {

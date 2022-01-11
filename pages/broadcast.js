@@ -6,6 +6,7 @@ import cryptoRandomString from 'crypto-random-string';
 import AutoRecordCalibrate from '../src/AutoRecordCalibrate';
 import AutoRecorder from '../src/AutoRecorder';
 import Broadcaster from '../src/Broadcaster';
+import DelayedVideo from '../src/DelayedVideo';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
@@ -106,7 +107,11 @@ function BroadcastPage({ broadcastId }) {
       return;
     }
     if (isRecording) {
+      const delayedVideoCanvas = document.body.querySelector('.delayed-video');
       videoRecorderRef.current = new VideoRecorder({
+        stream: delayedVideoCanvas
+          ? delayedVideoCanvas.captureStream()
+          : videoRef.current.srcObject,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
@@ -136,6 +141,9 @@ function BroadcastPage({ broadcastId }) {
         muted
         ref={videoRef}
       ></video>
+      {autoRecordPhase === 'active' && stream && (
+        <DelayedVideo videoRef={videoRef} delaySeconds={2} />
+      )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
@@ -155,7 +163,11 @@ function BroadcastPage({ broadcastId }) {
                 Auto-record
               </button>
             ) : autoRecordPhase === 'active' && stream ? (
-              <AutoRecorder stream={stream} model={autoRecordModel} />
+              <AutoRecorder
+                stream={stream}
+                model={autoRecordModel}
+                onRecording={setIsRecording}
+              />
             ) : null}
           </div>
           <div id="broadcastId" className="broadcast-id">
