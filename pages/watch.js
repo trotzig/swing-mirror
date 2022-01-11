@@ -17,6 +17,8 @@ const delayRates = [
   { label: '+1s', value: 1, title: 'Video delayed 1 second' },
   { label: '+2s', value: 2, title: 'Video delayed 2 seconds' },
   { label: '+3s', value: 3, title: 'Video delayed 3 seconds' },
+  { label: '+4s', value: 4, title: 'Video delayed 4 seconds' },
+  { label: '+5s', value: 5, title: 'Video delayed 5 seconds' },
 ];
 
 function WatchPage({ broadcastId }) {
