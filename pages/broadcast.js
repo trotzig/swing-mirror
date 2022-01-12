@@ -3,7 +3,6 @@ import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
-import AutoRecordCalibrate from '../src/AutoRecordCalibrate';
 import AutoRecorder from '../src/AutoRecorder';
 import Broadcaster from '../src/Broadcaster';
 import DelayedVideo from '../src/DelayedVideo';
@@ -40,8 +39,7 @@ function BroadcastPage({ broadcastId }) {
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
-  const [autoRecordPhase, setAutoRecordPhase] = useState();
-  const [autoRecordModel, setAutoRecordModel] = useState();
+  const [isAutoRecording, setIsAutoRecording] = useState(false);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -141,7 +139,7 @@ function BroadcastPage({ broadcastId }) {
         muted
         ref={videoRef}
       ></video>
-      {autoRecordPhase === 'active' && stream && (
+      {isAutoRecording && stream && (
         <DelayedVideo videoRef={videoRef} delaySeconds={2} />
       )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -155,20 +153,16 @@ function BroadcastPage({ broadcastId }) {
             </Link>
           </div>
           <div>
-            {autoRecordPhase === undefined ? (
-              <button
-                className="reset-text"
-                onClick={() => setAutoRecordPhase('calibrate')}
-              >
-                Auto-record
-              </button>
-            ) : autoRecordPhase === 'active' && stream ? (
+            <button onClick={() => setIsAutoRecording(!isAutoRecording)}>
+              {isAutoRecording ? 'Stop auto-recording' : 'Start auto-recording'}
+            </button>
+            {isAutoRecording && stream && (
               <AutoRecorder
                 stream={stream}
-                model={autoRecordModel}
+                videoRef={videoRef}
                 onRecording={setIsRecording}
               />
-            ) : null}
+            )}
           </div>
           <div id="broadcastId" className="broadcast-id">
             <span>code</span> <code>{broadcastId}</code>
@@ -202,21 +196,6 @@ function BroadcastPage({ broadcastId }) {
           )}
         </div>
       </div>
-      <Modal
-        title="Calibrate"
-        open={autoRecordPhase === 'calibrate'}
-        onClose={() => setAutoRecordPhase(undefined)}
-      >
-        {stream && (
-          <AutoRecordCalibrate
-            stream={stream}
-            onCalibrationDone={model => {
-              setAutoRecordModel(model);
-              setAutoRecordPhase('active');
-            }}
-          />
-        )}
-      </Modal>
     </div>
   );
 }

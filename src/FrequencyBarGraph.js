@@ -21,9 +21,20 @@ function renderGraph({
   }
 }
 
+function getTotalLoudness({ dataArray, bufferLength }) {
+  let total = 0;
+  for (let i = 0; i < bufferLength; i++) {
+    total += dataArray[i];
+  }
+  return total;
+}
+
+const SPIKE_INCREASE = 5;
+const SPIKE_MIN_LOUDNESS = MAX_VALUE * 5;
+
 export default function FrequencyBarGraph({
   stream,
-  onData,
+  onSpike,
   data,
   width,
   height,
@@ -41,12 +52,14 @@ export default function FrequencyBarGraph({
     const sourceNode = ctx.createMediaStreamSource(stream);
     const analyzer = ctx.createAnalyser();
     analyzer.fftSize = 64;
+    analyzer.minDecibel = -10;
     const bufferLength = analyzer.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
     sourceNode.connect(analyzer);
 
     let isActive = true;
+    let previousLoudness;
     function renderFrame() {
       if (!isActive) {
         return;
@@ -59,7 +72,15 @@ export default function FrequencyBarGraph({
         width,
         height,
       });
-      onData(dataArray, bufferLength);
+      const loudness = getTotalLoudness({ dataArray, bufferLength });
+      if (
+        typeof previousLoudness === 'number' &&
+        loudness > SPIKE_INCREASE * previousLoudness &&
+        loudness > SPIKE_MIN_LOUDNESS
+      ) {
+        onSpike(Date.now());
+      }
+      previousLoudness = loudness;
       requestAnimationFrame(renderFrame);
     }
     renderFrame();
@@ -67,7 +88,7 @@ export default function FrequencyBarGraph({
     () => {
       isActive = false;
     };
-  }, [stream, onData]);
+  }, [stream, onSpike]);
 
   useEffect(() => {
     if (!data) {

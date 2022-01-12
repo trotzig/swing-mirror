@@ -1,48 +1,58 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import FrequencyBarGraph from './FrequencyBarGraph';
+import VideoMotionDetector from './VideoMotionDetector';
 
 const RECORDING_LENGTH_MS = 3000;
 
-function matchFrequencyDataArrays(dataArray, model) {
-  const len = dataArray.length;
-
-  for (let i = 0; i < len; i++) {
-    const a = dataArray[i];
-    const b = model.data[i];
-    const allowedSpread = model.spreads[i];
-
-    if (Math.abs(a - b) > allowedSpread + 20) {
-      return false;
-    }
-  }
-  return true;
-}
-
-export default function AutoRecorder({ stream, model, onRecording }) {
+export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
   const [isRecording, setIsRecording] = useState(false);
   const isRecordingRef = useRef(false);
+  const latestAudioSpikeRef = useRef();
+  const latestVideoSpikeRef = useRef();
 
-  const onFrequencyBarGraphData = useCallback(
-    (dataArray, bufferLength) => {
-      let timeout;
+  const handleAudioSpike = useCallback(timestamp => {
+    console.log('audio spike!', timestamp);
+    latestAudioSpikeRef.current = timestamp;
+  }, []);
+
+  const handleVideoMotion = useCallback(timestamp => {
+    console.log('video spike!', timestamp);
+    latestVideoSpikeRef.current = timestamp;
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
       if (isRecordingRef.current) {
         return;
       }
-      if (matchFrequencyDataArrays(dataArray, model)) {
-        console.log('Matching!');
-        setIsRecording(true);
-        onRecording(true);
-        isRecordingRef.current = true;
-        timeout = setTimeout(() => {
-          setIsRecording(false);
-          onRecording(false);
-          isRecordingRef.current = false;
-        }, RECORDING_LENGTH_MS);
+      if (!latestAudioSpikeRef.current || !latestVideoSpikeRef.current) {
+        // no spikes detected
+        return;
       }
-    },
-    [model, onRecording],
-  );
+
+      if (Math.abs(latestAudioSpikeRef.current - latestVideoSpikeRef.current) > 100) {
+        // not the same event
+        return;
+      }
+
+      if (Date.now() - latestAudioSpikeRef.current > 100) {
+        // too long ago
+        return;
+      }
+      latestAudioSpikeRef.current === undefined;
+      latestVideoSpikeRef.current === undefined;
+      onRecording(true);
+      const timeout = setTimeout(() => {
+        setIsRecording(false);
+        onRecording(false);
+        isRecordingRef.current = false;
+      }, RECORDING_LENGTH_MS);
+    }, 20);
+
+    return () => clearInterval(interval);
+  }, [onRecording]);
+
   return (
     <div className="auto-recorder">
       {isRecording ? 'RECORDING!' : 'not recording'}
@@ -50,10 +60,9 @@ export default function AutoRecorder({ stream, model, onRecording }) {
         width={200}
         height={50}
         stream={stream}
-        onData={onFrequencyBarGraphData}
+        onSpike={handleAudioSpike}
       />
-      <FrequencyBarGraph width={200} height={50} data={model.data} />
-      <FrequencyBarGraph width={200} height={50} data={model.spreads} />
+      <VideoMotionDetector onMotion={handleVideoMotion} videoRef={videoRef} />
     </div>
   );
 }
