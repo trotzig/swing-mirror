@@ -565,6 +565,9 @@ h1 i {
   transition: all .3s;
   max-height: 100px;
   font-size: 12px;
+  width: 100%;
+  overflow: hidden;
+  width: 100%;
 }
 .library-item .library-item-main {
   display: grid;
@@ -590,7 +593,6 @@ h1 i {
 }
 .library-item button {
   position: relative;
-  overflow: hidden;
 }
 
 .library-item.deleted {
@@ -612,6 +614,7 @@ h1 i {
   line-height: 1.2;
   opacity: 0;
   transform: translateX(100%);
+  font-size: 14px;
 }
 .library-item .library-delete-button.visible {
   opacity: 1;
