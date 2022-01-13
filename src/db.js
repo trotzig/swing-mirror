@@ -38,7 +38,7 @@ class DB extends EventTarget {
     dbPromise = initDB();
   }
 
-  async addVideo({ url, blob, duration, photoUrl, name }) {
+  async addVideo({ url, blob, duration, photoUrl, name, isAuto }) {
     const videoId = cryptoRandomString({ length: 10 });
     const blobId = cryptoRandomString({ length: 10 });
     const dbVideo = await (
@@ -50,6 +50,7 @@ class DB extends EventTarget {
       duration,
       blobId,
       name,
+      isAuto,
     });
     await (
       await dbPromise

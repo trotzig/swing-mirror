@@ -27,6 +27,7 @@ export function Library({ onSelectedVideo, edit }) {
                     onSelectedVideo(await video.toRecording());
                   }}
                 >
+                  {video.isAuto ? <div className="badge">Auto</div> : null}
                   <img src={video.photoUrl} />
                   <div>
                     <h4>{video.name}</h4>

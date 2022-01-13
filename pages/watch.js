@@ -62,6 +62,7 @@ function WatchPage({ broadcastId }) {
         stream: delayedVideoCanvas
           ? delayedVideoCanvas.captureStream()
           : videoRef.current.srcObject,
+        isAuto: !!delayedVideoCanvas,
         video: videoRef.current,
         canvas: canvasRef.current,
       });

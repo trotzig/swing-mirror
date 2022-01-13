@@ -585,6 +585,15 @@ h1 i {
   opacity: 0.7;
   margin: 0;
 }
+.library-item button {
+  position: relative;
+}
+
+.library-item .badge {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+}
 
 .library-item .library-delete-button {
   transition: opacity 0.1s;
@@ -702,4 +711,13 @@ button.auto-record-button {
 }
 .toggle.toggle-on::after {
   transform: translateX(15px);
+}
+
+.badge {
+  background-color: red;
+  padding: 2px 5px;
+  line-height: 1;
+  font-size: 10px;
+  text-transform: uppercase;
+  border-radius: var(--border-radius);
 }

@@ -2,10 +2,11 @@ import db from './db';
 import fileSuffix from './fileSuffix';
 
 export default class VideoRecorder {
-  constructor({ stream, video, canvas }) {
+  constructor({ stream, video, canvas, isAuto }) {
     this.stream = stream;
     this.video = video;
     this.canvas = canvas;
+    this.isAuto = isAuto;
   }
 
   start() {
@@ -54,6 +55,7 @@ export default class VideoRecorder {
           fileName,
           photoUrl: this.photoUrl,
           duration: (endTime - this.startTime) / 1000,
+          isAuto: this.isAuto,
         };
         db.addVideo({ ...recording, blob }).catch(console.error);
         resolve(recording);
