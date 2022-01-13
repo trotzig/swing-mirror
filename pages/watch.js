@@ -41,6 +41,7 @@ function WatchPage({ broadcastId }) {
       broadcastId,
       videoRef,
       onInstruction: instruction => {
+        console.log(instruction);
         if (typeof instruction.isRecording === 'boolean') {
           setIsRecording(instruction.isRecording);
         }
@@ -74,6 +75,8 @@ function WatchPage({ broadcastId }) {
   useEffect(() => {
     if (isAutoRecording) {
       setDelayIndex(2);
+    } else {
+      setDelayIndex(0);
     }
     instructionRef.current({ isAutoRecording });
   }, [isAutoRecording]);
@@ -103,7 +106,11 @@ function WatchPage({ broadcastId }) {
           ref={videoRef}
         />
         {delay.value > 0 ? (
-          <DelayedVideo delaySeconds={delay.value} videoRef={videoRef} />
+          <DelayedVideo
+            key={recording.url}
+            delaySeconds={delay.value}
+            videoRef={videoRef}
+          />
         ) : null}
         {isAutoRecording && hasStream && (
           <AutoRecorder passive onClose={() => setIsAutoRecording(false)} />

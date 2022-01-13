@@ -91,15 +91,18 @@ function BroadcastPage({ broadcastId }) {
       })
       .catch(error => console.error(error));
 
-    broadcaster.on('instruction', instruction => {
+    const instructionHandler = instruction => {
+      console.log(instruction);
       if (typeof instruction.isRecording === 'boolean') {
         setIsRecording(instruction.isRecording);
       }
       if (typeof instruction.isAutoRecording === 'boolean') {
         setIsAutoRecording(instruction.isAutoRecording);
       }
-    });
+    };
+    broadcaster.on('instruction', instructionHandler);
     return () => {
+      broadcaster.off('instruction', instructionHandler);
       broadcaster.close();
       const cameraStream = videoElement.srcObject;
       cameraStream.getTracks().forEach(track => track.stop());
@@ -150,7 +153,7 @@ function BroadcastPage({ broadcastId }) {
         ref={videoRef}
       ></video>
       {isAutoRecording && stream && (
-        <DelayedVideo videoRef={videoRef} delaySeconds={2} />
+        <DelayedVideo key={recording.url} videoRef={videoRef} delaySeconds={2} />
       )}
       {!isLibraryOpen && isAutoRecording && stream && (
         <AutoRecorder
