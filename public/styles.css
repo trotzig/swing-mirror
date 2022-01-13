@@ -186,7 +186,7 @@ h1 i {
 
 .start-box {
   text-align: center;
-  border: 1px solid #666;
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
   padding: 10px;
   text-decoration: none;
@@ -642,7 +642,7 @@ h1 i {
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: var(--border-radius);
-  animation: fadeIn .3s;
+  animation: fadeIn 0.3s;
 }
 .auto-recorder canvas {
   width: 100%;
@@ -678,7 +678,6 @@ button.auto-record-button {
   align-items: center;
 }
 
-
 .toggle {
   width: 35px;
   height: 20px;
@@ -699,7 +698,7 @@ button.auto-record-button {
   height: 16px;
   border: 1px solid rgba(0, 0, 0, 0.5);
   transform: translateX(0);
-  transition: transform .1s;
+  transition: transform 0.1s;
 }
 .toggle.toggle-on::after {
   transform: translateX(15px);

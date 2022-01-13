@@ -2,6 +2,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
+import AutoRecordButton from '../src/AutoRecordButton';
+import AutoRecorder from '../src/AutoRecorder';
 import DelayedVideo from '../src/DelayedVideo';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
@@ -27,6 +29,7 @@ function WatchPage({ broadcastId }) {
   const canvasRef = useRef();
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
+  const [isAutoRecording, setIsAutoRecording] = useState(false);
   const [hasStream, setHasStream] = useState(false);
   const [delayIndex, setDelayIndex] = useState(0);
   const [recording, setRecording] = useState();
@@ -41,6 +44,9 @@ function WatchPage({ broadcastId }) {
         if (typeof instruction.isRecording === 'boolean') {
           setIsRecording(instruction.isRecording);
         }
+        if (typeof instruction.isAutoRecording === 'boolean') {
+          setIsAutoRecording(instruction.isAutoRecording);
+        }
       },
       onStreamActive: () => setHasStream(true),
     });
@@ -50,7 +56,11 @@ function WatchPage({ broadcastId }) {
 
   useEffect(() => {
     if (isRecording) {
+      const delayedVideoCanvas = document.body.querySelector('.delayed-video');
       videoRecorderRef.current = new VideoRecorder({
+        stream: delayedVideoCanvas
+          ? delayedVideoCanvas.captureStream()
+          : videoRef.current.srcObject,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
@@ -60,6 +70,13 @@ function WatchPage({ broadcastId }) {
     }
     instructionRef.current({ isRecording });
   }, [isRecording]);
+
+  useEffect(() => {
+    if (isAutoRecording) {
+      setDelayIndex(2);
+    }
+    instructionRef.current({ isAutoRecording });
+  }, [isAutoRecording]);
 
   useEffect(() => {
     async function run() {
@@ -88,6 +105,9 @@ function WatchPage({ broadcastId }) {
         {delay.value > 0 ? (
           <DelayedVideo delaySeconds={delay.value} videoRef={videoRef} />
         ) : null}
+        {isAutoRecording && hasStream && (
+          <AutoRecorder passive onClose={() => setIsAutoRecording(false)} />
+        )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
           <div className="video-header-inner ">
@@ -99,12 +119,11 @@ function WatchPage({ broadcastId }) {
               </Link>
             </div>
 
-            <div
-              className="delay-title"
-              style={{ opacity: delay.value > 0 ? 1 : 0 }}
-            >
-              {delay.title}
-            </div>
+            <AutoRecordButton
+              isActive={isAutoRecording}
+              onClick={() => setIsAutoRecording(!isAutoRecording)}
+            />
+
             {hasStream && (
               <div className="rounded-translucent">
                 <button

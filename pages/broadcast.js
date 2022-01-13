@@ -91,9 +91,14 @@ function BroadcastPage({ broadcastId }) {
       })
       .catch(error => console.error(error));
 
-    broadcaster.on('instruction', instruction =>
-      setIsRecording(instruction.isRecording),
-    );
+    broadcaster.on('instruction', instruction => {
+      if (typeof instruction.isRecording === 'boolean') {
+        setIsRecording(instruction.isRecording);
+      }
+      if (typeof instruction.isAutoRecording === 'boolean') {
+        setIsAutoRecording(instruction.isAutoRecording);
+      }
+    });
     return () => {
       broadcaster.close();
       const cameraStream = videoElement.srcObject;
@@ -120,6 +125,10 @@ function BroadcastPage({ broadcastId }) {
     }
     broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording, documentVisible]);
+
+  useEffect(() => {
+    broadcasterRef.current.sendInstruction({ isAutoRecording });
+  }, [isAutoRecording]);
 
   useEffect(() => {
     async function run() {

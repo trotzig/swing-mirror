@@ -6,6 +6,7 @@ import VideoMotionDetector from './VideoMotionDetector';
 const RECORDING_LENGTH_MS = 4000;
 
 export default function AutoRecorder({
+  passive,
   stream,
   model,
   onRecording,
@@ -73,17 +74,21 @@ export default function AutoRecorder({
         We&apos;re monitoring sound and video to detect golf shots. The video is
         delayed while auto-recording.
       </p>
-      <FrequencyBarGraph
-        width={200}
-        height={50}
-        stream={stream}
-        onSpike={handleAudioSpike}
-      />
-      <VideoMotionDetector
-        onMotion={handleVideoMotion}
-        videoRef={videoRef}
-        hidden
-      />
+      {!passive && (
+        <>
+          <FrequencyBarGraph
+            width={200}
+            height={50}
+            stream={stream}
+            onSpike={handleAudioSpike}
+          />
+          <VideoMotionDetector
+            onMotion={handleVideoMotion}
+            videoRef={videoRef}
+            hidden
+          />
+        </>
+      )}
     </div>
   );
 }
