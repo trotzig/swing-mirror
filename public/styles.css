@@ -564,6 +564,7 @@ h1 i {
   margin-bottom: 20px;
   transition: all .3s;
   max-height: 100px;
+  font-size: 12px;
 }
 .library-item .library-item-main {
   display: grid;
@@ -589,6 +590,7 @@ h1 i {
 }
 .library-item button {
   position: relative;
+  overflow: hidden;
 }
 
 .library-item.deleted {
