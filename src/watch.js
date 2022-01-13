@@ -30,7 +30,12 @@ export default function watch({
       .setRemoteDescription(description)
       .then(() => peerConnection.createAnswer())
       .then(sdp => {
-        console.log('SDP', sdp);
+        let newSdp = sdp.sdp.split('\r\n');
+        console.log(newSdp);
+        newSdp = newSdp.filter(
+          line => !/urn:3gpp:video-orientation/.test(line),
+        );
+        sdp.sdp = newSdp.join('\r\n');
         return peerConnection.setLocalDescription(sdp);
       })
       .then(() => {
