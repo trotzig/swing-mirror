@@ -4,6 +4,7 @@ import db from './db';
 
 export function Library({ onSelectedVideo, edit }) {
   const [videos, setVideos] = useState();
+  const [deleted, setDeleted] = useState({});
   useEffect(() => {
     async function run() {
       setVideos(await db.listVideos());
@@ -20,7 +21,10 @@ export function Library({ onSelectedVideo, edit }) {
         {videos ? (
           <ul>
             {videos.map(video => (
-              <li key={video.id} className="library-item">
+              <li
+                key={video.id}
+                className={`library-item${deleted[video.id] ? ' deleted' : ''}`}
+              >
                 <button
                   className="library-item-main reset"
                   onClick={async () => {
@@ -35,10 +39,15 @@ export function Library({ onSelectedVideo, edit }) {
                   </div>
                 </button>
                 <button
-                  className="library-delete-button reset-text"
-                  style={{ opacity: edit ? 1 : 0 }}
+                  className={`library-delete-button reset-text${
+                    edit ? ' visible' : ''
+                  }`}
                   onClick={() => {
-                    db.deleteVideo(video.id);
+                    setDeleted(old => ({
+                      ...old,
+                      [video.id]: true,
+                    }));
+                    setTimeout(() => db.deleteVideo(video.id), 500);
                   }}
                 >
                   Delete

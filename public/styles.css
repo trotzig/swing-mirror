@@ -562,6 +562,8 @@ h1 i {
   align-items: flex-start;
   column-gap: 15px;
   margin-bottom: 20px;
+  transition: all .3s;
+  max-height: 100px;
 }
 .library-item .library-item-main {
   display: grid;
@@ -589,6 +591,12 @@ h1 i {
   position: relative;
 }
 
+.library-item.deleted {
+  transform: scale(0.2);
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+}
 .library-item .badge {
   position: absolute;
   left: 3px;
@@ -596,10 +604,16 @@ h1 i {
 }
 
 .library-item .library-delete-button {
-  transition: opacity 0.1s;
+  transition: all 0.3s;
   color: red;
   justify-self: flex-end;
   line-height: 1.2;
+  opacity: 0;
+  transform: translateX(100%);
+}
+.library-item .library-delete-button.visible {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .video-info input {
