@@ -15,7 +15,7 @@ function renderGraph({
   for (let i = 0; i < bufferLength; i++) {
     const barWidth = width / bufferLength;
     const barHeight = dataArray[i] * (height / MAX_VALUE);
-    canvasCtx.fillStyle = 'rgba(66, 122, 172, 1)';
+    canvasCtx.fillStyle = 'red';
     canvasCtx.fillRect(x, height - barHeight, barWidth, barHeight);
     x += barWidth;
   }

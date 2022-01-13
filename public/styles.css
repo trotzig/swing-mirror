@@ -640,10 +640,67 @@ h1 i {
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: var(--border-radius);
   animation: fadeIn .3s;
 }
 .auto-recorder canvas {
   width: 100%;
+}
+.auto-recorder-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 20px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.auto-recorder-header button {
+  text-transform: uppercase;
+  font-size: small;
+}
+
+.auto-recorder-header h2 {
+  margin: 0;
+}
+
+button.auto-record-button {
+  background-color: rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  font-size: small;
+  padding: 5px 10px;
+  line-height: 1.5;
+  border-radius: var(--border-radius);
+  justify-self: center;
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 7px;
+  align-items: center;
+}
+
+
+.toggle {
+  width: 35px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: currentColor;
+  padding: 1px;
+  position: relative;
+}
+.toggle.toggle-on {
+  background-color: red;
+}
+.toggle::after {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  background-color: currentColor;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  transform: translateX(0);
+  transition: transform .1s;
+}
+.toggle.toggle-on::after {
+  transform: translateX(15px);
 }

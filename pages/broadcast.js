@@ -3,13 +3,13 @@ import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
+import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
 import Broadcaster from '../src/Broadcaster';
 import DelayedVideo from '../src/DelayedVideo';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
-import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
 import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
@@ -148,6 +148,7 @@ function BroadcastPage({ broadcastId }) {
           stream={stream}
           videoRef={videoRef}
           onRecording={setIsRecording}
+          onClose={() => setIsAutoRecording(false)}
         />
       )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -160,11 +161,10 @@ function BroadcastPage({ broadcastId }) {
               </a>
             </Link>
           </div>
-          <div>
-            <button onClick={() => setIsAutoRecording(!isAutoRecording)}>
-              {isAutoRecording ? 'Stop auto-recording' : 'Start auto-recording'}
-            </button>
-          </div>
+          <AutoRecordButton
+            isActive={isAutoRecording}
+            onClick={() => setIsAutoRecording(!isAutoRecording)}
+          />
           <div id="broadcastId" className="broadcast-id">
             <span>code</span> <code>{broadcastId}</code>
           </div>

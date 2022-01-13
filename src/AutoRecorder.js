@@ -5,7 +5,13 @@ import VideoMotionDetector from './VideoMotionDetector';
 
 const RECORDING_LENGTH_MS = 4000;
 
-export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
+export default function AutoRecorder({
+  stream,
+  model,
+  onRecording,
+  onClose,
+  videoRef,
+}) {
   const [isRecording, setIsRecording] = useState(false);
   const isRecordingRef = useRef(false);
   const latestAudioSpikeRef = useRef();
@@ -57,10 +63,15 @@ export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
 
   return (
     <div className="auto-recorder">
-      <h2>Auto-recording active</h2>
-      <p>
-        We&apos;re monitoring sound and video movements to detect when
-        you&apos;re hitting a golf shot.
+      <div className="auto-recorder-header">
+        <h2>Auto-recording active</h2>
+        <button className="reset-text" onClick={onClose}>
+          Turn off
+        </button>
+      </div>
+      <p style={{ opacity: 0.7 }}>
+        We&apos;re monitoring sound and video to detect golf shots. The video is
+        delayed while auto-recording.
       </p>
       <FrequencyBarGraph
         width={200}
