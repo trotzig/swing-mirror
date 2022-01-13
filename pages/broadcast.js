@@ -35,6 +35,7 @@ function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
   const [libraryVideo, setLibraryVideo] = useState();
   const [isRecording, setIsRecording] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [stream, setStream] = useState(false);
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
@@ -142,6 +143,13 @@ function BroadcastPage({ broadcastId }) {
       {isAutoRecording && stream && (
         <DelayedVideo videoRef={videoRef} delaySeconds={2} />
       )}
+      {!isLibraryOpen && isAutoRecording && stream && (
+        <AutoRecorder
+          stream={stream}
+          videoRef={videoRef}
+          onRecording={setIsRecording}
+        />
+      )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
@@ -156,13 +164,6 @@ function BroadcastPage({ broadcastId }) {
             <button onClick={() => setIsAutoRecording(!isAutoRecording)}>
               {isAutoRecording ? 'Stop auto-recording' : 'Start auto-recording'}
             </button>
-            {isAutoRecording && stream && (
-              <AutoRecorder
-                stream={stream}
-                videoRef={videoRef}
-                onRecording={setIsRecording}
-              />
-            )}
           </div>
           <div id="broadcastId" className="broadcast-id">
             <span>code</span> <code>{broadcastId}</code>
@@ -171,7 +172,13 @@ function BroadcastPage({ broadcastId }) {
       </div>
       <div className="video-footer">
         <div className="video-recording">
-          {recording && <LibraryButton key={recording.url} video={recording} />}
+          {recording && (
+            <LibraryButton
+              key={recording.url}
+              video={recording}
+              onLibraryToggle={setIsLibraryOpen}
+            />
+          )}
         </div>
         {stream && (
           <RecordButton

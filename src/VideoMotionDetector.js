@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function VideoMotionDetector({ videoRef, onMotion }) {
+export default function VideoMotionDetector({ videoRef, onMotion, hidden }) {
   const canvasRef = useRef();
   const workerRef = useRef();
   useEffect(() => {
@@ -36,5 +36,7 @@ export default function VideoMotionDetector({ videoRef, onMotion }) {
       isActive = false;
     };
   }, [videoRef, onMotion]);
-  return <canvas ref={canvasRef} />;
+  return (
+    <canvas ref={canvasRef} style={{ display: hidden ? 'none' : undefined }} />
+  );
 }

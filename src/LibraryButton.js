@@ -6,7 +6,7 @@ import ShareButton from './ShareButton';
 import VideoInfo from './VideoInfo';
 import VideoPlayer from './VideoPlayer';
 
-export default function LibraryButton({ video }) {
+export default function LibraryButton({ video, onLibraryToggle = () => {} }) {
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [libraryEdit, setLibraryEdit] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState();
@@ -16,6 +16,7 @@ export default function LibraryButton({ video }) {
         className="reset"
         onClick={() => {
           setLibraryOpen(true);
+          onLibraryToggle(true);
         }}
       >
         <img src={video.photoUrl} className="video-still-image" />
@@ -26,6 +27,7 @@ export default function LibraryButton({ video }) {
         title="Library"
         onClose={() => {
           setLibraryOpen(false);
+          onLibraryToggle(false);
         }}
         action={
           <button

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import FrequencyBarGraph from './FrequencyBarGraph';
 import VideoMotionDetector from './VideoMotionDetector';
 
-const RECORDING_LENGTH_MS = 3000;
+const RECORDING_LENGTH_MS = 4000;
 
 export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
   const [isRecording, setIsRecording] = useState(false);
@@ -12,12 +12,10 @@ export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
   const latestVideoSpikeRef = useRef();
 
   const handleAudioSpike = useCallback(timestamp => {
-    console.log('audio spike!', timestamp);
     latestAudioSpikeRef.current = timestamp;
   }, []);
 
   const handleVideoMotion = useCallback(timestamp => {
-    console.log('video spike!', timestamp);
     latestVideoSpikeRef.current = timestamp;
   }, []);
 
@@ -31,7 +29,10 @@ export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
         return;
       }
 
-      if (Math.abs(latestAudioSpikeRef.current - latestVideoSpikeRef.current) > 100) {
+      if (
+        Math.abs(latestAudioSpikeRef.current - latestVideoSpikeRef.current) >
+        100
+      ) {
         // not the same event
         return;
       }
@@ -43,6 +44,7 @@ export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
       latestAudioSpikeRef.current === undefined;
       latestVideoSpikeRef.current === undefined;
       onRecording(true);
+      setIsRecording(true);
       const timeout = setTimeout(() => {
         setIsRecording(false);
         onRecording(false);
@@ -55,14 +57,22 @@ export default function AutoRecorder({ stream, model, onRecording, videoRef }) {
 
   return (
     <div className="auto-recorder">
-      {isRecording ? 'RECORDING!' : 'not recording'}
+      <h2>Auto-recording active</h2>
+      <p>
+        We&apos;re monitoring sound and video movements to detect when
+        you&apos;re hitting a golf shot.
+      </p>
       <FrequencyBarGraph
         width={200}
         height={50}
         stream={stream}
         onSpike={handleAudioSpike}
       />
-      <VideoMotionDetector onMotion={handleVideoMotion} videoRef={videoRef} />
+      <VideoMotionDetector
+        onMotion={handleVideoMotion}
+        videoRef={videoRef}
+        hidden
+      />
     </div>
   );
 }
