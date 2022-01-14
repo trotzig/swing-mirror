@@ -63,8 +63,12 @@ export default function watch({
   });
 
   function closeSocket() {
-    socket.close();
-    peerConnection.close();
+    if (socket) {
+      socket.close();
+    }
+    if (peerConnection) {
+      peerConnection.close();
+    }
   }
 
   window.onunload = window.onbeforeunload = closeSocket;
