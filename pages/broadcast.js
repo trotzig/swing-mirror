@@ -143,6 +143,8 @@ function BroadcastPage({ broadcastId }) {
     return () => db.removeEventListener('change', run);
   }, []);
 
+  throw new Error('foobar');
+
   return (
     <div className="video-wrapper">
       <div className="blurry-background" />
