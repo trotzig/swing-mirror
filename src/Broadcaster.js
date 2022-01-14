@@ -8,8 +8,6 @@ export default class Broadcaster extends EventEmitter {
     this.broadcastId = broadcastId;
     this.peerConnections = {};
     this.socket = io.connect(window.location.origin);
-    this.lastInstructionIdReceived = -1;
-    this.ourInstructionId = 1;
   }
 
   init(stream) {
@@ -50,12 +48,7 @@ export default class Broadcaster extends EventEmitter {
     });
 
     this.socket.on('instruction', (id, instruction) => {
-      if (this.lastInstructionIdReceived < instruction.id) {
-        this.emit('instruction', instruction);
-      } else {
-        console.warn('Ignoring instruction that came out of order');
-      }
-      this.lastInstructionIdReceived = instruction.id;
+      this.emit('instruction', instruction);
     });
 
     this.socket.on('candidate', (id, candidate) => {
@@ -87,11 +80,9 @@ export default class Broadcaster extends EventEmitter {
   }
 
   sendInstruction(instruction) {
-    instruction.id = this.ourInstructionId;
     Object.keys(this.peerConnections).forEach(socketId =>
       this.socket.emit('instruction', socketId, instruction),
     );
-    this.ourInstructionId++;
   }
 
   close() {

@@ -2,18 +2,35 @@ import { io } from 'socket.io-client';
 
 import createHash from './createHash';
 
+function isSameRapidInstruction(lastInstructionReceived, instruction) {
+  if (!lastInstructionReceived) {
+    return false;
+  }
+  if (
+    !JSON.stringify(Object.keys(lastInstructionReceived.instruction)) ===
+    JSON.stringify(Object.keys(instruction))
+  ) {
+    // not the same instruction
+    return false;
+  }
+
+  if (Date.now() - lastInstructionReceived.timestamp > 200) {
+    return false;
+  }
+  return true;
+}
+
 export default function watch({
   broadcastId,
   onInstruction,
   onRecording,
   onStream,
 }) {
-  let ourInstructionId = 1;
-  let lastInstructionIdReceived = -1;
   let broadcastSocketId;
   let peerConnection;
   let receiveBuffer = [];
   let receivedBytes = 0;
+  let lastInstructionReceived;
   const config = {
     iceServers: [
       {
@@ -57,12 +74,8 @@ export default function watch({
   });
 
   socket.on('instruction', (id, instruction) => {
-    if (lastInstructionIdReceived < instruction.id) {
-      onInstruction(instruction);
-    } else {
-      console.warn('Ignoring instruction that came out-of-order');
-    }
-    lastInstructionIdReceived = instruction.id;
+    lastInstructionReceived = { instruction, timestamp: Date.now() };
+    onInstruction(instruction);
   });
 
   socket.on('broadcaster', () => {
@@ -82,9 +95,14 @@ export default function watch({
   return {
     closeSocket,
     sendInstruction: instruction => {
-      instruction.id = ourInstructionId;
+      if (isSameRapidInstruction(lastInstructionReceived, instruction)) {
+        console.log(
+          'Skipping instruction since it was just the one we received',
+          instruction,
+        );
+        return;
+      }
       socket.emit('instruction', broadcastSocketId, instruction);
-      ourInstructionId++;
     },
   };
 }
