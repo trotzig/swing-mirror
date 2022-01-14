@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Error({ err }) {
+function Error() {
   return (
     <div className="error-page">
       <div className="blurry-background" />
@@ -8,16 +8,11 @@ function Error({ err }) {
         <h1>Whoops – That&apos;s an error!</h1>
         <p>
           Reach out to henric@happo.io if you need help, and make sure to
-          include the error log below in the email message.
+          include information about what you did when the error occured.
         </p>
-        <pre>{(err && err.stack) || 'Fake error\nat fake-error.js:12:1'}</pre>
       </div>
     </div>
   );
 }
-
-Error.getInitialProps = ({ err }) => {
-  return { err };
-};
 
 export default Error;
