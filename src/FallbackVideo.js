@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function initCanvas(canvas, video) {}
-
-export default function DelayedVideo({ videoRef, onStream = () => {} }) {
+export default function FallbackVideo({ videoRef, onStream = () => {} }) {
   const canvasRef = useRef();
 
   useEffect(() => {
