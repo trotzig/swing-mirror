@@ -100,6 +100,9 @@ function WatchPage({ broadcastId }) {
           playsInline
           ref={videoRef}
         />
+        {stream && window.chrome && (
+          <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
+        )}
         {isAutoRecording && stream && (
           <AutoRecorder
             passive
@@ -108,9 +111,6 @@ function WatchPage({ broadcastId }) {
             stream={fallbackStream || stream}
             videoRef={videoRef}
           />
-        )}
-        {stream && window.chrome && (
-          <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
