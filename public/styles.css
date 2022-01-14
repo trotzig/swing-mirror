@@ -742,3 +742,13 @@ button.auto-record-button {
   text-transform: uppercase;
   border-radius: var(--border-radius);
 }
+
+.error-page {
+  margin-top: 100px;
+}
+.error-page .page-wrapper {
+  max-width: 600px;
+}
+.error-page p {
+  margin-bottom: 30px;
+}
