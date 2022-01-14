@@ -245,9 +245,9 @@ h1 i {
 @media (orientation: landscape) and (max-width: 900px) {
   .video-header {
     top: 0;
-    left: 0;
+    left: 30px;
     height: 100%;
-    width: 75px;
+    width: auto;
   }
   .video-header-inner {
     height: 100%;
@@ -331,7 +331,7 @@ h1 i {
   .video-footer {
     bottom: 0;
     left: auto;
-    right: 0;
+    right: 30px;
     width: auto;
     height: 100%;
     grid-template-columns: 1fr;
