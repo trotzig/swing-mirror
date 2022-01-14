@@ -13,13 +13,16 @@ export default function AutoRecorder({
   onRecording,
   onClose,
   videoRef,
+  onReplayVideo = () => {},
 }) {
   const [isRecording, setIsRecording] = useState(false);
+  const [isAutoReplay, setIsAutoReplay] = useState(false);
   const isRecordingRef = useRef(false);
   const canvasRef = useRef();
   const activeRecordingsRef = useRef([]);
   const latestAudioSpikeRef = useRef();
   const latestVideoSpikeRef = useRef();
+  const replayRecordingsRef = useRef(false);
 
   const handleAudioSpike = useCallback(timestamp => {
     latestAudioSpikeRef.current = timestamp;
@@ -100,7 +103,14 @@ export default function AutoRecorder({
         if (recording.keep) {
           console.log('Stopping keep video');
         }
-        recording.stop();
+        recording.stop().then(video => {
+          if (!video) {
+            return;
+          }
+          if (replayRecordingsRef.current) {
+            onReplayVideo(video);
+          }
+        });
         const index = activeRecordingsRef.current.indexOf(recording);
         activeRecordingsRef.current.splice(index, 1);
       }
@@ -126,7 +136,14 @@ export default function AutoRecorder({
         rec.stop();
       }
     };
-  }, [videoRef, stream]);
+  }, [videoRef, stream, onReplayVideo]);
+
+  const toggleClasses = ['toggle'];
+  if (isAutoReplay) {
+    toggleClasses.push('toggle-on');
+  } else {
+    toggleClasses.push('toggle-off');
+  }
 
   return (
     <div className="auto-recorder">
@@ -140,6 +157,16 @@ export default function AutoRecorder({
         We&apos;re monitoring sound spikes and video movement to detect golf
         shots.
       </p>
+      <button
+        className="reset-text auto-replay-button"
+        onClick={() => {
+          setIsAutoReplay(!isAutoReplay);
+          replayRecordingsRef.current = !isAutoReplay;
+        }}
+      >
+        <div className={toggleClasses.join(' ')} />
+        <div>Replay recorded videos</div>
+      </button>
       {!passive && (
         <>
           <FrequencyBarGraph

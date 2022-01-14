@@ -49,6 +49,7 @@ export default class VideoRecorder {
     return new Promise(resolve => {
       this.mediaRecorder.onstop = () => {
         if (!this.keep) {
+          resolve(undefined);
           return;
         }
 
@@ -56,6 +57,7 @@ export default class VideoRecorder {
         const duration = (endTime - this.startTime) / 1000;
         if (duration < 1) {
           console.log('Discarding video since it was shorter than 1s');
+          resolve(undefined);
           return;
         }
 

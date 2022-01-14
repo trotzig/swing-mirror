@@ -10,7 +10,9 @@ import DrawingBoard from '../src/DrawingBoard';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
+import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
+import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
 
@@ -33,6 +35,7 @@ function videoDimensions(videoEl) {
 
 function BroadcastPage({ broadcastId }) {
   const [recording, setRecording] = useState();
+  const [replayVideo, setReplayVideo] = useState();
   const [libraryVideo, setLibraryVideo] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
@@ -155,18 +158,19 @@ function BroadcastPage({ broadcastId }) {
         muted
         ref={videoRef}
       ></video>
+      {stream && (
+        <DrawingBoard
+          width={videoRef.current.videoWidth}
+          height={videoRef.current.videoHeight}
+        />
+      )}
       {!isLibraryOpen && isAutoRecording && stream && (
         <AutoRecorder
           stream={stream}
           videoRef={videoRef}
           onRecording={setIsRecording}
           onClose={() => setIsAutoRecording(false)}
-        />
-      )}
-      {stream && (
-        <DrawingBoard
-          width={videoRef.current.videoWidth}
-          height={videoRef.current.videoHeight}
+          onReplayVideo={setReplayVideo}
         />
       )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -215,6 +219,16 @@ function BroadcastPage({ broadcastId }) {
           )}
         </div>
       </div>
+      <Modal
+        open={replayVideo}
+        onClose={() => setReplayVideo(undefined)}
+        title="Replay"
+        disableSlideToClose
+      >
+        {replayVideo && (
+          <VideoPlayer video={replayVideo} onVideoChange={setReplayVideo} />
+        )}
+      </Modal>
     </div>
   );
 }
