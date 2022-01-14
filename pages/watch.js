@@ -14,10 +14,6 @@ import VolumeUp from '../src/icons/VolumeUp';
 import db from '../src/db';
 import watch from '../src/watch';
 
-function useFallbackVideo() {
-  return typeof window !== 'undefined' && !!window.chrome;
-}
-
 function WatchPage({ broadcastId }) {
   const videoRef = useRef();
   const videoRecorderRef = useRef();
@@ -113,7 +109,7 @@ function WatchPage({ broadcastId }) {
             videoRef={videoRef}
           />
         )}
-        {stream && useFallbackVideo() && (
+        {stream && window.chrome && (
           <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
