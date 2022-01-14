@@ -95,6 +95,8 @@ function WatchPage({ broadcastId }) {
       setRecording(dbVideo ? await dbVideo.toRecording() : undefined);
     }
     run();
+    db.addEventListener('change', run);
+    return () => db.removeEventListener('change', run);
   }, []);
 
   const delay = delayRates[delayIndex % delayRates.length];
@@ -154,9 +156,7 @@ function WatchPage({ broadcastId }) {
         </div>
         <div className="video-footer">
           <div className="video-recording">
-            {recording && (
-              <LibraryButton key={recording.url} video={recording} />
-            )}
+            <LibraryButton video={recording} />
           </div>
           <RecordButton
             onClick={() => setIsRecording(!isRecording)}
