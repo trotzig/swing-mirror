@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import SkipAhead from './icons/SkipAhead';
 import VolumeOff from './icons/VolumeOff';
 import VolumeUp from './icons/VolumeUp';
 
@@ -26,7 +27,7 @@ function rangeTouchEndListener(e) {
   const max = parseFloat(el.getAttribute('max'), 10);
   const value = Math.max(Math.min(relativeLeft * max, max), 0);
   el.value = value;
-  el.parentElement.parentElement.querySelector('video').currentTime = value;
+  el.parentElement.parentElement.parentElement.querySelector('video').currentTime = value;
 }
 
 function step(dir, video, playbackRate) {
@@ -34,7 +35,8 @@ function step(dir, video, playbackRate) {
     video.pause();
     return;
   }
-  const move = playbackRate.value / 2;
+  // const move = playbackRate.value / 2;
+  const move = 0.1;
   video.currentTime = video.currentTime + dir * move;
 }
 
@@ -81,27 +83,33 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
   return (
     <div className="video-player">
       <video ref={videoRef} playsInline muted={isMuted} loop autoPlay></video>
-      <div className="video-player-step-overlay">
-        <button
-          className="video-player-step-back reset"
-          onClick={() => step(-1, videoRef.current, playbackRate)}
-        />
-        <button
-          className="video-player-step-forward reset"
-          onClick={() => step(1, videoRef.current, playbackRate)}
-        />
-      </div>
       <div className="video-player-controls">
-        <input
-          ref={seekRef}
-          type="range"
-          min="0"
-          step="any"
-          max={video && video.duration}
-          onChange={e => (videoRef.current.currentTime = e.target.value)}
-          onMouseDown={() => videoRef.current.pause()}
-          onTouchEnd={rangeTouchEndListener}
-        />
+        <div className="video-player-seek">
+          <button
+            className="video-player-step-back reset"
+            style={{ transform: 'rotate(180deg)' }}
+            onClick={() => step(-1, videoRef.current, playbackRate)}
+          >
+            <SkipAhead size={40} fill="rgba(255,255,255,0.15" />
+          </button>
+
+          <input
+            ref={seekRef}
+            type="range"
+            min="0"
+            step="any"
+            max={video && video.duration}
+            onChange={e => (videoRef.current.currentTime = e.target.value)}
+            onMouseDown={() => videoRef.current.pause()}
+            onTouchEnd={rangeTouchEndListener}
+          />
+          <button
+            className="video-player-step-forward reset"
+            onClick={() => step(1, videoRef.current, playbackRate)}
+          >
+            <SkipAhead size={40} fill="rgba(255,255,255,0.15" />
+          </button>
+        </div>
         <div className="video-player-controls-bottom">
           <div className="rounded-translucent">
             <button
