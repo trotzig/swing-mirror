@@ -27,7 +27,9 @@ function rangeTouchEndListener(e) {
   const max = parseFloat(el.getAttribute('max'), 10);
   const value = Math.max(Math.min(relativeLeft * max, max), 0);
   el.value = value;
-  el.parentElement.parentElement.parentElement.querySelector('video').currentTime = value;
+  el.parentElement.parentElement.parentElement.querySelector(
+    'video',
+  ).currentTime = value;
 }
 
 function step(dir, video, playbackRate) {
@@ -82,7 +84,14 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
 
   return (
     <div className="video-player">
-      <video ref={videoRef} playsInline muted={isMuted} loop autoPlay></video>
+      <video
+        ref={videoRef}
+        onClick={e => e.target.pause()}
+        playsInline
+        muted={isMuted}
+        loop
+        autoPlay
+      ></video>
       <div className="video-player-controls">
         <div className="video-player-seek">
           <button
