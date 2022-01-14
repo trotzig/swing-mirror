@@ -51,10 +51,17 @@ export default class VideoRecorder {
         if (!this.keep) {
           return;
         }
+
+        const endTime = Date.now();
+        const duration = (endTime - this.startTime) / 1000;
+        if (duration < 1) {
+          console.log('Discarding video since it was shorter than 1s');
+          return;
+        }
+
         if (this.isAuto) {
           console.log('Saving auto recording since keep=true');
         }
-        const endTime = Date.now();
         const blob = new Blob(this.recordedChunks, {
           type: this.mimeType,
         });
@@ -65,7 +72,7 @@ export default class VideoRecorder {
           name: 'Untitled video',
           fileName,
           photoUrl: this.photoUrl,
-          duration: (endTime - this.startTime) / 1000,
+          duration,
           isAuto: this.isAuto,
         };
         db.addVideo({ ...recording, blob }).catch(console.error);
