@@ -12,15 +12,17 @@ export default function LibraryButton({ video, onLibraryToggle = () => {} }) {
   const [selectedVideo, setSelectedVideo] = useState();
   return (
     <div>
-      <button
-        className="reset"
-        onClick={() => {
-          setLibraryOpen(true);
-          onLibraryToggle(true);
-        }}
-      >
-        <img src={video.photoUrl} className="video-still-image" />
-      </button>
+      {video ? (
+        <button
+          className="reset"
+          onClick={() => {
+            setLibraryOpen(true);
+            onLibraryToggle(true);
+          }}
+        >
+          <img src={video.photoUrl} className="video-still-image" />
+        </button>
+      ) : null}
       <Modal
         slideUp
         open={libraryOpen}
@@ -47,7 +49,9 @@ export default function LibraryButton({ video, onLibraryToggle = () => {} }) {
         title={selectedVideo && <VideoInfo video={selectedVideo} />}
         action={<ShareButton video={selectedVideo} />}
       >
-        <VideoPlayer video={selectedVideo} onVideoChange={setSelectedVideo} />
+        {video && (
+          <VideoPlayer video={selectedVideo} onVideoChange={setSelectedVideo} />
+        )}
       </Modal>
     </div>
   );

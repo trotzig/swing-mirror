@@ -2,11 +2,12 @@ import db from './db';
 import fileSuffix from './fileSuffix';
 
 export default class VideoRecorder {
-  constructor({ stream, video, canvas, isAuto }) {
+  constructor({ stream, video, canvas, isAuto, keep = true }) {
     this.stream = stream;
     this.video = video;
     this.canvas = canvas;
     this.isAuto = isAuto;
+    this.keep = keep;
   }
 
   start() {
@@ -20,9 +21,12 @@ export default class VideoRecorder {
       availableMimeTypes.find(type => MediaRecorder.isTypeSupported(type)) ||
       availableMimeTypes[0];
 
-    this.mediaRecorder = new MediaRecorder(this.stream || this.video.srcObject, {
-      mimeType: this.mimeType,
-    });
+    this.mediaRecorder = new MediaRecorder(
+      this.stream || this.video.srcObject,
+      {
+        mimeType: this.mimeType,
+      },
+    );
     this.mediaRecorder.ondataavailable = event => {
       if (event.data.size > 0) {
         this.recordedChunks.push(event.data);
@@ -44,6 +48,12 @@ export default class VideoRecorder {
   stop() {
     return new Promise(resolve => {
       this.mediaRecorder.onstop = () => {
+        if (!this.keep) {
+          return;
+        }
+        if (this.isAuto) {
+          console.log('Saving auto recording since keep=true');
+        }
         const endTime = Date.now();
         const blob = new Blob(this.recordedChunks, {
           type: this.mimeType,

@@ -666,7 +666,8 @@ h1 i {
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
   width: 100%;
-  max-width: 400px;
+  width: 400px;
+  max-width: 80%;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: var(--border-radius);

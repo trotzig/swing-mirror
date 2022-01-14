@@ -6,7 +6,6 @@ import cryptoRandomString from 'crypto-random-string';
 import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
 import Broadcaster from '../src/Broadcaster';
-import DelayedVideo from '../src/DelayedVideo';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
@@ -37,7 +36,6 @@ function BroadcastPage({ broadcastId }) {
   const [isRecording, setIsRecording] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [stream, setStream] = useState();
-  const [delayedStream, setDelayedStream] = useState();
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
@@ -114,19 +112,22 @@ function BroadcastPage({ broadcastId }) {
     if (!documentVisible) {
       return;
     }
+    if (isAutoRecording) {
+      return;
+    }
     if (isRecording) {
       videoRecorderRef.current = new VideoRecorder({
-        stream: delayedStream || videoRef.current.srcObject,
+        stream: videoRef.current.srcObject,
         isAuto: isAutoRecording,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
       videoRecorderRef.current.start();
     } else if (videoRecorderRef.current) {
-      videoRecorderRef.current.stop().then(setRecording);
+      videoRecorderRef.current.stop();
     }
     broadcasterRef.current.sendInstruction({ isRecording });
-  }, [isRecording, documentVisible, isAutoRecording, delayedStream]);
+  }, [isRecording, documentVisible, isAutoRecording]);
 
   useEffect(() => {
     broadcasterRef.current.sendInstruction({ isAutoRecording });
@@ -138,6 +139,8 @@ function BroadcastPage({ broadcastId }) {
       setRecording(dbVideo ? await dbVideo.toRecording() : undefined);
     }
     run();
+    db.addEventListener('change', run);
+    return () => db.removeEventListener('change', run);
   }, []);
 
   return (
@@ -151,14 +154,6 @@ function BroadcastPage({ broadcastId }) {
         muted
         ref={videoRef}
       ></video>
-      {isAutoRecording && stream && (
-        <DelayedVideo
-          key={recording.url}
-          videoRef={videoRef}
-          delaySeconds={2}
-          onStream={setDelayedStream}
-        />
-      )}
       {!isLibraryOpen && isAutoRecording && stream && (
         <AutoRecorder
           stream={stream}
@@ -188,13 +183,10 @@ function BroadcastPage({ broadcastId }) {
       </div>
       <div className="video-footer">
         <div className="video-recording">
-          {recording && (
-            <LibraryButton
-              key={recording.url}
-              video={recording}
-              onLibraryToggle={setIsLibraryOpen}
-            />
-          )}
+          <LibraryButton
+            video={recording}
+            onLibraryToggle={setIsLibraryOpen}
+          />
         </div>
         {stream && (
           <RecordButton
