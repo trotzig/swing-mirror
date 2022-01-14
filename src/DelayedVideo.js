@@ -113,7 +113,10 @@ export default function DelayedVideo({
 
   useEffect(() => {
     onStream(outputRef.current.captureStream());
-  }, []);
+    () => {
+      onStream(undefined);
+    }
+  }, [onStream]);
 
   return (
     <div>
