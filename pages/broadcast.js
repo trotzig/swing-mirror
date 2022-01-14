@@ -112,6 +112,7 @@ function BroadcastPage({ broadcastId }) {
     if (!documentVisible) {
       return;
     }
+    broadcasterRef.current.sendInstruction({ isRecording });
     if (isAutoRecording) {
       return;
     }
@@ -126,7 +127,6 @@ function BroadcastPage({ broadcastId }) {
     } else if (videoRecorderRef.current) {
       videoRecorderRef.current.stop();
     }
-    broadcasterRef.current.sendInstruction({ isRecording });
   }, [isRecording, documentVisible, isAutoRecording]);
 
   useEffect(() => {

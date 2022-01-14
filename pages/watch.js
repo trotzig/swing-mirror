@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
-import DelayedVideo from '../src/DelayedVideo';
+import FallbackVideo from '../src/FallbackVideo';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
 import RecordButton from '../src/RecordButton';
@@ -14,14 +14,9 @@ import VolumeUp from '../src/icons/VolumeUp';
 import db from '../src/db';
 import watch from '../src/watch';
 
-const delayRates = [
-  { label: '+0s', value: 0, title: 'No delay' },
-  { label: '+1s', value: 1, title: 'Video delayed 1 second' },
-  { label: '+2s', value: 2, title: 'Video delayed 2 seconds' },
-  { label: '+3s', value: 3, title: 'Video delayed 3 seconds' },
-  { label: '+4s', value: 4, title: 'Video delayed 4 seconds' },
-  { label: '+5s', value: 5, title: 'Video delayed 5 seconds' },
-];
+function useFallbackVideo() {
+  return typeof window !== 'undefined' && !!window.chrome;
+}
 
 function WatchPage({ broadcastId }) {
   const videoRef = useRef();
@@ -31,8 +26,7 @@ function WatchPage({ broadcastId }) {
   const [isRecording, setIsRecording] = useState(false);
   const [isAutoRecording, setIsAutoRecording] = useState(false);
   const [stream, setStream] = useState();
-  const [delayedStream, setDelayedStream] = useState();
-  const [delayIndex, setDelayIndex] = useState(0);
+  const [fallbackStream, setFallbackStream] = useState();
   const [recording, setRecording] = useState();
   const [isController, setIsController] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
@@ -66,10 +60,13 @@ function WatchPage({ broadcastId }) {
   }, [broadcastId]);
 
   useEffect(() => {
+    instructionRef.current({ isRecording });
+    if (isAutoRecording) {
+      return;
+    }
     if (isRecording) {
       videoRecorderRef.current = new VideoRecorder({
-        stream: delayedStream || videoRef.current.srcObject,
-        isAuto: isAutoRecording,
+        stream: fallbackStream || videoRef.current.srcObject,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
@@ -77,17 +74,7 @@ function WatchPage({ broadcastId }) {
     } else if (videoRecorderRef.current) {
       videoRecorderRef.current.stop().then(setRecording);
     }
-    instructionRef.current({ isRecording });
-  }, [isRecording, delayedStream, isAutoRecording]);
-
-  useEffect(() => {
-    if (isAutoRecording) {
-      setDelayIndex(2);
-    } else {
-      setDelayIndex(0);
-    }
-    instructionRef.current({ isAutoRecording });
-  }, [isAutoRecording]);
+  }, [isRecording, isAutoRecording, fallbackStream]);
 
   useEffect(() => {
     async function run() {
@@ -99,7 +86,9 @@ function WatchPage({ broadcastId }) {
     return () => db.removeEventListener('change', run);
   }, []);
 
-  const delay = delayRates[delayIndex % delayRates.length];
+  useEffect(() => {
+    instructionRef.current({ isAutoRecording });
+  }, [isAutoRecording]);
 
   return (
     <div>
@@ -115,16 +104,17 @@ function WatchPage({ broadcastId }) {
           playsInline
           ref={videoRef}
         />
-        {stream && (
-          <DelayedVideo
-            key={(recording && recording.url) || 'delayed'}
-            delaySeconds={delay.value}
+        {isAutoRecording && stream && (
+          <AutoRecorder
+            passive
+            signal={isRecording}
+            onClose={() => setIsAutoRecording(false)}
+            stream={fallbackStream || stream}
             videoRef={videoRef}
-            onStream={setDelayedStream}
           />
         )}
-        {isAutoRecording && stream && (
-          <AutoRecorder passive onClose={() => setIsAutoRecording(false)} />
+        {stream && useFallbackVideo() && (
+          <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
@@ -136,22 +126,10 @@ function WatchPage({ broadcastId }) {
                 </a>
               </Link>
             </div>
-
             <AutoRecordButton
               isActive={isAutoRecording}
               onClick={() => setIsAutoRecording(!isAutoRecording)}
             />
-
-            {stream && (
-              <div className="rounded-translucent">
-                <button
-                  className="reset-text"
-                  onClick={() => setDelayIndex(delayIndex + 1)}
-                >
-                  {delay.label}
-                </button>
-              </div>
-            )}
           </div>
         </div>
         <div className="video-footer">

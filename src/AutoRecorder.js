@@ -8,8 +8,8 @@ const RECORDING_LENGTH_MS = 4000;
 
 export default function AutoRecorder({
   passive,
+  signal = false,
   stream,
-  model,
   onRecording,
   onClose,
   videoRef,
@@ -30,6 +30,10 @@ export default function AutoRecorder({
   }, []);
 
   useEffect(() => {
+    if (passive) {
+      // no need to listen to triggers when passive
+      return;
+    }
     const interval = setInterval(() => {
       if (isRecordingRef.current) {
         return;
@@ -63,7 +67,18 @@ export default function AutoRecorder({
     }, 20);
 
     return () => clearInterval(interval);
-  }, [onRecording]);
+  }, [onRecording, passive]);
+
+  useEffect(() => {
+    if (!passive) {
+      // no need to listen to signal when not passive
+      return;
+    }
+    isRecordingRef.current = signal;
+    if (signal) {
+      activeRecordingsRef.current[0].keep = true;
+    }
+  }, [passive, signal]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -120,7 +135,8 @@ export default function AutoRecorder({
         </button>
       </div>
       <p style={{ opacity: 0.7 }}>
-        We&apos;re monitoring sound spikes and video movement to detect golf shots.
+        We&apos;re monitoring sound spikes and video movement to detect golf
+        shots.
       </p>
       {!passive && (
         <>

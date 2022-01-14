@@ -19,7 +19,7 @@ let dbPromise = typeof indexedDB !== 'undefined' ? initDB() : Promise.resolve();
 function prepareVideo(video) {
   video.toRecording = async () => {
     const videoBlob = await (await dbPromise).get('videoBlobs', video.blobId);
-    const url = URL.createObjectURL(videoBlob.blob);
+    const url = videoBlob ? URL.createObjectURL(videoBlob.blob) : null;
     return { ...video, url };
   };
   return video;
