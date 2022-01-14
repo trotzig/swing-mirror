@@ -4,10 +4,9 @@ import createHash from './createHash';
 
 export default function watch({
   broadcastId,
-  videoRef,
   onInstruction,
   onRecording,
-  onStreamActive,
+  onStream,
 }) {
   let broadcastSocketId;
   let peerConnection;
@@ -30,20 +29,13 @@ export default function watch({
       .setRemoteDescription(description)
       .then(() => peerConnection.createAnswer())
       .then(sdp => {
-        let newSdp = sdp.sdp.split('\r\n');
-        console.log(newSdp);
-        newSdp = newSdp.filter(
-          line => !/urn:3gpp:video-orientation/.test(line),
-        );
-        sdp.sdp = newSdp.join('\r\n');
         return peerConnection.setLocalDescription(sdp);
       })
       .then(() => {
         socket.emit('answer', id, peerConnection.localDescription);
       });
     peerConnection.ontrack = event => {
-      videoRef.current.srcObject = event.streams[0];
-      onStreamActive();
+      onStream(event.streams[0]);
     };
     peerConnection.onicecandidate = event => {
       if (event.candidate) {

@@ -36,7 +36,8 @@ function BroadcastPage({ broadcastId }) {
   const [libraryVideo, setLibraryVideo] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const [stream, setStream] = useState(false);
+  const [stream, setStream] = useState();
+  const [delayedStream, setDelayedStream] = useState();
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
@@ -114,12 +115,9 @@ function BroadcastPage({ broadcastId }) {
       return;
     }
     if (isRecording) {
-      const delayedVideoCanvas = document.body.querySelector('.delayed-video');
       videoRecorderRef.current = new VideoRecorder({
-        stream: delayedVideoCanvas
-          ? delayedVideoCanvas.captureStream()
-          : videoRef.current.srcObject,
-        isAuto: !!delayedVideoCanvas,
+        stream: delayedStream || videoRef.current.srcObject,
+        isAuto: isAutoRecording,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
@@ -128,7 +126,7 @@ function BroadcastPage({ broadcastId }) {
       videoRecorderRef.current.stop().then(setRecording);
     }
     broadcasterRef.current.sendInstruction({ isRecording });
-  }, [isRecording, documentVisible]);
+  }, [isRecording, documentVisible, isAutoRecording, delayedStream]);
 
   useEffect(() => {
     broadcasterRef.current.sendInstruction({ isAutoRecording });
@@ -154,7 +152,12 @@ function BroadcastPage({ broadcastId }) {
         ref={videoRef}
       ></video>
       {isAutoRecording && stream && (
-        <DelayedVideo key={recording.url} videoRef={videoRef} delaySeconds={2} />
+        <DelayedVideo
+          key={recording.url}
+          videoRef={videoRef}
+          delaySeconds={2}
+          onStream={setDelayedStream}
+        />
       )}
       {!isLibraryOpen && isAutoRecording && stream && (
         <AutoRecorder

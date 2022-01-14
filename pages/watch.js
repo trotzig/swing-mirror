@@ -30,7 +30,8 @@ function WatchPage({ broadcastId }) {
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
   const [isAutoRecording, setIsAutoRecording] = useState(false);
-  const [hasStream, setHasStream] = useState(false);
+  const [stream, setStream] = useState();
+  const [delayedStream, setDelayedStream] = useState();
   const [delayIndex, setDelayIndex] = useState(0);
   const [recording, setRecording] = useState();
   const [isController, setIsController] = useState(true);
@@ -49,7 +50,16 @@ function WatchPage({ broadcastId }) {
           setIsAutoRecording(instruction.isAutoRecording);
         }
       },
-      onStreamActive: () => setHasStream(true),
+      onStream: stream => {
+        videoRef.current.addEventListener(
+          'playing',
+          () => {
+            setStream(stream);
+          },
+          { once: true },
+        );
+        videoRef.current.srcObject = stream;
+      },
     });
     instructionRef.current = sendInstruction;
     return closeSocket;
@@ -57,12 +67,9 @@ function WatchPage({ broadcastId }) {
 
   useEffect(() => {
     if (isRecording) {
-      const delayedVideoCanvas = document.body.querySelector('.delayed-video');
       videoRecorderRef.current = new VideoRecorder({
-        stream: delayedVideoCanvas
-          ? delayedVideoCanvas.captureStream()
-          : videoRef.current.srcObject,
-        isAuto: !!delayedVideoCanvas,
+        stream: delayedStream || videoRef.current.srcObject,
+        isAuto: isAutoRecording,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
@@ -71,7 +78,7 @@ function WatchPage({ broadcastId }) {
       videoRecorderRef.current.stop().then(setRecording);
     }
     instructionRef.current({ isRecording });
-  }, [isRecording]);
+  }, [isRecording, delayedStream, isAutoRecording]);
 
   useEffect(() => {
     if (isAutoRecording) {
@@ -106,14 +113,15 @@ function WatchPage({ broadcastId }) {
           playsInline
           ref={videoRef}
         />
-        {delay.value > 0 ? (
+        {stream && (
           <DelayedVideo
-            key={recording.url}
+            key={recording.url || 'delayed'}
             delaySeconds={delay.value}
             videoRef={videoRef}
+            onStream={setDelayedStream}
           />
-        ) : null}
-        {isAutoRecording && hasStream && (
+        )}
+        {isAutoRecording && stream && (
           <AutoRecorder passive onClose={() => setIsAutoRecording(false)} />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -132,7 +140,7 @@ function WatchPage({ broadcastId }) {
               onClick={() => setIsAutoRecording(!isAutoRecording)}
             />
 
-            {hasStream && (
+            {stream && (
               <div className="rounded-translucent">
                 <button
                   className="reset-text"

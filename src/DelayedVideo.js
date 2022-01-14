@@ -7,17 +7,41 @@ function initCanvas(canvas, video) {
   return ctx;
 }
 
-export default function DelayedVideo({ videoRef, delaySeconds }) {
+export default function DelayedVideo({
+  videoRef,
+  delaySeconds,
+  onStream = () => {},
+}) {
   const captureRef = useRef();
   const outputRef = useRef();
   const workerRef = useRef();
   const frameRateRef = useRef(30);
 
   useEffect(() => {
-    const captureCtx = initCanvas(captureRef.current, videoRef.current);
     const outputCtx = initCanvas(outputRef.current, videoRef.current);
-
     let isActive = true;
+
+    if (delaySeconds === 0) {
+      function processMirrorFrame() {
+        if (!isActive || !outputRef.current) {
+          return;
+        }
+        outputCtx.drawImage(
+          videoRef.current,
+          0,
+          0,
+          outputRef.current.width,
+          outputRef.current.height,
+        );
+        requestAnimationFrame(processMirrorFrame);
+      }
+      processMirrorFrame();
+      return () => {
+        isActive = false;
+      };
+    }
+
+    const captureCtx = initCanvas(captureRef.current, videoRef.current);
     let framesProcessed = 0;
 
     const frameRateInterval = setInterval(() => {
@@ -75,14 +99,21 @@ export default function DelayedVideo({ videoRef, delaySeconds }) {
       workerRef.current.terminate();
       clearInterval(frameRateInterval);
     };
-  }, [videoRef]);
+  }, [videoRef, delaySeconds]);
 
   useEffect(() => {
+    if (!workerRef.current) {
+      return;
+    }
     workerRef.current.postMessage({
       delaySeconds,
       framesPerSecond: frameRateRef.current,
     });
   }, [delaySeconds]);
+
+  useEffect(() => {
+    onStream(outputRef.current.captureStream());
+  }, []);
 
   return (
     <div>
