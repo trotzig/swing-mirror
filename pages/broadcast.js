@@ -6,6 +6,7 @@ import cryptoRandomString from 'crypto-random-string';
 import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
 import Broadcaster from '../src/Broadcaster';
+import DrawingBoard from '../src/DrawingBoard';
 import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
@@ -162,6 +163,12 @@ function BroadcastPage({ broadcastId }) {
           onClose={() => setIsAutoRecording(false)}
         />
       )}
+      {stream && (
+        <DrawingBoard
+          width={videoRef.current.videoWidth}
+          height={videoRef.current.videoHeight}
+        />
+      )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
@@ -183,10 +190,7 @@ function BroadcastPage({ broadcastId }) {
       </div>
       <div className="video-footer">
         <div className="video-recording">
-          <LibraryButton
-            video={recording}
-            onLibraryToggle={setIsLibraryOpen}
-          />
+          <LibraryButton video={recording} onLibraryToggle={setIsLibraryOpen} />
         </div>
         {stream && (
           <RecordButton

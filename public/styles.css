@@ -30,6 +30,7 @@ a {
 }
 
 video.full-screen,
+.drawing-board,
 .fallback-video,
 .delayed-video {
   width: 100%;
@@ -563,7 +564,7 @@ h1 i {
   align-items: flex-start;
   column-gap: 15px;
   margin-bottom: 20px;
-  transition: all .3s;
+  transition: all 0.3s;
   max-height: 100px;
   font-size: 12px;
   width: 100%;
@@ -751,4 +752,16 @@ button.auto-record-button {
 }
 .error-page p {
   margin-bottom: 30px;
+}
+.undo-drawing-board {
+  position: fixed;
+  top: 100px;
+  right: 10px;
+}
+@media (orientation: landscape) and (max-width: 900px) {
+  .undo-drawing-board {
+    top: 10px;
+    right: 50%;
+    transform: translateX(50%);
+  }
 }
