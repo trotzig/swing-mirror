@@ -48,6 +48,7 @@ export default function LibraryButton({ video, onLibraryToggle = () => {} }) {
         onClose={() => setSelectedVideo(undefined)}
         title={selectedVideo && <VideoInfo video={selectedVideo} />}
         action={<ShareButton video={selectedVideo} />}
+        disableSlideToClose
       >
         {video && (
           <VideoPlayer video={selectedVideo} onVideoChange={setSelectedVideo} />

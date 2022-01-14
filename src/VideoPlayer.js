@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import DrawingBoard from './DrawingBoard';
 import SkipAhead from './icons/SkipAhead';
 import VolumeOff from './icons/VolumeOff';
 import VolumeUp from './icons/VolumeUp';
@@ -46,6 +47,7 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
+  const [videoDimensions, setVideoDimensions] = useState();
   const videoRef = useRef();
   const seekRef = useRef();
   const animateRef = useRef();
@@ -61,6 +63,12 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
       seekRef.current.value = videoEl.currentTime;
     };
     videoEl.addEventListener('timeupdate', timeListener);
+    const metaListener = () =>
+      setVideoDimensions({
+        width: videoEl.videoWidth,
+        height: videoEl.videoHeight,
+      });
+    videoEl.addEventListener('loadedmetadata', metaListener);
     if (video) {
       videoEl.src = video.url;
     }
@@ -69,6 +77,7 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
       videoEl.removeEventListener('play', playListener);
       videoEl.removeEventListener('pause', pauseListener);
       videoEl.removeEventListener('timeupdate', timeListener);
+      videoEl.removeEventListener('loadedmetadata', metaListener);
       videoEl.pause();
     };
   }, [video]);
@@ -92,6 +101,7 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
         loop
         autoPlay
       ></video>
+      {videoDimensions && <DrawingBoard {...videoDimensions} />}
       <div className="video-player-controls">
         <div className="video-player-seek">
           <button

@@ -10,6 +10,7 @@ export default function Modal({
   children,
   slideUp = false,
   title,
+  disableSlideToClose = false,
 }) {
   const [touchStart, setTouchStart] = useState();
   const [touchDistance, setTouchDistance] = useState();
@@ -55,18 +56,27 @@ export default function Modal({
             : undefined,
       }}
       onTouchStart={e => {
+        if (disableSlideToClose) {
+          return;
+        }
         if (Date.now() - scrollTimestamp < 200) {
           return;
         }
         setTouchStart(e.touches[0].pageY);
       }}
       onTouchMove={e => {
+        if (disableSlideToClose) {
+          return;
+        }
         if (Date.now() - scrollTimestamp < 200) {
           return;
         }
         setTouchDistance(Math.max(0, e.touches[0].pageY - touchStart));
       }}
       onTouchEnd={e => {
+        if (disableSlideToClose) {
+          return;
+        }
         setTouchStart(undefined);
         setTouchDistance(undefined);
         if (touchDistance > 150) {
