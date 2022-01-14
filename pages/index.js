@@ -40,6 +40,8 @@ function CodeInput({ length, ...props }) {
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
         style={{ textIndent: charWidth * 0.33 }}
+        autoCorrect="off"
+        autoCapitalize="none"
       />
       <div className="code-input-boxes">
         {charWidth
