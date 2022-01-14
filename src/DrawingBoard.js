@@ -2,9 +2,37 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import Undo from './icons/Undo';
 
+function getObjectFitSize(containerWidth, containerHeight, width, height) {
+  const doRatio = width / height;
+  const cRatio = containerWidth / containerHeight;
+  let targetWidth = 0;
+  let targetHeight = 0;
+
+  if (doRatio > cRatio) {
+    targetWidth = containerWidth;
+    targetHeight = targetWidth / doRatio;
+  } else {
+    targetHeight = containerHeight;
+    targetWidth = targetHeight * doRatio;
+  }
+
+  return {
+    width: targetWidth,
+    height: targetHeight,
+    left: (containerWidth - targetWidth) / 2,
+    top: (containerHeight - targetHeight) / 2,
+  };
+}
+
 function getMousePos(evt) {
   const canvas = evt.target;
-  const rect = canvas.getBoundingClientRect();
+  const cRect = canvas.getBoundingClientRect();
+  const rect = getObjectFitSize(
+    cRect.width,
+    cRect.height,
+    canvas.width,
+    canvas.height,
+  );
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
 
@@ -68,6 +96,9 @@ export default function DrawingBoard({ width, height }) {
           }
         }}
         onTouchEnd={e => {
+          if (!currentItem) {
+            return;
+          }
           const end = getMousePos(e.changedTouches[0]);
           if (
             Math.abs(currentItem.start.x - currentItem.end.x) +
@@ -79,6 +110,9 @@ export default function DrawingBoard({ width, height }) {
           setCurrentItem();
         }}
         onMouseUp={e => {
+          if (!currentItem) {
+            return;
+          }
           const end = getMousePos(e);
           if (
             Math.abs(currentItem.start.x - currentItem.end.x) +
