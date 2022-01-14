@@ -45,13 +45,38 @@ export default function DrawingBoard({ width, height }) {
   return (
     <div>
       <canvas
+        onTouchStart={e =>
+          setCurrentItem({
+            start: getMousePos(e.changedTouches[0]),
+            end: getMousePos(e.changedTouches[0]),
+          })
+        }
         onMouseDown={e =>
           setCurrentItem({ start: getMousePos(e), end: getMousePos(e) })
         }
+        onTouchMove={e => {
+          if (currentItem) {
+            setCurrentItem({
+              start: currentItem.start,
+              end: getMousePos(e.changedTouches[0]),
+            });
+          }
+        }}
         onMouseMove={e => {
           if (currentItem) {
             setCurrentItem({ start: currentItem.start, end: getMousePos(e) });
           }
+        }}
+        onTouchEnd={e => {
+          const end = getMousePos(e.changedTouches[0]);
+          if (
+            Math.abs(currentItem.start.x - currentItem.end.x) +
+              Math.abs(currentItem.start.y - currentItem.end.y) >
+            10
+          ) {
+            setItems(old => old.concat([currentItem]));
+          }
+          setCurrentItem();
         }}
         onMouseUp={e => {
           const end = getMousePos(e);
