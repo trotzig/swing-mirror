@@ -7,7 +7,9 @@ import AutoRecorder from '../src/AutoRecorder';
 import FallbackVideo from '../src/FallbackVideo';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
+import Modal from '../src/Modal';
 import RecordButton from '../src/RecordButton';
+import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import VolumeOff from '../src/icons/VolumeOff';
 import VolumeUp from '../src/icons/VolumeUp';
@@ -24,6 +26,7 @@ function WatchPage({ broadcastId }) {
   const [stream, setStream] = useState();
   const [fallbackStream, setFallbackStream] = useState();
   const [recording, setRecording] = useState();
+  const [replayVideo, setReplayVideo] = useState();
   const [isController, setIsController] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -110,6 +113,7 @@ function WatchPage({ broadcastId }) {
             onClose={() => setIsAutoRecording(false)}
             stream={fallbackStream || stream}
             videoRef={videoRef}
+            onReplayVideo={setReplayVideo}
           />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -145,6 +149,16 @@ function WatchPage({ broadcastId }) {
           </div>
         </div>
       </div>
+      <Modal
+        open={replayVideo}
+        onClose={() => setReplayVideo(undefined)}
+        title="Replay"
+        disableSlideToClose
+      >
+        {replayVideo && (
+          <VideoPlayer video={replayVideo} onVideoChange={setReplayVideo} />
+        )}
+      </Modal>
     </div>
   );
 }

@@ -24,6 +24,7 @@ export default function LibraryButton({ video, onLibraryToggle = () => {} }) {
         </button>
       ) : null}
       <Modal
+        scrolls
         slideUp
         open={libraryOpen}
         title="Library"

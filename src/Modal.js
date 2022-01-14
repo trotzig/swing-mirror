@@ -11,6 +11,7 @@ export default function Modal({
   slideUp = false,
   title,
   disableSlideToClose = false,
+  scrolls
 }) {
   const [touchStart, setTouchStart] = useState();
   const [touchDistance, setTouchDistance] = useState();
@@ -44,6 +45,9 @@ export default function Modal({
   }
   if (slideUp) {
     classes.push('slide-up');
+  }
+  if (scrolls) {
+    classes.push('scrolls');
   }
   return (
     <div

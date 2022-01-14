@@ -365,6 +365,9 @@ h1 i {
   flex-direction: column;
 }
 .modal-children {
+  overflow-y: hidden;
+}
+.modal.scrolls .modal-children {
   flex: 1;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
