@@ -57,13 +57,15 @@ export default function AutoRecorder({
       }
       latestAudioSpikeRef.current === undefined;
       latestVideoSpikeRef.current === undefined;
-      onRecording(true);
-      activeRecordingsRef.current[0].keep = true;
+      if (activeRecordingsRef.current.length) {
+        activeRecordingsRef.current[0].keep = true;
+        onRecording(true);
 
-      const timeout = setTimeout(() => {
-        onRecording(false);
-        isRecordingRef.current = false;
-      }, RECORDING_LENGTH_MS);
+        const timeout = setTimeout(() => {
+          onRecording(false);
+          isRecordingRef.current = false;
+        }, RECORDING_LENGTH_MS);
+      }
     }, 20);
 
     return () => clearInterval(interval);

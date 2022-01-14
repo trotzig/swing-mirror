@@ -8,6 +8,8 @@ export default function watch({
   onRecording,
   onStream,
 }) {
+  let ourInstructionId = 1;
+  let lastInstructionIdReceived = -1;
   let broadcastSocketId;
   let peerConnection;
   let receiveBuffer = [];
@@ -55,7 +57,12 @@ export default function watch({
   });
 
   socket.on('instruction', (id, instruction) => {
-    onInstruction(instruction);
+    if (lastInstructionIdReceived < instruction.id) {
+      onInstruction(instruction);
+    } else {
+      console.warn('Ignoring instruction that came out-of-order');
+    }
+    lastInstructionIdReceived = instruction.id;
   });
 
   socket.on('broadcaster', () => {
@@ -74,7 +81,10 @@ export default function watch({
   window.onunload = window.onbeforeunload = closeSocket;
   return {
     closeSocket,
-    sendInstruction: instruction =>
-      socket.emit('instruction', broadcastSocketId, instruction),
+    sendInstruction: instruction => {
+      instruction.id = ourInstructionId;
+      socket.emit('instruction', broadcastSocketId, instruction);
+      ourInstructionId++;
+    },
   };
 }
