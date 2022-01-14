@@ -86,7 +86,10 @@ function IndexPage({ error, broadcastId }) {
     <div>
       <div className="blurry-background" />
       <nav>
-        <div className="page-wrapper start-nav" style={{ position: 'relative' }}>
+        <div
+          className="page-wrapper start-nav"
+          style={{ position: 'relative' }}
+        >
           <SwingAppsIconSvg size={50} />
           {libraryVideo && (
             <div className="home-library-button">

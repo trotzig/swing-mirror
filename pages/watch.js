@@ -115,7 +115,7 @@ function WatchPage({ broadcastId }) {
         />
         {stream && (
           <DelayedVideo
-            key={recording.url || 'delayed'}
+            key={(recording && recording.url) || 'delayed'}
             delaySeconds={delay.value}
             videoRef={videoRef}
             onStream={setDelayedStream}
