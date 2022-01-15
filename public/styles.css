@@ -780,12 +780,12 @@ button.auto-replay-button {
   position: fixed;
   width: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.4);
-  padding-top: 70px;
+  transform: translate(-50%, -100%);
+  padding-top: 1px;
   padding-bottom: 1px;
   overflow: hidden;
   font-size: 10px;
+  transition: opacity .2s;
 }
 
 .player-graphics-outer {

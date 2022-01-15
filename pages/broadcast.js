@@ -167,8 +167,9 @@ function BroadcastPage({ broadcastId }) {
           height={videoRef.current.videoHeight}
         />
       )}
-      {stream && isPlayerGraphics && (
+      {stream && (
         <PlayerGraphics
+          active={isPlayerGraphics}
           videoWidth={videoRef.current.videoWidth}
           videoHeight={videoRef.current.videoHeight}
         />

@@ -3,7 +3,7 @@ import React from 'react';
 import Cup from './icons/Cup';
 import getObjectFitSize from './getObjectFitSize';
 
-export default function PlayerGraphics({ videoWidth, videoHeight }) {
+export default function PlayerGraphics({ active, videoWidth, videoHeight }) {
   const rect = getObjectFitSize(
     window.innerWidth,
     window.innerHeight,
@@ -11,7 +11,14 @@ export default function PlayerGraphics({ videoWidth, videoHeight }) {
     videoHeight,
   );
   return (
-    <div className="player-graphics" style={{ maxWidth: rect.width }}>
+    <div
+      className="player-graphics"
+      style={{
+        maxWidth: rect.width,
+        top: Math.max(rect.top, 130),
+        opacity: active ? 1 : 0,
+      }}
+    >
       <div className="player-graphics-outer">
         <div className="player-graphics-inner">
           <div className="player-graphics-hole">17</div>
