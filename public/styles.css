@@ -504,7 +504,6 @@ h1 i {
   align-items: center;
 }
 
-
 .start-camera {
   position: fixed;
   top: 50%;
@@ -774,5 +773,110 @@ button.auto-replay-button {
     top: 10px;
     right: 50%;
     transform: translateX(50%);
+  }
+}
+
+.player-graphics {
+  position: fixed;
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 70px;
+  padding-bottom: 1px;
+  overflow: hidden;
+  font-size: 10px;
+}
+
+.player-graphics-outer {
+  background-image: linear-gradient(#132e5d, #395476);
+  border-top: solid 1px #b3e1fd;
+  box-shadow: 0 0 0 1px #132e5d;
+}
+.player-graphics-inner {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  text-transform: uppercase;
+  align-items: center;
+  display: flex;
+  line-height: 1;
+}
+.player-graphics-hole {
+  font-size: 400%;
+  line-height: 1;
+  font-family: monospace;
+  padding: 0 10px;
+}
+.player-graphics-name {
+  font-weight: bold;
+  padding: 0px 10px;
+  font-size: 200%;
+}
+.player-graphics-cup,
+.player-graphics-par {
+  background-color: #347f48;
+  text-align: center;
+  line-height: 1;
+  font-size: 140%;
+  align-self: stretch;
+  padding: 3px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.player-graphics-par {
+  font-size: 160%;
+  background-color: #f5f5f5;
+  color: #333;
+  align-items: flex-start;
+}
+.player-graphics-pos {
+  font-weight: bold;
+  color: #589CCA;
+  padding: 15px;
+}
+.player-graphics-score {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 2px;
+  font-weight: bold;
+  font-size: 180%;
+  margin-right: 10px;
+}
+.player-graphics-extra {
+  align-self: stretch;
+  border-left: 2px solid #b3e1fd;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 10px;
+}
+
+.player-graphics-extra span {
+  color: #9297A9;
+  font-size: 120%;
+}
+.player-graphics-extra b {
+  font-size: 160%;
+  font-weight: normal;
+}
+@media (max-width: 700px) {
+  .player-graphics {
+    font-size: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .player-graphics {
+    font-size: 6px;
+  }
+}
+@media (max-width: 500px) {
+  .player-graphics-extra {
+    display: none;
   }
 }

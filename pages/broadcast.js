@@ -11,6 +11,7 @@ import FlipCamera from '../src/icons/FlipCamera';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
 import Modal from '../src/Modal';
+import PlayerGraphics from '../src/PlayerGraphics';
 import RecordButton from '../src/RecordButton';
 import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
@@ -45,6 +46,7 @@ function BroadcastPage({ broadcastId }) {
   const [documentVisible, setDocumentVisible] = useState(true);
   const [isAutoRecording, setIsAutoRecording] = useState(false);
   const [isAutoReplay, setIsAutoReplay] = useState(true);
+  const [isPlayerGraphics, setIsPlayerGraphics] = useState(false);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -165,6 +167,12 @@ function BroadcastPage({ broadcastId }) {
           height={videoRef.current.videoHeight}
         />
       )}
+      {stream && isPlayerGraphics && (
+        <PlayerGraphics
+          videoWidth={videoRef.current.videoWidth}
+          videoHeight={videoRef.current.videoHeight}
+        />
+      )}
       {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
         <AutoRecorder
           stream={stream}
@@ -190,7 +198,11 @@ function BroadcastPage({ broadcastId }) {
             isActive={isAutoRecording}
             onClick={() => setIsAutoRecording(!isAutoRecording)}
           />
-          <div id="broadcastId" className="broadcast-id">
+          <div
+            id="broadcastId"
+            className="broadcast-id"
+            onClick={() => setIsPlayerGraphics(!isPlayerGraphics)}
+          >
             <span>code</span> <code>{broadcastId}</code>
           </div>
         </div>

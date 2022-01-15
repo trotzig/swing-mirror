@@ -4,10 +4,12 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
+import DrawingBoard from '../src/DrawingBoard';
 import FallbackVideo from '../src/FallbackVideo';
 import Home from '../src/icons/Home';
 import LibraryButton from '../src/LibraryButton';
 import Modal from '../src/Modal';
+import PlayerGraphics from '../src/PlayerGraphics';
 import RecordButton from '../src/RecordButton';
 import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
@@ -30,6 +32,7 @@ function WatchPage({ broadcastId }) {
   const [recording, setRecording] = useState();
   const [replayVideo, setReplayVideo] = useState();
   const [isController, setIsController] = useState(true);
+  const [isPlayerGraphics, setIsPlayerGraphics] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
@@ -108,6 +111,18 @@ function WatchPage({ broadcastId }) {
         {stream && window.chrome && (
           <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
         )}
+        {stream && (
+          <DrawingBoard
+            width={videoRef.current.videoWidth}
+            height={videoRef.current.videoHeight}
+          />
+        )}
+        {stream && isPlayerGraphics && (
+          <PlayerGraphics
+            videoWidth={videoRef.current.videoWidth}
+            videoHeight={videoRef.current.videoHeight}
+          />
+        )}
         {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
           <AutoRecorder
             passive
@@ -134,6 +149,12 @@ function WatchPage({ broadcastId }) {
               isActive={isAutoRecording}
               onClick={() => setIsAutoRecording(!isAutoRecording)}
             />
+            <div
+              style={{ opacity: 0, padding: 10 }}
+              onClick={() => setIsPlayerGraphics(!isPlayerGraphics)}
+            >
+              .
+            </div>
           </div>
         </div>
         <div className="video-footer">
