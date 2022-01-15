@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import About from '../src/About';
 import LibraryButton from '../src/LibraryButton';
 import Modal from '../src/Modal';
 import Monitor from '../src/icons/Monitor';
@@ -72,6 +73,7 @@ function CodeInput({ length, ...props }) {
 
 function IndexPage({ error, broadcastId }) {
   const [formVisible, setFormVisible] = useState(false);
+  const [aboutVisible, setAboutVisible] = useState(false);
   const [libraryVideo, setLibraryVideo] = useState();
   useEffect(() => {
     async function run() {
@@ -136,8 +138,18 @@ function IndexPage({ error, broadcastId }) {
       <footer>
         <div className="page-wrapper" style={{ textAlign: 'center' }}>
           <p>
-            by <a href="https://github.com/trotzig">@trotzig</a>{' '}
-            {new Date().getFullYear()}
+            By <a href="https://github.com/trotzig">@trotzig</a>{' '}
+            {new Date().getFullYear()} |{' '}
+            <a
+              href="#"
+              className="reset-text"
+              onClick={e => {
+                setAboutVisible(true);
+                e.preventDefault();
+              }}
+            >
+              About
+            </a>
           </p>
         </div>
       </footer>
@@ -152,6 +164,16 @@ function IndexPage({ error, broadcastId }) {
             <CodeInput length={4} name="broadcastId" />
           </form>
         </div>
+      </Modal>
+      <Modal
+        opaque
+        slideUp
+        open={aboutVisible}
+        onClose={() => setAboutVisible(false)}
+        title="About Swing Mirror"
+        scrolls
+      >
+        <About />
       </Modal>
     </div>
   );
