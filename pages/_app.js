@@ -9,6 +9,10 @@ function SwingMirrorApp({ Component, pageProps }) {
   return (
     <>
       <Head>
+        <script
+          async
+          src="https://hosted.okayanalytics.com/tracker.js?tid=OA-F9CKM3RG"
+        ></script>
         <meta
           name="viewport"
           content="initial-scale=1.0, width=device-width, user-scalable=no, viewport-fit=cover"
