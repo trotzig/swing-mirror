@@ -369,7 +369,7 @@ h1 i {
 }
 .modal.scrolls .modal-children {
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 .modal.closed {

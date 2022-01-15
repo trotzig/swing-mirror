@@ -42,6 +42,7 @@ export default function AutoRecorder({
       // no need to listen to triggers when passive
       return;
     }
+    let recordingTimeout;
     const interval = setInterval(() => {
       if (isRecordingRef.current) {
         return;
@@ -69,14 +70,17 @@ export default function AutoRecorder({
         activeRecordingsRef.current[0].keep = true;
         onRecording(true);
 
-        const timeout = setTimeout(() => {
+        recordingTimeout = setTimeout(() => {
           onRecording(false);
           isRecordingRef.current = false;
         }, RECORDING_LENGTH_MS);
       }
     }, 20);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(recordingTimeout);
+    }
   }, [onRecording, passive]);
 
   useEffect(() => {
