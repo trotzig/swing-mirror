@@ -43,7 +43,11 @@ function step(dir, video, playbackRate) {
   video.currentTime = video.currentTime + dir * move;
 }
 
-export default function VideoPlayer({ video, onVideoChange = () => {} }) {
+export default function VideoPlayer({
+  video,
+  onVideoChange = () => {},
+  playbackRate: propPlaybackRate = 1,
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [playbackRateIncr, setPlaybackRateIncr] = useState(0);
@@ -72,7 +76,6 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
     if (video) {
       videoEl.src = video.url;
     }
-    setPlaybackRateIncr(0);
     return () => {
       videoEl.removeEventListener('play', playListener);
       videoEl.removeEventListener('pause', pauseListener);
@@ -88,8 +91,17 @@ export default function VideoPlayer({ video, onVideoChange = () => {} }) {
 
   useEffect(() => {
     const rate = playbackRates[playbackRateIncr % playbackRates.length];
+    console.log('Setting video playback rate', rate.value, playbackRateIncr);
     videoRef.current.playbackRate = rate.value;
   }, [playbackRateIncr]);
+
+  useEffect(() => {
+    console.log(propPlaybackRate);
+    const i = playbackRates.findIndex(r => r.value === propPlaybackRate);
+    console.log('Setting playback rate incr', i);
+    setPlaybackRateIncr(i);
+  }, [propPlaybackRate]);
+
 
   return (
     <div className="video-player">

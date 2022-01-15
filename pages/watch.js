@@ -23,6 +23,8 @@ function WatchPage({ broadcastId }) {
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
   const [isAutoRecording, setIsAutoRecording] = useState(false);
+  const [isAutoReplay, setIsAutoReplay] = useState(true);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [stream, setStream] = useState();
   const [fallbackStream, setFallbackStream] = useState();
   const [recording, setRecording] = useState();
@@ -106,14 +108,16 @@ function WatchPage({ broadcastId }) {
         {stream && window.chrome && (
           <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
         )}
-        {isAutoRecording && stream && (
+        {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
           <AutoRecorder
             passive
             signal={isRecording}
+            isAutoReplay={isAutoReplay}
             onClose={() => setIsAutoRecording(false)}
             stream={fallbackStream || stream}
             videoRef={videoRef}
             onReplayVideo={setReplayVideo}
+            onToggleAutoReplay={setIsAutoReplay}
           />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
@@ -134,7 +138,10 @@ function WatchPage({ broadcastId }) {
         </div>
         <div className="video-footer">
           <div className="video-recording">
-            <LibraryButton video={recording} />
+            <LibraryButton
+              video={recording}
+              onLibraryToggle={setIsLibraryOpen}
+            />
           </div>
           <RecordButton
             onClick={() => setIsRecording(!isRecording)}
@@ -156,7 +163,11 @@ function WatchPage({ broadcastId }) {
         disableSlideToClose
       >
         {replayVideo && (
-          <VideoPlayer video={replayVideo} onVideoChange={setReplayVideo} />
+          <VideoPlayer
+            video={replayVideo}
+            onVideoChange={setReplayVideo}
+            playbackRate={0.2}
+          />
         )}
       </Modal>
     </div>

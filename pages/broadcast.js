@@ -44,6 +44,7 @@ function BroadcastPage({ broadcastId }) {
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
   const [isAutoRecording, setIsAutoRecording] = useState(false);
+  const [isAutoReplay, setIsAutoReplay] = useState(true);
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -164,9 +165,11 @@ function BroadcastPage({ broadcastId }) {
           height={videoRef.current.videoHeight}
         />
       )}
-      {!isLibraryOpen && isAutoRecording && stream && (
+      {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
         <AutoRecorder
           stream={stream}
+          isAutoReplay={isAutoReplay}
+          onToggleAutoReplay={setIsAutoReplay}
           videoRef={videoRef}
           onRecording={setIsRecording}
           onClose={() => setIsAutoRecording(false)}
@@ -226,7 +229,11 @@ function BroadcastPage({ broadcastId }) {
         disableSlideToClose
       >
         {replayVideo && (
-          <VideoPlayer video={replayVideo} onVideoChange={setReplayVideo} />
+          <VideoPlayer
+            video={replayVideo}
+            onVideoChange={setReplayVideo}
+            playbackRate={0.2}
+          />
         )}
       </Modal>
     </div>

@@ -14,15 +14,16 @@ export default function AutoRecorder({
   onClose,
   videoRef,
   onReplayVideo = () => {},
+  isAutoReplay,
+  onToggleAutoReplay,
 }) {
   const [isRecording, setIsRecording] = useState(false);
-  const [isAutoReplay, setIsAutoReplay] = useState(false);
   const isRecordingRef = useRef(false);
   const canvasRef = useRef();
   const activeRecordingsRef = useRef([]);
   const latestAudioSpikeRef = useRef();
   const latestVideoSpikeRef = useRef();
-  const replayRecordingsRef = useRef(false);
+  const replayRecordingsRef = useRef(isAutoReplay);
 
   const handleAudioSpike = useCallback(timestamp => {
     latestAudioSpikeRef.current = timestamp;
@@ -31,6 +32,10 @@ export default function AutoRecorder({
   const handleVideoMotion = useCallback(timestamp => {
     latestVideoSpikeRef.current = timestamp;
   }, []);
+
+  useEffect(() => {
+    replayRecordingsRef.current = isAutoReplay;
+  }, [isAutoReplay]);
 
   useEffect(() => {
     if (passive) {
@@ -159,10 +164,7 @@ export default function AutoRecorder({
       </p>
       <button
         className="reset-text auto-replay-button"
-        onClick={() => {
-          setIsAutoReplay(!isAutoReplay);
-          replayRecordingsRef.current = !isAutoReplay;
-        }}
+        onClick={() => onToggleAutoReplay(!isAutoReplay)}
       >
         <div className={toggleClasses.join(' ')} />
         <div>Replay recorded videos</div>
