@@ -1,5 +1,23 @@
 {
   "name": "Swing Mirror",
   "scope": "/",
-  "display": "fullscreen"
+  "display": "fullscreen",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/app-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/app-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
 }
