@@ -67,6 +67,7 @@ function BroadcastPage({ broadcastId }) {
     broadcasterRef.current = new Broadcaster({ broadcastId });
     const broadcaster = broadcasterRef.current;
     const videoElement = videoRef.current;
+    let streamToShutdown;
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -76,6 +77,7 @@ function BroadcastPage({ broadcastId }) {
         },
       })
       .then(cameraStream => {
+        streamToShutdown = cameraStream;
         videoRef.current.addEventListener(
           'canplay',
           () => {
@@ -110,8 +112,9 @@ function BroadcastPage({ broadcastId }) {
     return () => {
       broadcaster.off('instruction', instructionHandler);
       broadcaster.close();
-      const cameraStream = videoElement.srcObject;
-      cameraStream.getTracks().forEach(track => track.stop());
+      if (streamToShutdown) {
+        streamToShutdown.getTracks().forEach(track => track.stop());
+      }
     };
   }, [broadcastId, facingMode, documentVisible]);
 
@@ -220,7 +223,7 @@ function BroadcastPage({ broadcastId }) {
           />
         )}
         <div className="video-footer-right">
-          {stream && (
+          {stream && hasBackCamera && (
             <div className="rounded-translucent">
               <button
                 className="reset"
