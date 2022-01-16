@@ -32,11 +32,15 @@ export default function FallbackVideo({ videoRef, onStream = () => {} }) {
   }, [videoRef]);
 
   useEffect(() => {
-    onStream(canvasRef.current.captureStream());
+    const stream = canvasRef.current.captureStream();
+    const audioTracks = videoRef.current.srcObject.getAudioTracks();
+    console.log(audioTracks);
+    audioTracks.forEach(audioTrack => stream.addTrack(audioTrack));
+    onStream(stream);
     () => {
       onStream(undefined);
     };
-  }, [onStream]);
+  }, [onStream, videoRef]);
 
   return <canvas ref={canvasRef} className="fallback-video" />;
 }
