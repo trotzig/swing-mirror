@@ -17,7 +17,7 @@ import VideoPlayer from '../src/VideoPlayer';
 import VideoRecorder from '../src/VideoRecorder';
 import db from '../src/db';
 
-function videoDimensions(videoEl) {
+function getVideoDimensionsForConstraint(videoEl) {
   const isPortrait = window.innerHeight > window.innerWidth;
   if (isPortrait && /iPad|iPhone|iPod|android/.test(navigator.userAgent)) {
     // iOS and Android constraints are expressed in landscape mode, so we need
@@ -47,6 +47,7 @@ function BroadcastPage({ broadcastId }) {
   const [isAutoRecording, setIsAutoRecording] = useState(false);
   const [isAutoReplay, setIsAutoReplay] = useState(true);
   const [isPlayerGraphics, setIsPlayerGraphics] = useState(false);
+  const [videoDimensions, setVideoDimensions] = useState({});
   const videoRef = useRef();
   const videoRecorderRef = useRef();
   const broadcasterRef = useRef();
@@ -73,7 +74,7 @@ function BroadcastPage({ broadcastId }) {
         audio: true,
         video: {
           facingMode,
-          ...videoDimensions(videoRef.current),
+          ...getVideoDimensionsForConstraint(videoRef.current),
         },
       })
       .then(cameraStream => {
@@ -109,7 +110,16 @@ function BroadcastPage({ broadcastId }) {
       }
     };
     broadcaster.on('instruction', instructionHandler);
+    const resizeListener = () => {
+      setVideoDimensions({
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight,
+      });
+    };
+    videoElement.addEventListener('resize', resizeListener);
+
     return () => {
+      videoElement.removeEventListener('resize', resizeListener);
       broadcaster.off('instruction', instructionHandler);
       broadcaster.close();
       if (streamToShutdown) {
@@ -166,15 +176,15 @@ function BroadcastPage({ broadcastId }) {
       ></video>
       {stream && (
         <DrawingBoard
-          width={videoRef.current.videoWidth}
-          height={videoRef.current.videoHeight}
+          width={videoDimensions.width}
+          height={videoDimensions.height}
         />
       )}
       {stream && (
         <PlayerGraphics
           active={isPlayerGraphics}
-          videoWidth={videoRef.current.videoWidth}
-          videoHeight={videoRef.current.videoHeight}
+          videoWidth={videoDimensions.width}
+          videoHeight={videoDimensions.height}
           onClick={() => setIsPlayerGraphics(false)}
         />
       )}
