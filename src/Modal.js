@@ -11,7 +11,7 @@ export default function Modal({
   slideUp = false,
   title,
   disableSlideToClose = false,
-  scrolls
+  scrolls,
 }) {
   const [touchStart, setTouchStart] = useState();
   const [touchDistance, setTouchDistance] = useState();
@@ -88,13 +88,7 @@ export default function Modal({
         }
       }}
     >
-      <div
-        className="modal-children"
-        ref={childrenRef}
-        onScroll={e => setScrollTimestamp(Date.now())}
-      >
-        {children}
-      </div>
+      <div className="blurry-background" />
       <div className="modal-actions">
         <div className="rounded-translucent">
           <button className="reset modal-close" onClick={() => onClose()}>
@@ -103,6 +97,13 @@ export default function Modal({
         </div>
         <div className="modal-title">{title}</div>
         <div className="modal-action">{action}</div>
+      </div>
+      <div
+        className="modal-children"
+        ref={childrenRef}
+        onScroll={e => setScrollTimestamp(Date.now())}
+      >
+        {children}
       </div>
     </div>
   );

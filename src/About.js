@@ -26,7 +26,6 @@ function LaptopScreenshot({ src }) {
 export default function About() {
   return (
     <div className="about">
-      <div className="blurry-background" />
       <div className="page-wrapper">
         <div className="about-section">
           <div className="about-section-content">
