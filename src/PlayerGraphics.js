@@ -3,7 +3,12 @@ import React from 'react';
 import Cup from './icons/Cup';
 import getObjectFitSize from './getObjectFitSize';
 
-export default function PlayerGraphics({ active, videoWidth, videoHeight }) {
+export default function PlayerGraphics({
+  active,
+  videoWidth,
+  videoHeight,
+  onClick,
+}) {
   const rect = getObjectFitSize(
     window.innerWidth,
     window.innerHeight,
@@ -13,6 +18,7 @@ export default function PlayerGraphics({ active, videoWidth, videoHeight }) {
   return (
     <div
       className="player-graphics"
+      onClick={onClick}
       style={{
         maxWidth: rect.width,
         top: Math.max(rect.top, 130),

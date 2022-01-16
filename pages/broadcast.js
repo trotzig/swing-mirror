@@ -172,6 +172,7 @@ function BroadcastPage({ broadcastId }) {
           active={isPlayerGraphics}
           videoWidth={videoRef.current.videoWidth}
           videoHeight={videoRef.current.videoHeight}
+          onClick={() => setIsPlayerGraphics(false)}
         />
       )}
       {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
