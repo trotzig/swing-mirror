@@ -22,7 +22,10 @@ export default class Broadcaster extends EventEmitter {
       });
       this.peerConnections[id] = peerConnection;
 
-      peerConnection.addTrack(stream.getVideoTracks()[0], stream);
+
+      for (const track of stream.getTracks()) {
+        peerConnection.addTrack(track, stream);
+      }
 
       peerConnection.onicecandidate = event => {
         if (event.candidate) {
@@ -65,17 +68,6 @@ export default class Broadcaster extends EventEmitter {
     window.onunload = window.onbeforeunload = () => {
       this.socket.close();
     };
-  }
-
-  overrideStream(stream) {
-    Object.keys(this.peerConnections).forEach(socketId => {
-      const peerConnection = this.peerConnections[socketId];
-      peerConnection.getSenders()[0].replaceTrack(stream.getVideoTracks()[0]);
-    });
-  }
-
-  resetStream() {
-    this.overrideStream(this.stream);
   }
 
   sendInstruction(instruction) {
