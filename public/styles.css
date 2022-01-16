@@ -763,16 +763,22 @@ button.auto-replay-button {
 .error-page p {
   margin-bottom: 30px;
 }
-.undo-drawing-board {
+.drawing-board-buttons {
   position: fixed;
   top: 100px;
   right: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 20px;
+  column-gap: 20px;
+  transition: opacity .2s;
 }
 @media (orientation: landscape) and (max-width: 900px) {
-  .undo-drawing-board {
+  .drawing-board-buttons {
     top: 10px;
     right: 50%;
     transform: translateX(50%);
+    grid-template-columns: 1fr 1fr;
   }
 }
 

@@ -23,6 +23,7 @@ export default function PlayerGraphics({
         maxWidth: rect.width,
         top: Math.max(rect.top, 130),
         opacity: active ? 1 : 0,
+        pointerEvents: active ? undefined : 'none',
       }}
     >
       <div className="player-graphics-outer">

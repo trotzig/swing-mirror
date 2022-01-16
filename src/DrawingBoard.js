@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import Restart from './icons/Restart';
 import Undo from './icons/Undo';
 import getObjectFitSize from './getObjectFitSize';
 
@@ -108,20 +109,33 @@ export default function DrawingBoard({ width, height }) {
         height={height}
       />
       <div
-        className="undo-drawing-board rounded-translucent"
+        className="drawing-board-buttons"
         style={{
           opacity: items.length ? 1 : 0,
           pointerEvents: items.length ? undefined : 'none',
         }}
       >
-        <button
-          className="reset"
-          onClick={() => {
-            setItems(old => old.slice(0, old.length - 1));
-          }}
-        >
-          <Undo />
-        </button>
+        <div className="undo-drawing-board rounded-translucent">
+          <button
+            className="reset"
+            onClick={() => {
+              setItems(old => old.slice(0, old.length - 1));
+            }}
+          >
+            <Undo />
+          </button>
+        </div>
+
+        <div className="clear-drawing-board rounded-translucent">
+          <button
+            className="reset"
+            onClick={() => {
+              setItems([]);
+            }}
+          >
+            <Restart />
+          </button>
+        </div>
       </div>
     </div>
   );
