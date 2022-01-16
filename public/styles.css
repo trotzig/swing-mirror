@@ -8,6 +8,7 @@
 html {
   background-color: #000;
   color: #f5f5f5;
+  min-height: 100%;
 }
 
 body {
@@ -18,6 +19,7 @@ body {
   line-height: 1.5;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
 * {
@@ -426,7 +428,7 @@ h1 i {
   left: 50%;
   top: 0;
   transform: translateX(-50%);
-  background-position: 5% 15%;
+  background-position: 5% 25%;
   height: 100%;
   width: 100%;
   max-width: var(--content-width);
