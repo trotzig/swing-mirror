@@ -34,6 +34,7 @@ function WatchPage({ broadcastId }) {
   const [isController, setIsController] = useState(true);
   const [isPlayerGraphics, setIsPlayerGraphics] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [videoDimensions, setVideoDimensions] = useState({});
 
   useEffect(() => {
     const { closeSocket, sendInstruction } = watch({
@@ -59,8 +60,20 @@ function WatchPage({ broadcastId }) {
         videoRef.current.srcObject = stream;
       },
     });
+
+    const videoElem = videoRef.current;
+    const resizeListener = () => {
+      setVideoDimensions({
+        width: videoElem.videoWidth,
+        height: videoElem.videoHeight,
+      });
+    };
+    videoElem.addEventListener('resize', resizeListener);
     instructionRef.current = sendInstruction;
-    return closeSocket;
+    return () => {
+      videoElem.removeEventListener('resize', resizeListener);
+      closeSocket();
+    };
   }, [broadcastId]);
 
   useEffect(() => {
@@ -109,19 +122,24 @@ function WatchPage({ broadcastId }) {
           ref={videoRef}
         />
         {stream && window.chrome && (
-          <FallbackVideo videoRef={videoRef} onStream={setFallbackStream} />
+          <FallbackVideo
+            width={videoDimensions.width}
+            height={videoDimensions.height}
+            videoRef={videoRef}
+            onStream={setFallbackStream}
+          />
         )}
         {stream && (
           <DrawingBoard
-            width={videoRef.current.videoWidth}
-            height={videoRef.current.videoHeight}
+            width={videoDimensions.width}
+            height={videoDimensions.height}
           />
         )}
         {stream && (
           <PlayerGraphics
             active={isPlayerGraphics}
-            videoWidth={videoRef.current.videoWidth}
-            videoHeight={videoRef.current.videoHeight}
+            videoWidth={videoDimensions.width}
+            videoHeight={videoDimensions.height}
             onClick={() => setIsPlayerGraphics(false)}
           />
         )}

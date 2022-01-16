@@ -1,6 +1,5 @@
-import EventEmitter from 'events';
-
 import { io } from 'socket.io-client';
+import EventEmitter from 'events';
 
 export default class Broadcaster extends EventEmitter {
   constructor({ broadcastId }) {

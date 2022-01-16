@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-export default function FallbackVideo({ videoRef, onStream = () => {} }) {
+export default function FallbackVideo({
+  videoRef,
+  width,
+  height,
+  onStream = () => {},
+}) {
   const canvasRef = useRef();
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
-    canvasRef.current.width = videoRef.current.videoWidth;
-    canvasRef.current.height = videoRef.current.videoHeight;
     let isActive = true;
 
     let animFrame;
@@ -42,5 +45,12 @@ export default function FallbackVideo({ videoRef, onStream = () => {} }) {
     };
   }, [onStream, videoRef]);
 
-  return <canvas ref={canvasRef} className="fallback-video" />;
+  return (
+    <canvas
+      width={width}
+      height={height}
+      ref={canvasRef}
+      className="fallback-video"
+    />
+  );
 }
