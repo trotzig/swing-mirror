@@ -4,7 +4,8 @@
     "no-undef": 2,
     "@next/next/no-img-element": 0,
     "jsx-a11y/alt-text": 0,
-    "react-hooks/exhaustive-deps": 2
+    "react-hooks/exhaustive-deps": 2,
+    "@next/next/no-html-link-for-pages": 0
   },
   "globals": {
     "Promise": true,

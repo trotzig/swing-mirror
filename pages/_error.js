@@ -10,6 +10,7 @@ function Error() {
           Reach out to henric@happo.io if you need help, and make sure to
           include information about what you did when the error occured.
         </p>
+        <p><a href="/">Back to start</a></p>
       </div>
     </div>
   );
