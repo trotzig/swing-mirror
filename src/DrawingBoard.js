@@ -2,25 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import Restart from './icons/Restart';
 import Undo from './icons/Undo';
-import getObjectFitSize from './getObjectFitSize';
-
-function getMousePos(evt) {
-  const canvas = evt.target;
-  const cRect = canvas.getBoundingClientRect();
-  const rect = getObjectFitSize(
-    cRect.width,
-    cRect.height,
-    canvas.width,
-    canvas.height,
-  );
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-
-  return {
-    x: (evt.clientX - rect.left) * scaleX,
-    y: (evt.clientY - rect.top) * scaleY,
-  };
-}
+import getMousePos from './getMousePos';
 
 export default function DrawingBoard({ width, height }) {
   const [items, setItems] = useState([]);

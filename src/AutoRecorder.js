@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import BallPosition from './BallPosition';
 import FrequencyBarGraph from './FrequencyBarGraph';
 import VideoMotionDetector from './VideoMotionDetector';
 import VideoRecorder from './VideoRecorder';
@@ -16,8 +17,11 @@ export default function AutoRecorder({
   onReplayVideo = () => {},
   isAutoReplay,
   onToggleAutoReplay,
+  videoWidth,
+  videoHeight,
 }) {
   const [isRecording, setIsRecording] = useState(false);
+  const [ballPosition, setBallPosition] = useState();
   const isRecordingRef = useRef(false);
   const canvasRef = useRef();
   const activeRecordingsRef = useRef([]);
@@ -40,6 +44,9 @@ export default function AutoRecorder({
   useEffect(() => {
     if (passive) {
       // no need to listen to triggers when passive
+      return;
+    }
+    if (!ballPosition) {
       return;
     }
     let recordingTimeout;
@@ -80,8 +87,8 @@ export default function AutoRecorder({
     return () => {
       clearInterval(interval);
       clearTimeout(recordingTimeout);
-    }
-  }, [onRecording, passive]);
+    };
+  }, [onRecording, passive, ballPosition]);
 
   useEffect(() => {
     if (!passive) {
@@ -95,6 +102,9 @@ export default function AutoRecorder({
   }, [passive, signal]);
 
   useEffect(() => {
+    if (!ballPosition) {
+      return;
+    }
     const interval = setInterval(() => {
       if (isRecordingRef.current) {
         // There's an ongoing recording, we want to prevent overusing gpu/cpu
@@ -145,13 +155,23 @@ export default function AutoRecorder({
         rec.stop();
       }
     };
-  }, [videoRef, stream, onReplayVideo]);
+  }, [videoRef, stream, onReplayVideo, ballPosition]);
 
   const toggleClasses = ['toggle'];
   if (isAutoReplay) {
     toggleClasses.push('toggle-on');
   } else {
     toggleClasses.push('toggle-off');
+  }
+
+  if (!ballPosition) {
+    return (
+      <BallPosition
+        onPosition={setBallPosition}
+        videoWidth={videoWidth}
+        videoHeight={videoHeight}
+      />
+    );
   }
 
   return (

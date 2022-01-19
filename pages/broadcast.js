@@ -197,6 +197,8 @@ function BroadcastPage({ broadcastId }) {
           onRecording={setIsRecording}
           onClose={() => setIsAutoRecording(false)}
           onReplayVideo={setReplayVideo}
+          videoWidth={videoDimensions.width}
+          videoHeight={videoDimensions.height}
         />
       )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />

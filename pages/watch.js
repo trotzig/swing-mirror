@@ -153,6 +153,8 @@ function WatchPage({ broadcastId }) {
             videoRef={videoRef}
             onReplayVideo={setReplayVideo}
             onToggleAutoReplay={setIsAutoReplay}
+            videoWidth={videoDimensions.width}
+            videoHeight={videoDimensions.height}
           />
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />

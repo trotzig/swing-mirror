@@ -33,6 +33,7 @@ a {
 }
 
 video.full-screen,
+.ball-position-canvas,
 .drawing-board,
 .fallback-video,
 .delayed-video {
@@ -957,4 +958,25 @@ button.auto-replay-button {
   width: 5px;
   height: 5px;
   background-color: #999;
+}
+
+.ball-position {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+}
+.ball-position-inner {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  text-shadow: 0 0 3px #000;
+}
+
+.ball-position-square {
+  position: fixed;
+  border: 5px dashed currentColor;
+  border-radius: var(--border-radius);
+  pointer: crosshair;
 }
