@@ -188,10 +188,11 @@ function BroadcastPage({ broadcastId }) {
           onClick={() => setIsPlayerGraphics(false)}
         />
       )}
-      {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
+      {isAutoRecording && stream && (
         <AutoRecorder
           stream={stream}
           isAutoReplay={isAutoReplay}
+          isPaused={replayVideo || isLibraryOpen}
           onToggleAutoReplay={setIsAutoReplay}
           videoRef={videoRef}
           onRecording={setIsRecording}

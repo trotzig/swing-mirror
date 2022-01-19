@@ -8,6 +8,7 @@ import VideoRecorder from './VideoRecorder';
 const RECORDING_LENGTH_MS = 4000;
 
 export default function AutoRecorder({
+  isPaused,
   passive,
   signal = false,
   stream,
@@ -44,11 +45,7 @@ export default function AutoRecorder({
   }, [isAutoReplay]);
 
   useEffect(() => {
-    if (passive) {
-      // no need to listen to triggers when passive
-      return;
-    }
-    if (!ballPosition) {
+    if (passive || isPaused || !ballPosition) {
       return;
     }
     let recordingTimeout;
@@ -90,7 +87,7 @@ export default function AutoRecorder({
       clearInterval(interval);
       clearTimeout(recordingTimeout);
     };
-  }, [onRecording, passive, ballPosition]);
+  }, [onRecording, passive, ballPosition, isPaused]);
 
   useEffect(() => {
     if (!passive) {
@@ -104,7 +101,7 @@ export default function AutoRecorder({
   }, [passive, signal]);
 
   useEffect(() => {
-    if (!ballPosition) {
+    if (!ballPosition || isPaused) {
       return;
     }
     const interval = setInterval(() => {
@@ -157,7 +154,7 @@ export default function AutoRecorder({
         rec.stop();
       }
     };
-  }, [videoRef, stream, onReplayVideo, ballPosition]);
+  }, [videoRef, stream, onReplayVideo, ballPosition, isPaused]);
 
   const toggleClasses = ['toggle'];
   if (isAutoReplay) {
