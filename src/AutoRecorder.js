@@ -164,51 +164,51 @@ export default function AutoRecorder({
     toggleClasses.push('toggle-off');
   }
 
-  if (!ballPosition) {
-    return (
+  return (
+    <>
       <BallPosition
         onPosition={setBallPosition}
         videoWidth={videoWidth}
         videoHeight={videoHeight}
+        frozen={!!ballPosition}
       />
-    );
-  }
-
-  return (
-    <div className="auto-recorder">
-      <div className="auto-recorder-header">
-        <h2>Auto-recording active</h2>
-        <button className="reset-text" onClick={onClose}>
-          Turn off
-        </button>
-      </div>
-      <p style={{ opacity: 0.7 }}>
-        We&apos;re monitoring sound spikes and video movement to detect golf
-        shots.
-      </p>
-      <button
-        className="reset-text auto-replay-button"
-        onClick={() => onToggleAutoReplay(!isAutoReplay)}
-      >
-        <div className={toggleClasses.join(' ')} />
-        <div>Replay recorded videos</div>
-      </button>
-      {!passive && (
-        <>
-          <FrequencyBarGraph
-            width={200}
-            height={50}
-            stream={stream}
-            onSpike={handleAudioSpike}
-          />
-          <VideoMotionDetector
-            onMotion={handleVideoMotion}
-            videoRef={videoRef}
-            ballPosition={ballPosition}
-          />
-        </>
+      {ballPosition && (
+        <div className="auto-recorder">
+          <div className="auto-recorder-header">
+            <h2>Auto-recording active</h2>
+            <button className="reset-text" onClick={onClose}>
+              Turn off
+            </button>
+          </div>
+          <p style={{ opacity: 0.7 }}>
+            We&apos;re monitoring sound spikes and video movement to detect golf
+            shots.
+          </p>
+          <button
+            className="reset-text auto-replay-button"
+            onClick={() => onToggleAutoReplay(!isAutoReplay)}
+          >
+            <div className={toggleClasses.join(' ')} />
+            <div>Replay recorded videos</div>
+          </button>
+          {!passive && (
+            <>
+              <FrequencyBarGraph
+                width={200}
+                height={50}
+                stream={stream}
+                onSpike={handleAudioSpike}
+              />
+              <VideoMotionDetector
+                onMotion={handleVideoMotion}
+                videoRef={videoRef}
+                ballPosition={ballPosition}
+              />
+            </>
+          )}
+          <canvas style={{ display: 'none' }} ref={canvasRef} />
+        </div>
       )}
-      <canvas style={{ display: 'none' }} ref={canvasRef} />
-    </div>
+    </>
   );
 }

@@ -57,51 +57,28 @@ function colorDelta(previousPixel, currentPixel) {
 
 const PIXEL_THRESHOLD = 0.1;
 
-function initMatrix(size) {
-  const result = new Array(size);
-  for (let i = 0; i < size; i++) {
-    result[i] = new Array(size);
-  }
-  return result;
-}
-
 let initialBallPixels;
-let hasBall = false;
 
 self.addEventListener('message', e => {
-  const { width, height, pixels, ballPosition } = e.data;
-
-  const imageData = new Uint8ClampedArray(pixels);
-
-  const startX = Math.round(ballPosition.x * width);
-  const endX = Math.min(startX + ballPosition.size, width - 1);
-
-  const startY = Math.round(ballPosition.y * height);
-  const endY = Math.min(startY + ballPosition.size, height - 1);
-
-  const ballPixels = initMatrix(ballPosition.size);
-
-  for (let x = 0; x < ballPosition.size; x++) {
-    for (let y = 0; y < ballPosition.size; y++) {
-      const i = ((startX + x) * 4) + ((startY + y) * 4);
-      const pixel = imageData.slice(i, i + 4);
-      ballPixels[x][y] = pixel;
-    }
-  }
-
+  const imageData = new Uint8ClampedArray(e.data);
   if (!initialBallPixels) {
-    initialBallPixels = ballPixels;
+    initialBallPixels = new Uint8ClampedArray(imageData.length);
+    for (let i = 0; i < imageData.length; i++) {
+      initialBallPixels[i] = imageData[i];
+    }
     return;
   }
 
-  let totalDiff = 0.0;
+  let totalDiff = 0;
 
-  for (let x = 0; x < ballPosition.size; x++) {
-    for (let y = 0; y < ballPosition.size; y++) {
-      const diff = colorDelta(initialBallPixels[x][y], ballPixels[x][y]);
-      totalDiff += diff;
+  for (let i = 0; i < imageData.length; i = i + 4) {
+    const before = initialBallPixels.slice(i, i + 4);
+    const after = imageData.slice(i, i + 4);
+    const diff = colorDelta(before, after);
+    if (diff > 0.005) {
+      totalDiff++;
     }
   }
 
-  self.postMessage({ ballVisible: totalDiff > 4 });
+  self.postMessage({ diff: totalDiff });
 });

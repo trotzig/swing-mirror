@@ -18,7 +18,12 @@ function relativeBallPosition(posOnPage, canvas, videoWidth, videoHeight) {
   return pos;
 }
 
-export default function BallPosition({ videoWidth, videoHeight, onPosition }) {
+export default function BallPosition({
+  frozen,
+  videoWidth,
+  videoHeight,
+  onPosition,
+}) {
   const [pos, setPos] = useState();
   const [isMoving, setIsMoving] = useState();
   const [locked, setLocked] = useState(false);
@@ -41,45 +46,49 @@ export default function BallPosition({ videoWidth, videoHeight, onPosition }) {
   }, []);
   return (
     <div>
-      <canvas
-        ref={canvasRef}
-        className="ball-position-canvas"
-        width={videoWidth}
-        height={videoHeight}
-      />
-      <div className="ball-position">
-        <div className="ball-position-inner">
-          {locked ? (
-            <div>
-              <h2>
-                Step 2: Remove the ball (and other objects) from the square.
-              </h2>
-              <button
-                onClick={() =>
-                  onPosition(
-                    relativeBallPosition(
-                      pos,
-                      canvasRef.current,
-                      videoWidth,
-                      videoHeight,
-                    ),
-                  )
-                }
-              >
-                Done
-              </button>
-            </div>
-          ) : (
-            <div>
-              <h2>
-                Step 1: Move the square below so that the ball is positioned
-                inside it.
-              </h2>
-              <button onClick={() => setLocked(true)}>Next</button>
-            </div>
-          )}
+      {!frozen && (
+        <canvas
+          ref={canvasRef}
+          className="ball-position-canvas"
+          width={videoWidth}
+          height={videoHeight}
+        />
+      )}
+      {!frozen && (
+        <div className="ball-position">
+          <div className="ball-position-inner">
+            {locked ? (
+              <div>
+                <h2>
+                  Step 2: Remove the ball (and other objects) from the square.
+                </h2>
+                <button
+                  onClick={() =>
+                    onPosition(
+                      relativeBallPosition(
+                        pos,
+                        canvasRef.current,
+                        videoWidth,
+                        videoHeight,
+                      ),
+                    )
+                  }
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <div>
+                <h2>
+                  Step 1: Move the square below so that the ball is positioned
+                  inside it.
+                </h2>
+                <button onClick={() => setLocked(true)}>Next</button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {pos && (
         <div
           className="ball-position-square"

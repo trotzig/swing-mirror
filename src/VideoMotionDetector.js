@@ -1,21 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+const DIFF_THRESHOLD = 2000;
+
 export default function VideoMotionDetector({
   videoRef,
   onMotion,
   hidden,
   ballPosition,
 }) {
+  const [diff, setDiff] = useState(0);
   const [ballVisible, setBallVisible] = useState(false);
   const canvasRef = useRef();
+  const outputRef = useRef();
   const workerRef = useRef();
   const lastBallVisible = useRef();
   useEffect(() => {
     let isActive = true;
-    canvasRef.current.width = videoRef.current.videoWidth / 4;
-    canvasRef.current.height = videoRef.current.videoHeight / 4;
-    const { width, height } = canvasRef.current;
-
+    const videoWidth = videoRef.current.videoWidth;
+    const videoHeight = videoRef.current.videoHeight;
     const ctx = canvasRef.current.getContext('2d');
 
     function renderFrame() {
@@ -25,19 +27,21 @@ export default function VideoMotionDetector({
       if (!canvasRef.current) {
         return;
       }
-      ctx.drawImage(videoRef.current, 0, 0, width, height);
-      const imageData = ctx.getImageData(0, 0, width, height);
-      workerRef.current.postMessage(
-        { width, height, ballPosition, pixels: imageData.data.buffer },
-        [imageData.data.buffer],
-      );
+      const sx = Math.round(ballPosition.x * videoWidth);
+      const sy = Math.round(ballPosition.y * videoHeight);
+      console.log(sx, sy);
+      ctx.drawImage(videoRef.current, sx, sy, 100, 100, 0, 0, 100, 100);
+      const imageData = ctx.getImageData(0, 0, 100, 100);
+      workerRef.current.postMessage(imageData.data.buffer, [
+        imageData.data.buffer,
+      ]);
       setTimeout(renderFrame, 50);
     }
 
     const worker = new Worker('/video-diff-worker.js');
     workerRef.current = worker;
     worker.addEventListener('message', e => {
-      setBallVisible(e.data.ballVisible);
+      setDiff(e.data.diff);
     });
     renderFrame();
 
@@ -45,20 +49,28 @@ export default function VideoMotionDetector({
       isActive = false;
       worker.terminate();
     };
-  }, [videoRef, ballPosition, setBallVisible]);
+  }, [videoRef, ballPosition, setDiff]);
 
   useEffect(() => {
-    if (ballVisible) {
+    const isVisible = diff > DIFF_THRESHOLD;
+    setBallVisible(isVisible);
+    if (isVisible) {
       lastBallVisible.current = Date.now();
     } else if (lastBallVisible.current) {
       onMotion();
+      lastBallVisible.current = undefined;
     }
-  }, [ballVisible, onMotion]);
+  }, [diff, onMotion, setBallVisible]);
 
   return (
     <div>
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
-      {ballVisible ? 'BALL VISIBLE' : 'NO BALL'}
+      <canvas
+        width="100"
+        height="100"
+        ref={canvasRef}
+        style={{ display: 'block', width: 'auto' }}
+      />
+      {diff} -- {ballVisible ? 'BALL VISIBLE' : 'NO BALL'}
     </div>
   );
 }
