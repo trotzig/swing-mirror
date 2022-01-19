@@ -57,10 +57,7 @@ export default function VideoMotionDetector({
 
   return (
     <div>
-      <canvas
-        ref={canvasRef}
-        style={{ display: hidden ? 'none' : undefined }}
-      />
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
       {ballVisible ? 'BALL VISIBLE' : 'NO BALL'}
     </div>
   );
