@@ -204,7 +204,7 @@ export default function AutoRecorder({
           <VideoMotionDetector
             onMotion={handleVideoMotion}
             videoRef={videoRef}
-            hidden
+            ballPosition={ballPosition}
           />
         </>
       )}

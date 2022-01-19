@@ -9,13 +9,14 @@ function renderGraph({
   height,
   bufferLength,
   barWidth,
+  fillStyle = 'red',
 }) {
   canvasCtx.clearRect(0, 0, width, height);
   let x = 0;
   for (let i = 0; i < bufferLength; i++) {
     const barWidth = width / bufferLength;
     const barHeight = dataArray[i] * (height / MAX_VALUE);
-    canvasCtx.fillStyle = 'red';
+    canvasCtx.fillStyle = fillStyle;
     canvasCtx.fillRect(x, height - barHeight, barWidth, barHeight);
     x += barWidth;
   }
@@ -65,13 +66,7 @@ export default function FrequencyBarGraph({
         return;
       }
       analyzer.getByteFrequencyData(dataArray);
-      renderGraph({
-        canvasCtx,
-        dataArray,
-        bufferLength,
-        width,
-        height,
-      });
+      let color = 'gray';
       const loudness = getTotalLoudness({ dataArray, bufferLength });
       if (
         typeof previousLoudness === 'number' &&
@@ -79,7 +74,16 @@ export default function FrequencyBarGraph({
         loudness > SPIKE_MIN_LOUDNESS
       ) {
         onSpike(Date.now());
+        color = 'red';
       }
+      renderGraph({
+        canvasCtx,
+        dataArray,
+        bufferLength,
+        width,
+        height,
+        fillStyle: color,
+      });
       previousLoudness = loudness;
       requestAnimationFrame(renderFrame);
     }
