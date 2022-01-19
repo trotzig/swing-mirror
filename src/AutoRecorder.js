@@ -60,13 +60,13 @@ export default function AutoRecorder({
 
       if (
         Math.abs(latestAudioSpikeRef.current - latestVideoSpikeRef.current) >
-        100
+        300
       ) {
         // not the same event
         return;
       }
 
-      if (Date.now() - latestAudioSpikeRef.current > 100) {
+      if (Date.now() - latestAudioSpikeRef.current > 200) {
         // too long ago
         return;
       }
@@ -81,7 +81,7 @@ export default function AutoRecorder({
           isRecordingRef.current = false;
         }, RECORDING_LENGTH_MS);
       }
-    }, 20);
+    }, 50);
 
     return () => {
       clearInterval(interval);

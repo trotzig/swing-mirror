@@ -29,7 +29,6 @@ export default function VideoMotionDetector({
       }
       const sx = Math.round(ballPosition.x * videoWidth);
       const sy = Math.round(ballPosition.y * videoHeight);
-      console.log(sx, sy);
       ctx.drawImage(videoRef.current, sx, sy, 100, 100, 0, 0, 100, 100);
       const imageData = ctx.getImageData(0, 0, 100, 100);
       workerRef.current.postMessage(imageData.data.buffer, [
