@@ -30,7 +30,7 @@ function getTotalLoudness({ dataArray, bufferLength }) {
   return total;
 }
 
-const SPIKE_INCREASE = 5;
+const SPIKE_INCREASE = 3;
 const SPIKE_MIN_LOUDNESS = MAX_VALUE * 3;
 
 export default function FrequencyBarGraph({
