@@ -69,14 +69,14 @@ self.addEventListener('message', e => {
     return;
   }
 
-  let totalDiff = 0;
+  let totalDiff = 0.0;
 
   for (let i = 0; i < imageData.length; i = i + 4) {
     const before = initialBallPixels.slice(i, i + 4);
     const after = imageData.slice(i, i + 4);
     const diff = colorDelta(before, after);
     if (diff > 0.005) {
-      totalDiff++;
+      totalDiff += diff;;
     }
   }
 

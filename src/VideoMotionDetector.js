@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const DIFF_THRESHOLD = 2200;
+const DIFF_THRESHOLD = 4;
 
 export default function VideoMotionDetector({
   videoRef,
@@ -57,7 +57,7 @@ export default function VideoMotionDetector({
     if (isVisible) {
       lastBallVisible.current = Date.now();
     } else if (lastBallVisible.current) {
-      onMotion();
+      onMotion(Date.now());
       lastBallVisible.current = undefined;
     }
   }, [diff, onMotion, setBallVisible]);
@@ -70,7 +70,8 @@ export default function VideoMotionDetector({
         ref={canvasRef}
         style={{ display: 'block', width: 'auto' }}
       />
-      {diff} -- {ballVisible ? 'BALL VISIBLE' : 'NO BALL'}
+      {ballVisible ? 'BALL VISIBLE' : 'NO BALL'}
+      {' '}-- {diff}
     </div>
   );
 }

@@ -30,10 +30,12 @@ export default function AutoRecorder({
   const replayRecordingsRef = useRef(isAutoReplay);
 
   const handleAudioSpike = useCallback(timestamp => {
+    console.log('audio spike', timestamp);
     latestAudioSpikeRef.current = timestamp;
   }, []);
 
   const handleVideoMotion = useCallback(timestamp => {
+    console.log('video spike', timestamp);
     latestVideoSpikeRef.current = timestamp;
   }, []);
 
