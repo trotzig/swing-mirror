@@ -35,7 +35,7 @@ export default function VideoMotionDetector({
       workerRef.current.postMessage(imageData.data.buffer, [
         imageData.data.buffer,
       ]);
-      setTimeout(renderFrame, 50);
+      setTimeout(renderFrame, 200);
     }
 
     const worker = new Worker('/video-diff-worker.js');
@@ -68,7 +68,7 @@ export default function VideoMotionDetector({
         width="100"
         height="100"
         ref={canvasRef}
-        style={{ display: 'block', width: 'auto' }}
+        style={{ display: 'none', width: 'auto' }}
       />
       {ballVisible ? 'BALL VISIBLE' : 'NO BALL'}
       {' '}-- {diff}
