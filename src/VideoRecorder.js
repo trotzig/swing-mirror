@@ -10,7 +10,7 @@ export default class VideoRecorder {
     this.keep = keep;
   }
 
-  start() {
+  start({ takeStillPhoto = true } = {}) {
     this.recordedChunks = [];
     const availableMimeTypes = [
       'video/mp4;codecs:h264',
@@ -32,7 +32,9 @@ export default class VideoRecorder {
         this.recordedChunks.push(event.data);
       }
     };
-    this.photoUrl = this.takeStillPhoto();
+    if (takeStillPhoto) {
+      this.takeStillPhoto();
+    }
     this.startTime = Date.now();
     this.mediaRecorder.start();
   }
@@ -42,7 +44,7 @@ export default class VideoRecorder {
     this.canvas.height = this.video.videoHeight / 5;
     const context = this.canvas.getContext('2d');
     context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-    return this.canvas.toDataURL('image/jpg');
+    this.photoUrl = this.canvas.toDataURL('image/jpg');
   }
 
   stop() {

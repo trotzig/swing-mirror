@@ -74,6 +74,7 @@ export default function AutoRecorder({
       latestVideoSpikeRef.current === undefined;
       if (activeRecordingsRef.current.length) {
         activeRecordingsRef.current[0].keep = true;
+        activeRecordingsRef.current[0].takeStillPhoto();
         onRecording(true);
 
         recordingTimeout = setTimeout(() => {
@@ -142,7 +143,7 @@ export default function AutoRecorder({
         }
       }, RECORDING_LENGTH_MS / 2);
 
-      recording.start();
+      recording.start({ takeStillPhoto: false });
       activeRecordingsRef.current.push(recording);
     }, 1000);
 

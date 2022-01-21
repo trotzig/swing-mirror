@@ -55,12 +55,29 @@ function colorDelta(previousPixel, currentPixel) {
   return (0.5053 * y * y + 0.299 * i * i + 0.1957 * q * q) / MAX_YIQ_DIFFERENCE;
 }
 
+let gl;
+
+self.addEventListener('message', function messageHandler(e) {
+  if (e.data.canvas) {
+    // we're getting our offscreen canvas
+    const canvas = e.data.canvas;
+    gl = canvas.getContext('2d');
+  } else if (e.data.imageBitmap) {
+    const { imageBitmap, ballPosition, videoWidth, videoHeight } = e.data;
+    const sx = Math.round(ballPosition.x * videoWidth);
+    const sy = Math.round(ballPosition.y * videoHeight);
+    gl.drawImage(imageBitmap, sx, sy, 100, 100, 0, 0, 100, 100);
+    const data = gl.getImageData(0, 0, 100, 100);
+    processImageData(data.data);
+  } else {
+    const imageData = new Uint8ClampedArray(e.data);
+    processImageData(imageData);
+  }
+});
+
 const PIXEL_THRESHOLD = 0.1;
-
 let initialBallPixels;
-
-self.addEventListener('message', e => {
-  const imageData = new Uint8ClampedArray(e.data);
+function processImageData(imageData) {
   if (!initialBallPixels) {
     initialBallPixels = new Uint8ClampedArray(imageData.length);
     for (let i = 0; i < imageData.length; i++) {
@@ -76,9 +93,9 @@ self.addEventListener('message', e => {
     const after = imageData.slice(i, i + 4);
     const diff = colorDelta(before, after);
     if (diff > 0.005) {
-      totalDiff += diff;;
+      totalDiff += diff;
     }
   }
 
   self.postMessage({ diff: totalDiff });
-});
+}
