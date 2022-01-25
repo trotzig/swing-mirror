@@ -58,6 +58,7 @@ function BroadcastPage({ broadcastId }) {
   useEffect(() => {
     const handler = () => {
       setDocumentVisible(!document.hidden);
+      setStream();
     };
     document.addEventListener('visibilitychange', handler);
     return () => document.removeEventListener('visibilitychange', handler);
