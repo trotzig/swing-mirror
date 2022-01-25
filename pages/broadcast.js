@@ -110,6 +110,9 @@ function BroadcastPage({ broadcastId }) {
       if (typeof instruction.isAutoRecording === 'boolean') {
         setIsAutoRecording(instruction.isAutoRecording);
       }
+      if (typeof instruction.ballPosition === 'object') {
+        setBallPosition(instruction.ballPosition);
+      }
     };
     broadcaster.on('instruction', instructionHandler);
     const resizeListener = () => {
@@ -152,8 +155,8 @@ function BroadcastPage({ broadcastId }) {
   }, [isRecording, documentVisible, isAutoRecording]);
 
   useEffect(() => {
-    broadcasterRef.current.sendInstruction({ isAutoRecording });
-  }, [isAutoRecording]);
+    broadcasterRef.current.sendInstruction({ isAutoRecording, ballPosition });
+  }, [isAutoRecording, ballPosition]);
 
   useEffect(() => {
     async function run() {
@@ -208,7 +211,7 @@ function BroadcastPage({ broadcastId }) {
               onRecording={setIsRecording}
               onClose={() => {
                 setIsAutoRecording(false);
-                setBallPosition();
+                setBallPosition(null);
               }}
               onReplayVideo={setReplayVideo}
               ballPosition={ballPosition}
@@ -230,7 +233,7 @@ function BroadcastPage({ broadcastId }) {
             isActive={isAutoRecording}
             onClick={() => {
               setIsAutoRecording(!isAutoRecording);
-              setBallPosition();
+              setBallPosition(null);
             }}
           />
           <div

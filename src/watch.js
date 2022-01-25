@@ -75,6 +75,7 @@ export default function watch({
 
   socket.on('instruction', (id, instruction) => {
     lastInstructionReceived = { instruction, timestamp: Date.now() };
+    console.log('Received instruction', instruction);
     onInstruction(instruction);
   });
 

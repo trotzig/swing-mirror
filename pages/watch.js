@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
+import BallPosition from '../src/BallPosition';
 import DrawingBoard from '../src/DrawingBoard';
 import FallbackVideo from '../src/FallbackVideo';
 import Home from '../src/icons/Home';
@@ -25,6 +26,7 @@ function WatchPage({ broadcastId }) {
   const instructionRef = useRef();
   const [isRecording, setIsRecording] = useState(false);
   const [isAutoRecording, setIsAutoRecording] = useState(false);
+  const [ballPosition, setBallPosition] = useState();
   const [isAutoReplay, setIsAutoReplay] = useState(true);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [stream, setStream] = useState();
@@ -47,6 +49,9 @@ function WatchPage({ broadcastId }) {
         }
         if (typeof instruction.isAutoRecording === 'boolean') {
           setIsAutoRecording(instruction.isAutoRecording);
+        }
+        if (typeof instruction.ballPosition === 'object') {
+          setBallPosition(instruction.ballPosition);
         }
       },
       onStream: stream => {
@@ -104,8 +109,8 @@ function WatchPage({ broadcastId }) {
   }, []);
 
   useEffect(() => {
-    instructionRef.current({ isAutoRecording });
-  }, [isAutoRecording]);
+    instructionRef.current({ isAutoRecording, ballPosition });
+  }, [isAutoRecording, ballPosition]);
 
   return (
     <div>
@@ -143,19 +148,34 @@ function WatchPage({ broadcastId }) {
             onClick={() => setIsPlayerGraphics(false)}
           />
         )}
-        {!isLibraryOpen && !replayVideo && isAutoRecording && stream && (
-          <AutoRecorder
-            passive
-            signal={isRecording}
-            isAutoReplay={isAutoReplay}
-            onClose={() => setIsAutoRecording(false)}
-            stream={fallbackStream || stream}
-            videoRef={videoRef}
-            onReplayVideo={setReplayVideo}
-            onToggleAutoReplay={setIsAutoReplay}
-            videoWidth={videoDimensions.width}
-            videoHeight={videoDimensions.height}
-          />
+        {isAutoRecording && stream && (
+          <>
+            <BallPosition
+              onPosition={setBallPosition}
+              frozen={ballPosition}
+              videoWidth={videoDimensions.width}
+              videoHeight={videoDimensions.height}
+            />
+            {ballPosition && (
+              <AutoRecorder
+                passive
+                signal={isRecording}
+                isAutoReplay={isAutoReplay}
+                stream={fallbackStream || stream}
+                videoRef={videoRef}
+                onReplayVideo={setReplayVideo}
+                onToggleAutoReplay={setIsAutoReplay}
+                videoWidth={videoDimensions.width}
+                videoHeight={videoDimensions.height}
+                isPaused={replayVideo || isLibraryOpen}
+                onClose={() => {
+                  setIsAutoRecording(false);
+                  setBallPosition(null);
+                }}
+                ballPosition={ballPosition}
+              />
+            )}
+          </>
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
         <div className="video-header">
@@ -169,7 +189,10 @@ function WatchPage({ broadcastId }) {
             </div>
             <AutoRecordButton
               isActive={isAutoRecording}
-              onClick={() => setIsAutoRecording(!isAutoRecording)}
+              onClick={() => {
+                setIsAutoRecording(!isAutoRecording);
+                setBallPosition(null);
+              }}
             />
             <div
               style={{ opacity: 0, padding: 10 }}

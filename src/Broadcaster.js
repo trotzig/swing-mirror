@@ -71,6 +71,7 @@ export default class Broadcaster extends EventEmitter {
   }
 
   sendInstruction(instruction) {
+    console.log('Sending instruction', instruction);
     Object.keys(this.peerConnections).forEach(socketId =>
       this.socket.emit('instruction', socketId, instruction),
     );
