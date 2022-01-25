@@ -51,20 +51,24 @@ export default function AutoRecorder({
       if (isRecordingRef.current) {
         return;
       }
+      if (passive || isPaused) {
+        return;
+      }
       if (!latestAudioSpikeRef.current || !latestVideoSpikeRef.current) {
         // no spikes detected
         return;
       }
 
-      if (
-        Math.abs(latestAudioSpikeRef.current - latestVideoSpikeRef.current) >
-        300
-      ) {
+      const diff = Math.abs(
+        latestAudioSpikeRef.current - latestVideoSpikeRef.current,
+      );
+
+      if (diff > 300) {
         // not the same event
         return;
       }
 
-      if (Date.now() - latestAudioSpikeRef.current > 200) {
+      if (Date.now() - latestAudioSpikeRef.current > 400) {
         // too long ago
         return;
       }
