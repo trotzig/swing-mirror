@@ -978,5 +978,5 @@ button.auto-replay-button {
   position: fixed;
   border: 5px dashed currentColor;
   border-radius: var(--border-radius);
-  pointer: crosshair;
+  cursor: move;
 }

@@ -18,11 +18,9 @@ export default function AutoRecorder({
   onReplayVideo = () => {},
   isAutoReplay,
   onToggleAutoReplay,
-  videoWidth,
-  videoHeight,
+  ballPosition,
 }) {
   const [isRecording, setIsRecording] = useState(false);
-  const [ballPosition, setBallPosition] = useState();
   const isRecordingRef = useRef(false);
   const canvasRef = useRef();
   const activeRecordingsRef = useRef([]);
@@ -45,7 +43,7 @@ export default function AutoRecorder({
   }, [isAutoReplay]);
 
   useEffect(() => {
-    if (passive || isPaused || !ballPosition) {
+    if (passive || isPaused) {
       return;
     }
     let recordingTimeout;
@@ -88,7 +86,7 @@ export default function AutoRecorder({
       clearInterval(interval);
       clearTimeout(recordingTimeout);
     };
-  }, [onRecording, passive, ballPosition, isPaused]);
+  }, [onRecording, passive, isPaused]);
 
   useEffect(() => {
     if (!passive) {
@@ -102,7 +100,7 @@ export default function AutoRecorder({
   }, [passive, signal]);
 
   useEffect(() => {
-    if (!ballPosition || isPaused) {
+    if (isPaused) {
       return;
     }
     const interval = setInterval(() => {
@@ -155,7 +153,7 @@ export default function AutoRecorder({
         rec.stop();
       }
     };
-  }, [videoRef, stream, onReplayVideo, ballPosition, isPaused]);
+  }, [videoRef, stream, onReplayVideo, isPaused]);
 
   const toggleClasses = ['toggle'];
   if (isAutoReplay) {
@@ -166,49 +164,41 @@ export default function AutoRecorder({
 
   return (
     <>
-      <BallPosition
-        onPosition={setBallPosition}
-        videoWidth={videoWidth}
-        videoHeight={videoHeight}
-        frozen={!!ballPosition}
-      />
-      {ballPosition && (
-        <div className="auto-recorder">
-          <div className="auto-recorder-header">
-            <h2>Auto-recording active</h2>
-            <button className="reset-text" onClick={onClose}>
-              Turn off
-            </button>
-          </div>
-          <p style={{ opacity: 0.7 }}>
-            We&apos;re monitoring sound spikes and video movement to detect golf
-            shots.
-          </p>
-          <button
-            className="reset-text auto-replay-button"
-            onClick={() => onToggleAutoReplay(!isAutoReplay)}
-          >
-            <div className={toggleClasses.join(' ')} />
-            <div>Replay recorded videos</div>
+      <div className="auto-recorder">
+        <div className="auto-recorder-header">
+          <h2>Auto-recording active</h2>
+          <button className="reset-text" onClick={onClose}>
+            Turn off
           </button>
-          {!passive && (
-            <>
-              <FrequencyBarGraph
-                width={200}
-                height={50}
-                stream={stream}
-                onSpike={handleAudioSpike}
-              />
-              <VideoMotionDetector
-                onMotion={handleVideoMotion}
-                videoRef={videoRef}
-                ballPosition={ballPosition}
-              />
-            </>
-          )}
-          <canvas style={{ display: 'none' }} ref={canvasRef} />
         </div>
-      )}
+        <p style={{ opacity: 0.7 }}>
+          We&apos;re monitoring sound spikes and video movement to detect golf
+          shots.
+        </p>
+        <button
+          className="reset-text auto-replay-button"
+          onClick={() => onToggleAutoReplay(!isAutoReplay)}
+        >
+          <div className={toggleClasses.join(' ')} />
+          <div>Replay recorded videos</div>
+        </button>
+        {!passive && (
+          <>
+            <FrequencyBarGraph
+              width={200}
+              height={50}
+              stream={stream}
+              onSpike={handleAudioSpike}
+            />
+            <VideoMotionDetector
+              onMotion={handleVideoMotion}
+              videoRef={videoRef}
+              ballPosition={ballPosition}
+            />
+          </>
+        )}
+        <canvas style={{ display: 'none' }} ref={canvasRef} />
+      </div>
     </>
   );
 }

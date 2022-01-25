@@ -5,6 +5,7 @@ import cryptoRandomString from 'crypto-random-string';
 
 import AutoRecordButton from '../src/AutoRecordButton';
 import AutoRecorder from '../src/AutoRecorder';
+import BallPosition from '../src/BallPosition';
 import Broadcaster from '../src/Broadcaster';
 import DrawingBoard from '../src/DrawingBoard';
 import FlipCamera from '../src/icons/FlipCamera';
@@ -44,6 +45,7 @@ function BroadcastPage({ broadcastId }) {
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
+  const [ballPosition, setBallPosition] = useState();
   const [isAutoRecording, setIsAutoRecording] = useState(false);
   const [isAutoReplay, setIsAutoReplay] = useState(true);
   const [isPlayerGraphics, setIsPlayerGraphics] = useState(false);
@@ -189,18 +191,30 @@ function BroadcastPage({ broadcastId }) {
         />
       )}
       {isAutoRecording && stream && (
-        <AutoRecorder
-          stream={stream}
-          isAutoReplay={isAutoReplay}
-          isPaused={replayVideo || isLibraryOpen}
-          onToggleAutoReplay={setIsAutoReplay}
-          videoRef={videoRef}
-          onRecording={setIsRecording}
-          onClose={() => setIsAutoRecording(false)}
-          onReplayVideo={setReplayVideo}
-          videoWidth={videoDimensions.width}
-          videoHeight={videoDimensions.height}
-        />
+        <>
+          <BallPosition
+            onPosition={setBallPosition}
+            frozen={ballPosition}
+            videoWidth={videoDimensions.width}
+            videoHeight={videoDimensions.height}
+          />
+          {ballPosition && (
+            <AutoRecorder
+              stream={stream}
+              isAutoReplay={isAutoReplay}
+              isPaused={replayVideo || isLibraryOpen}
+              onToggleAutoReplay={setIsAutoReplay}
+              videoRef={videoRef}
+              onRecording={setIsRecording}
+              onClose={() => {
+                setIsAutoRecording(false);
+                setBallPosition();
+              }}
+              onReplayVideo={setReplayVideo}
+              ballPosition={ballPosition}
+            />
+          )}
+        </>
       )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
@@ -214,7 +228,10 @@ function BroadcastPage({ broadcastId }) {
           </div>
           <AutoRecordButton
             isActive={isAutoRecording}
-            onClick={() => setIsAutoRecording(!isAutoRecording)}
+            onClick={() => {
+              setIsAutoRecording(!isAutoRecording);
+              setBallPosition();
+            }}
           />
           <div
             id="broadcastId"

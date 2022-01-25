@@ -93,10 +93,11 @@ export default function BallPosition({
         <div
           className="ball-position-square"
           style={{
-            left: pos.x,
-            top: pos.y,
+            left: frozen ? frozen.x * videoWidth : pos.x,
+            top: frozen ? frozen.y * videoHeight : pos.y,
             width: SQUARE_SIZE,
             height: SQUARE_SIZE,
+            pointerEvents: frozen ? 'none' : undefined,
           }}
           onTouchMove={updatePos}
           onMouseDown={() => setIsMoving(true)}
