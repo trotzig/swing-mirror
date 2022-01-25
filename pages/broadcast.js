@@ -56,6 +56,10 @@ function BroadcastPage({ broadcastId }) {
   const canvasRef = useRef();
 
   useEffect(() => {
+    if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      // only turn off camera on iOS
+      return;
+    }
     const handler = () => {
       setDocumentVisible(!document.hidden);
       setStream();
