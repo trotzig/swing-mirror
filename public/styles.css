@@ -651,29 +651,27 @@ h1 i {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
+    transform: translateX(-50%) scale(0.7);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateX(-50%) scale(1);
   }
 }
 
 .auto-recorder {
   position: fixed;
-  top: 50%;
+  top: 100px;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translateX(-50%) scale(1);
   width: 100%;
   width: 400px;
   max-width: 80%;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: var(--border-radius);
   animation: fadeIn 0.3s;
 }
 .auto-recorder canvas {
-  width: 100%;
+  width: 100px;
+  height: 40px;
 }
 .auto-recorder-header {
   display: grid;
@@ -690,6 +688,14 @@ h1 i {
 
 .auto-recorder-header h2 {
   margin: 0;
+}
+
+.auto-recorder-indicators {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  column-gap: 10px;
+  align-items: flex-end;
+  height: 30px;
 }
 
 button.auto-record-button {
@@ -979,4 +985,17 @@ button.auto-replay-button {
   border: 5px dashed currentColor;
   border-radius: var(--border-radius);
   cursor: move;
+}
+
+.video-motion-ball {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255,255, 0.1);
+  border: 1px solid rgba(255, 255,255, 0.2);
+  transition: background-color .1s;
+}
+
+.video-motion-ball.visible {
+  background-color: rgba(255, 255,255, 0.7);
 }

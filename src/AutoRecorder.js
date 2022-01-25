@@ -175,10 +175,6 @@ export default function AutoRecorder({
             Turn off
           </button>
         </div>
-        <p style={{ opacity: 0.7 }}>
-          We&apos;re monitoring sound spikes and video movement to detect golf
-          shots.
-        </p>
         <button
           className="reset-text auto-replay-button"
           onClick={() => onToggleAutoReplay(!isAutoReplay)}
@@ -187,19 +183,19 @@ export default function AutoRecorder({
           <div>Replay recorded videos</div>
         </button>
         {!passive && (
-          <>
+          <div className="auto-recorder-indicators">
+            <VideoMotionDetector
+              onMotion={handleVideoMotion}
+              videoRef={videoRef}
+              ballPosition={ballPosition}
+            />
             <FrequencyBarGraph
               width={200}
               height={50}
               stream={stream}
               onSpike={handleAudioSpike}
             />
-            <VideoMotionDetector
-              onMotion={handleVideoMotion}
-              videoRef={videoRef}
-              ballPosition={ballPosition}
-            />
-          </>
+          </div>
         )}
         <canvas style={{ display: 'none' }} ref={canvasRef} />
       </div>

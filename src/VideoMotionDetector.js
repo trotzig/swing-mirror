@@ -98,7 +98,7 @@ export default function VideoMotionDetector({
         ref={canvasRef}
         style={{ display: 'none', width: 'auto' }}
       />
-      {ballVisible ? 'BALL VISIBLE' : 'NO BALL'} -- {diff}
+      <div className={`video-motion-ball ${ballVisible ? 'visible' : ''}`} />
     </div>
   );
 }
