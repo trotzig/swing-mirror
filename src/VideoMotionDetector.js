@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const DIFF_THRESHOLD = 4;
+const DIFF_THRESHOLD = 8;
 
 export default function VideoMotionDetector({
   videoRef,
