@@ -11,7 +11,10 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "dev": "NODE_ENV=development node server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "happo": "happo"
   },
   "dependencies": {
     "cookies": "^0.8.0",
@@ -28,7 +31,16 @@
     "socket.io-client": "^4.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.2",
+    "@storybook/addon-actions": "^6.4.18",
+    "@storybook/addon-essentials": "^6.4.18",
+    "@storybook/addon-links": "^6.4.18",
+    "@storybook/react": "^6.4.18",
+    "babel-loader": "^8.2.3",
+    "dotenv": "^16.0.0",
     "eslint": "8.5.0",
-    "eslint-config-next": "12.0.7"
+    "eslint-config-next": "12.0.7",
+    "happo-plugin-storybook": "^2.10.2",
+    "happo.io": "^7.0.1"
   }
 }
