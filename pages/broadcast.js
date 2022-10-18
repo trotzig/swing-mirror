@@ -3,9 +3,6 @@ import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import cryptoRandomString from 'crypto-random-string';
 
-import AutoRecordButton from '../src/AutoRecordButton';
-import AutoRecorder from '../src/AutoRecorder';
-import BallPosition from '../src/BallPosition';
 import Broadcaster from '../src/Broadcaster';
 import DrawingBoard from '../src/DrawingBoard';
 import FlipCamera from '../src/icons/FlipCamera';
@@ -45,9 +42,6 @@ function BroadcastPage({ broadcastId }) {
   const [facingMode, setFacingMode] = useState('environment');
   const [hasBackCamera, setHasBackCamera] = useState(true);
   const [documentVisible, setDocumentVisible] = useState(true);
-  const [ballPosition, setBallPosition] = useState();
-  const [isAutoRecording, setIsAutoRecording] = useState(false);
-  const [isAutoReplay, setIsAutoReplay] = useState(true);
   const [isPlayerGraphics, setIsPlayerGraphics] = useState(false);
   const [videoDimensions, setVideoDimensions] = useState({});
   const videoRef = useRef();
@@ -108,15 +102,8 @@ function BroadcastPage({ broadcastId }) {
       .catch(error => console.error(error));
 
     const instructionHandler = instruction => {
-      console.log(instruction);
       if (typeof instruction.isRecording === 'boolean') {
         setIsRecording(instruction.isRecording);
-      }
-      if (typeof instruction.isAutoRecording === 'boolean') {
-        setIsAutoRecording(instruction.isAutoRecording);
-      }
-      if (typeof instruction.ballPosition === 'object') {
-        setBallPosition(instruction.ballPosition);
       }
     };
     broadcaster.on('instruction', instructionHandler);
@@ -143,13 +130,9 @@ function BroadcastPage({ broadcastId }) {
       return;
     }
     broadcasterRef.current.sendInstruction({ isRecording });
-    if (isAutoRecording) {
-      return;
-    }
     if (isRecording) {
       videoRecorderRef.current = new VideoRecorder({
         stream: videoRef.current.srcObject,
-        isAuto: isAutoRecording,
         video: videoRef.current,
         canvas: canvasRef.current,
       });
@@ -157,11 +140,7 @@ function BroadcastPage({ broadcastId }) {
     } else if (videoRecorderRef.current) {
       videoRecorderRef.current.stop();
     }
-  }, [isRecording, documentVisible, isAutoRecording]);
-
-  useEffect(() => {
-    broadcasterRef.current.sendInstruction({ isAutoRecording, ballPosition });
-  }, [isAutoRecording, ballPosition]);
+  }, [isRecording, documentVisible]);
 
   useEffect(() => {
     async function run() {
@@ -198,32 +177,6 @@ function BroadcastPage({ broadcastId }) {
           onClick={() => setIsPlayerGraphics(false)}
         />
       )}
-      {isAutoRecording && stream && (
-        <>
-          <BallPosition
-            onPosition={setBallPosition}
-            frozen={ballPosition}
-            videoWidth={videoDimensions.width}
-            videoHeight={videoDimensions.height}
-          />
-          {ballPosition && (
-            <AutoRecorder
-              stream={stream}
-              isAutoReplay={isAutoReplay}
-              isPaused={replayVideo || isLibraryOpen}
-              onToggleAutoReplay={setIsAutoReplay}
-              videoRef={videoRef}
-              onRecording={setIsRecording}
-              onClose={() => {
-                setIsAutoRecording(false);
-                setBallPosition(null);
-              }}
-              onReplayVideo={setReplayVideo}
-              ballPosition={ballPosition}
-            />
-          )}
-        </>
-      )}
       <canvas style={{ display: 'none' }} ref={canvasRef} />
       <div className="video-header">
         <div className="video-header-inner">
@@ -234,13 +187,7 @@ function BroadcastPage({ broadcastId }) {
               </a>
             </Link>
           </div>
-          <AutoRecordButton
-            isActive={isAutoRecording}
-            onClick={() => {
-              setIsAutoRecording(!isAutoRecording);
-              setBallPosition(null);
-            }}
-          />
+          <div />
           <div
             id="broadcastId"
             className="broadcast-id"
